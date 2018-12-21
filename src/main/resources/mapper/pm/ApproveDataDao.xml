@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cn.jhsoft.usedcar.modules.pm.dao.ApproveDataDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.cn.jhsoft.usedcar.modules.pm.entity.ApproveDataEntity" id="approveDataMap">
+        <result property="id" column="id"/>
+        <result property="infoId" column="info_id"/>
+        <result property="smallCategory" column="small_category"/>
+        <result property="questionId" column="question_id"/>
+        <result property="amount" column="amount"/>
+        <result property="userId" column="user_id"/>
+        <result property="userBusiness" column="user_business"/>
+        <result property="bmc" column="bmc"/>
+        <result property="isVip" column="is_vip"/>
+        <result property="isVvip" column="is_vvip"/>
+        <result property="isLighthouse" column="is_lighthouse"/>
+        <result property="userKind" column="user_kind"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.ApproveDataEntity">
+		select * from tbl_approve_data where id = #{value}
+	</select>
+
+	<sql id="queryList_where">
+		<if test="title != null and title.trim() != ''">
+			and `title` = #{title}
+		</if>
+		<if test="smallCategory != null">
+			and `small_category` = #{smallCategory}
+		</if>
+	</sql>
+
+	<select id="queryList" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.ApproveDataEntity">
+		select * from tbl_approve_data
+		<where>
+			<include refid="queryList_where"></include>
+		</where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from tbl_approve_data
+		<where>
+			<include refid="queryList_where"></include>
+		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.cn.jhsoft.usedcar.modules.pm.entity.ApproveDataEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into tbl_approve_data
+		(
+			`info_id`, 
+			`small_category`, 
+			`question_id`, 
+			`amount`, 
+			`user_id`, 
+			`user_business`, 
+			`bmc`, 
+			`is_vip`, 
+			`is_vvip`, 
+			`is_lighthouse`, 
+			`user_kind`
+		)
+		values
+		(
+			#{infoId}, 
+			#{smallCategory}, 
+			#{questionId}, 
+			#{amount}, 
+			#{userId}, 
+			#{userBusiness}, 
+			#{bmc}, 
+			#{isVip}, 
+			#{isVvip}, 
+			#{isLighthouse}, 
+			#{userKind}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.cn.jhsoft.usedcar.modules.pm.entity.ApproveDataEntity">
+		update tbl_approve_data 
+		<set>
+			<if test="infoId != null">`info_id` = #{infoId}, </if>
+			<if test="smallCategory != null">`small_category` = #{smallCategory}, </if>
+			<if test="questionId != null">`question_id` = #{questionId}, </if>
+			<if test="amount != null">`amount` = #{amount}, </if>
+			<if test="userId != null">`user_id` = #{userId}, </if>
+			<if test="userBusiness != null">`user_business` = #{userBusiness}, </if>
+			<if test="bmc != null">`bmc` = #{bmc}, </if>
+			<if test="isVip != null">`is_vip` = #{isVip}, </if>
+			<if test="isVvip != null">`is_vvip` = #{isVvip}, </if>
+			<if test="isLighthouse != null">`is_lighthouse` = #{isLighthouse}, </if>
+			<if test="userKind != null">`user_kind` = #{userKind}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from tbl_approve_data where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from tbl_approve_data where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<select id="queryScoreCountListBySmallCategory" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.ScoreCountEntity">
+		select amount as score,count(*) as num from tbl_approve_data where small_category=#{smallCategory} group by amount;
+	</select>
+
+	<select id="queryQuestionCountBySmallCategory" resultType="int">
+		select count(*) from tbl_approve_data where small_category=#{smallCategory};
+	</select>
+
+</mapper>

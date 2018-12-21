@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cn.jhsoft.usedcar.modules.pm.dao.ApproveResultDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.cn.jhsoft.usedcar.modules.pm.entity.ApproveResultEntity" id="approveResultMap">
+        <result property="id" column="id"/>
+        <result property="infoId" column="info_id"/>
+        <result property="approveAmount" column="approve_amount"/>
+        <result property="approveAmount1" column="approve_amount1"/>
+        <result property="approveAmount2" column="approve_amount2"/>
+        <result property="approveAmount3" column="approve_amount3"/>
+        <result property="approveAmount4" column="approve_amount4"/>
+        <result property="approveAmount5" column="approve_amount5"/>
+        <result property="status" column="status"/>
+        <result property="createDate" column="create_date"/>
+        <result property="createAdminid" column="create_adminid"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.ApproveResultEntity">
+		select * from tbl_approve_result where id = #{value}
+	</select>
+
+	<sql id="queryList_where">
+		<if test="title != null and title.trim() != ''">
+			and `title` = #{title}
+		</if>
+	</sql>
+
+	<select id="queryList" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.ApproveResultEntity">
+		select * from tbl_approve_result
+		<where>
+			<include refid="queryList_where"></include>
+		</where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from tbl_approve_result
+		<where>
+			<include refid="queryList_where"></include>
+		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.cn.jhsoft.usedcar.modules.pm.entity.ApproveResultEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into tbl_approve_result
+		(
+			`info_id`, 
+			`approve_amount`, 
+			`approve_amount1`, 
+			`approve_amount2`, 
+			`approve_amount3`, 
+			`approve_amount4`, 
+			`approve_amount5`, 
+			`status`, 
+			`create_date`, 
+			`create_adminid`
+		)
+		values
+		(
+			#{infoId}, 
+			#{approveAmount}, 
+			#{approveAmount1}, 
+			#{approveAmount2}, 
+			#{approveAmount3}, 
+			#{approveAmount4}, 
+			#{approveAmount5}, 
+			#{status}, 
+			#{createDate}, 
+			#{createAdminid}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.cn.jhsoft.usedcar.modules.pm.entity.ApproveResultEntity">
+		update tbl_approve_result 
+		<set>
+			<if test="infoId != null">`info_id` = #{infoId}, </if>
+			<if test="approveAmount != null">`approve_amount` = #{approveAmount}, </if>
+			<if test="approveAmount1 != null">`approve_amount1` = #{approveAmount1}, </if>
+			<if test="approveAmount2 != null">`approve_amount2` = #{approveAmount2}, </if>
+			<if test="approveAmount3 != null">`approve_amount3` = #{approveAmount3}, </if>
+			<if test="approveAmount4 != null">`approve_amount4` = #{approveAmount4}, </if>
+			<if test="approveAmount5 != null">`approve_amount5` = #{approveAmount5}, </if>
+			<if test="status != null">`status` = #{status}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}, </if>
+			<if test="createAdminid != null">`create_adminid` = #{createAdminid}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from tbl_approve_result where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from tbl_approve_result where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

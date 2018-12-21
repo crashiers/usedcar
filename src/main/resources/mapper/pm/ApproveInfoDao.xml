@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cn.jhsoft.usedcar.modules.pm.dao.ApproveInfoDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.cn.jhsoft.usedcar.modules.pm.entity.ApproveInfoEntity" id="approveInfoMap">
+        <result property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="scope" column="scope"/>
+        <result property="sendAmount" column="send_amount"/>
+        <result property="sendDate" column="send_date"/>
+        <result property="recycleAmount" column="recycle_amount"/>
+        <result property="recycleDate" column="recycle_date"/>
+        <result property="initiator" column="initiator"/>
+        <result property="executor" column="executor"/>
+        <result property="remark" column="remark"/>
+        <result property="createDate" column="create_date"/>
+        <result property="createAdminid" column="create_adminid"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.ApproveInfoEntity">
+		select * from tbl_approve_info where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.ApproveInfoEntity">
+		select * from tbl_approve_info
+        <where>
+            <if test="name != null and name.trim() != ''">
+                and `title` like concat('%',#{name},'%')
+            </if>
+        </where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from tbl_approve_info
+        <where>
+            <if test="name != null and name.trim() != ''">
+                and `title` like concat('%',#{name},'%')
+            </if>
+        </where>
+	</select>
+	 
+	<insert id="save" parameterType="com.cn.jhsoft.usedcar.modules.pm.entity.ApproveInfoEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into tbl_approve_info
+		(
+			`title`, 
+			`scope`, 
+			`send_amount`, 
+			`send_date`, 
+			`recycle_amount`, 
+			`recycle_date`, 
+			`initiator`, 
+			`executor`, 
+			`remark`, 
+			`create_date`, 
+			`create_adminid`
+		)
+		values
+		(
+			#{title}, 
+			#{scope}, 
+			#{sendAmount}, 
+			#{sendDate}, 
+			#{recycleAmount}, 
+			#{recycleDate}, 
+			#{initiator}, 
+			#{executor}, 
+			#{remark}, 
+			#{createDate}, 
+			#{createAdminid}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.cn.jhsoft.usedcar.modules.pm.entity.ApproveInfoEntity">
+		update tbl_approve_info 
+		<set>
+			<if test="title != null">`title` = #{title}, </if>
+			<if test="scope != null">`scope` = #{scope}, </if>
+			<if test="sendAmount != null">`send_amount` = #{sendAmount}, </if>
+			<if test="sendDate != null">`send_date` = #{sendDate}, </if>
+			<if test="recycleAmount != null">`recycle_amount` = #{recycleAmount}, </if>
+			<if test="recycleDate != null">`recycle_date` = #{recycleDate}, </if>
+			<if test="initiator != null">`initiator` = #{initiator}, </if>
+			<if test="executor != null">`executor` = #{executor}, </if>
+			<if test="remark != null">`remark` = #{remark}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}, </if>
+			<if test="createAdminid != null">`create_adminid` = #{createAdminid}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from tbl_approve_info where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from tbl_approve_info where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

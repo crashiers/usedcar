@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cn.jhsoft.usedcar.modules.sign.dao.MonitorConfigDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.cn.jhsoft.usedcar.modules.sign.entity.MonitorConfigEntity" id="monitorConfigMap">
+        <result property="id" column="id"/>
+        <result property="dbType" column="db_type"/>
+        <result property="host" column="host"/>
+        <result property="port" column="port"/>
+        <result property="dbName" column="db_name"/>
+        <result property="tableName" column="table_name"/>
+        <result property="whereStr" column="where_str"/>
+        <result property="dateFieldName" column="date_field_name"/>
+        <result property="monitorTime" column="monitor_time"/>
+        <result property="calculateTimeType" column="calculate_time_type"/>
+        <result property="calculateTimeStart" column="calculate_time_start"/>
+        <result property="calculateTimeEnd" column="calculate_time_end"/>
+        <result property="notifierGroup" column="notifier_group"/>
+        <result property="notifierEmail" column="notifier_email"/>
+        <result property="notifierMobile" column="notifier_mobile"/>
+        <result property="notifierWeixin" column="notifier_weixin"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.cn.jhsoft.usedcar.modules.sign.entity.MonitorConfigEntity">
+		select * from tbl_monitor_config where id = #{value}
+	</select>
+
+    <sql id="queryList_where">
+		<![CDATA[ and `monitor_time` < DATE_FORMAT(now(), '%H:%i') ]]>
+    </sql>
+
+	<select id="queryList" resultType="com.cn.jhsoft.usedcar.modules.sign.entity.MonitorConfigEntity">
+		select * from tbl_monitor_config
+        <where>
+            <include refid="queryList_where"></include>
+        </where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from tbl_monitor_config
+        <where>
+            <include refid="queryList_where"></include>
+        </where>
+	</select>
+	 
+	<insert id="save" parameterType="com.cn.jhsoft.usedcar.modules.sign.entity.MonitorConfigEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into tbl_monitor_config
+		(
+			`host`, 
+			`db_type`,
+			`port`,
+			`db_name`,
+			`table_name`, 
+			`where_str`, 
+			`date_field_name`, 
+			`monitor_time`,
+			`calculate_time_type`, 
+			`calculate_time_start`, 
+			`calculate_time_end`, 
+			`notifier_group`,
+			`notifier_email`,
+			`notifier_mobile`,
+			`notifier_weixin`
+		)
+		values
+		(
+			#{dbType},
+			#{host},
+			#{port},
+			#{dbName},
+			#{tableName}, 
+			#{whereStr}, 
+			#{dateFieldName}, 
+			#{monitorTime},
+			#{calculateTimeType}, 
+			#{calculateTimeStart}, 
+			#{calculateTimeEnd}, 
+			#{notifierGroup},
+			#{notifierEmail},
+			#{notifierMobile},
+			#{notifierWeixin}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.cn.jhsoft.usedcar.modules.sign.entity.MonitorConfigEntity">
+		update tbl_monitor_config 
+		<set>
+			<if test="dbType != null">`db_type` = #{dbType}, </if>
+			<if test="host != null">`host` = #{host}, </if>
+			<if test="port != null">`port` = #{port}, </if>
+			<if test="dbName != null">`db_name` = #{dbName}, </if>
+			<if test="tableName != null">`table_name` = #{tableName}, </if>
+			<if test="whereStr != null">`where_str` = #{whereStr}, </if>
+			<if test="dateFieldName != null">`date_field_name` = #{dateFieldName}, </if>
+			<if test="monitorTime != null">`monitor_time` = #{monitorTime}, </if>
+			<if test="calculateTimeType != null">`calculate_time_type` = #{calculateTimeType}, </if>
+			<if test="calculateTimeStart != null">`calculate_time_start` = #{calculateTimeStart}, </if>
+			<if test="calculateTimeEnd != null">`calculate_time_end` = #{calculateTimeEnd}, </if>
+			<if test="notifierGroup != null">`notifier_group` = #{notifierGroup}, </if>
+			<if test="notifierEmail != null">`notifier_email` = #{notifierEmail}, </if>
+			<if test="notifierMobile != null">`notifier_mobile` = #{notifierMobile}, </if>
+			<if test="notifierWeixin != null">`notifier_weixin` = #{notifierWeixin}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from tbl_monitor_config where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from tbl_monitor_config where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

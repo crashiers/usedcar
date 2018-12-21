@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cn.jhsoft.usedcar.modules.pm.dao.ApproveWeightMatrixDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.cn.jhsoft.usedcar.modules.pm.entity.ApproveWeightMatrixEntity" id="approveWeightMatrixMap">
+        <result property="id" column="id"/>
+        <result property="bigCategory" column="big_category"/>
+        <result property="smallCategoryX" column="small_category_x"/>
+        <result property="smallCategoryY" column="small_category_y"/>
+        <result property="amount" column="amount"/>
+        <result property="createDate" column="create_date"/>
+        <result property="createAdminid" column="create_adminid"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.ApproveWeightMatrixEntity">
+		select * from tbl_approve_weight_matrix where id = #{value}
+	</select>
+
+	<select id="queryObjectByCate" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.ApproveWeightMatrixEntity">
+		select * from tbl_approve_weight_matrix where big_category = #{bigCategory} and small_category_x = #{smallCategoryX} and small_category_y = #{smallCategoryY}
+	</select>
+
+	<sql id="queryList_where">
+		<if test="bigCategory != null">
+			and `big_category` = #{bigCategory}
+		</if>
+	</sql>
+
+	<select id="queryList" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.ApproveWeightMatrixEntity">
+		select * from tbl_approve_weight_matrix
+		<where>
+			<include refid="queryList_where"></include>
+		</where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from tbl_approve_weight_matrix
+		<where>
+			<include refid="queryList_where"></include>
+		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.cn.jhsoft.usedcar.modules.pm.entity.ApproveWeightMatrixEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into tbl_approve_weight_matrix
+		(
+			`big_category`, 
+			`small_category_x`, 
+			`small_category_y`, 
+			`amount`, 
+			`create_date`, 
+			`create_adminid`
+		)
+		values
+		(
+			#{bigCategory}, 
+			#{smallCategoryX}, 
+			#{smallCategoryY}, 
+			#{amount}, 
+			#{createDate}, 
+			#{createAdminid}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.cn.jhsoft.usedcar.modules.pm.entity.ApproveWeightMatrixEntity">
+		update tbl_approve_weight_matrix 
+		<set>
+			<if test="bigCategory != null">`big_category` = #{bigCategory}, </if>
+			<if test="smallCategoryX != null">`small_category_x` = #{smallCategoryX}, </if>
+			<if test="smallCategoryY != null">`small_category_y` = #{smallCategoryY}, </if>
+			<if test="amount != null">`amount` = #{amount}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}, </if>
+			<if test="createAdminid != null">`create_adminid` = #{createAdminid}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from tbl_approve_weight_matrix where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from tbl_approve_weight_matrix where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<select id="queryWeightListBySmallCategoryY" resultType="String">
+		select amount from tbl_approve_weight_matrix where small_category_y=#{smallCategoryY} order by small_category_x;
+	</select>
+
+</mapper>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>满意度调查 - 权重矩阵</title>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+	<link rel="stylesheet" href="../../css/bootstrap.min.css">
+	<link rel="stylesheet" href="../../css/font-awesome.min.css">
+	<link rel="stylesheet" href="../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
+	<link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+	<link rel="stylesheet" href="../../css/main.css">
+	<script src="../../libs/jquery.min.js"></script>
+	<script src="../../plugins/layer/layer.js"></script>
+	<script src="../../libs/bootstrap.min.js"></script>
+	<script src="../../libs/vue.min.js"></script>
+	<script src="../../libs/ajaxfileupload.js"></script>
+	<script src="../../plugins/jqgrid/grid.locale-cn.js"></script>
+	<script src="../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
+	<script src="../../plugins/ztree/jquery.ztree.all.min.js"></script>
+	<script src="../../js/common.js"></script>
+	<script type="text/javascript" src="../../../front_client/js/My97DatePicker/WdatePicker.js" ></script>
+</head>
+<body>
+<div id="rrapp" v-cloak>
+
+	<div>
+		<div class="grid-btn" style="height:34px;">
+			<a class="btn btn-danger" style="float:left;" href="approveresult.html">查看结果</a>
+		</div>
+	</div>
+
+    <div class="panel panel-default rrappApprove">
+		<div class="panel-heading">权重矩阵</div>
+
+		<div class="row" style="border-top:0px;">
+			<div class="col-sm-6">
+				<div class="form-horizontal" style="width: initial;">
+					<div class="form-group">
+						<div class="col-sm-2 control-label">指标选取：</div>
+						<div class="col-sm-10" >
+							<select id="cate" @change="getSmallCate">
+								<option v-for="(key, val) in cateList" :value="val">{{key}}</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="col-sm-12" >
+							<table class="table">
+								<tr>
+									<td></td>
+									<td v-for="(key1, val1) in smallCateList">{{key1}}</td>
+								</tr>
+								<tr v-for="(key, val, indexRow) in smallCateList">
+									<td>{{key}}</td>
+									<td v-for="(data, indexCol) in weightMatrixLists[indexRow]" :class="indexRow == indexCol? 'bg':''">
+
+										<!--中间斜线-->
+										<span v-if="indexRow == indexCol">{{data.amount}}
+										<input type="hidden" v-bind:cate_x_x="getControlId('',val,data.smallCategoryX)" name="hideCate"/>
+										</span>
+										<!--左下半扇-->
+										<span v-if="indexRow > indexCol" v-bind:id="getControlId('label',val,data.smallCategoryX)" name="spanCate" v-bind:tit="data.amount">{{data.amount}}
+										</span>
+										<!--<span v-if="indexRow > indexCol" v-bind:tit="data.amount" name="spanCateSpan">{{data.amount}}</span>-->
+										<!--右上半扇-->
+										<input v-if="indexRow < indexCol" v-bind:cate_x_y="getControlId('',data.smallCategoryX,val)" v-bind:cate_y_x="getControlId('',val,data.smallCategoryX)" onchange="vm.calLeftBottom(this)" name="inputCate" v-bind:value="data.amount">
+									</td>
+
+								</tr>
+							</table>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="col-sm-2 control-label"></div>
+						<input type="button" class="btn btn-primary" @click="saveWeightMatrix" value="确定"/>
+						&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="clearData" value="清空"/>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-6" style="margin-bottom:20px;">
+				<img src="../../front_client/images/approve.png"/>
+			</div>
+		</div>
+	</div>
+
+
+	<form class="" id="infoForm">
+	<div class="panel panel-default">
+		<div class="panel-heading">填写调研基础信息</div>
+			<div class="form-horizontal">
+				<div class="form-group">
+					<div class="col-sm-2 control-label">标题</div>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" v-model="appdata.title" name="title" placeholder="必填"/>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-2 control-label">问卷范围</div>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" v-model="appdata.scope" name="scope" placeholder="必填"/>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-2 control-label">问卷发放数量</div>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" v-model="appdata.sendAmount" name="sendAmount" placeholder="必填" style="width: 200px;"/>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-2 control-label">问卷回收数量</div>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" v-model="appdata.recycleAmount" name="recycleAmount" placeholder="必填" style="width: 200px;"/>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-2 control-label">问卷发放时间</div>
+					<div class="col-sm-10">
+						<input type="text" class="form-control form-input dateInput" v-model="appdata.sendDate" id="startTimeAlarm" onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM-dd',onpicked: changeWdatePicker  })"  onBlur="startTimeVal()" style="width: 200px;"/>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-2 control-label">问卷回收时间</div>
+					<div class="col-sm-10">
+						<input type="text" class="form-control form-input dateInput" v-model="appdata.recycleDate" id="endTimeAlarm" onBlur="endTimeVal()" style="width: 200px;"/>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-2 control-label">调研发起方</div>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" v-model="appdata.initiator"/>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-2 control-label">调研执行方</div>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" v-model="appdata.executor"/>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-2 control-label">说明</div>
+					<div class="col-sm-10">
+						<textarea v-model="appdata.remark" class="form-control" placeholder="本次调研针对资源消耗排名前250的用户进行，共计发放400份问卷，回收有效问卷共计80份。" style="width:600px; height:100px;"></textarea>
+					</div>
+				</div>
+			</div>
+	</div>
+
+	</form>
+
+	<div class="panel panel-default">
+		<div class="panel-heading">上传调研问卷</div>
+
+			<div class="form-horizontal">
+
+				<div class="form-group">
+					<div class="col-sm-2 control-label">选择Excel文件</div>
+					<div class="col-sm-10">
+						<input type="file" name="file" id="file" />
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-2 control-label"></div>
+					<div class="col-sm-10" style="font-size: 12px;">
+						说明：<br/>
+						1）删除“”，“”，“”列，以及问题行，标注问题与指标对应数字编号<br/>
+						2）按上述要求，调整上传文件格式，点击“上传”选取需要计算的EXCEL文件。<br/>
+						3）上传成功后，需要等待几分钟后方可查看计算结果。<br/>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-2 control-label"></div>
+					<input type="button" class="btn btn-primary" id="uploadInfo" @click="saveInfo" value="上传"/>
+				</div>
+			</div>
+	</div>
+
+</div>
+
+<script src="../../js/modules/pm/approve.js"></script>
+</body>
+</html>

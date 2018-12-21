@@ -1,0 +1,123 @@
+package com.jhsoft.ueditor.upload;
+
+import com.cn.jhsoft.usedcar.common.utils.ThumbnailUtils;
+import com.jhsoft.ueditor.PathFormat;
+import com.jhsoft.ueditor.define.AppInfo;
+import com.jhsoft.ueditor.define.BaseState;
+import com.jhsoft.ueditor.define.FileType;
+import com.jhsoft.ueditor.define.State;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+public class BinaryUploader {
+
+	public static final State save(HttpServletRequest request,
+								   Map<String, Object> conf) {
+		// FileItemStream fileStream = null;
+		// boolean isAjaxUpload = request.getHeader( "X_Requested_With" ) != null;
+
+		if (!ServletFileUpload.isMultipartContent(request)) {
+			return new BaseState(false, AppInfo.NOT_MULTIPART_CONTENT);
+		}
+
+        // ServletFileUpload upload = new ServletFileUpload(
+			// 	new DiskFileItemFactory());
+        //
+        // if ( isAjaxUpload ) {
+        //     upload.setHeaderEncoding( "UTF-8" );
+        // }
+
+		try {
+			// FileItemIterator iterator = upload.getItemIterator(request);
+            //
+			// while (iterator.hasNext()) {
+			// 	fileStream = iterator.next();
+            //
+			// 	if (!fileStream.isFormField())
+			// 		break;
+			// 	fileStream = null;
+			// }
+            //
+			// if (fileStream == null) {
+			// 	return new BaseState(false, AppInfo.NOTFOUND_UPLOAD_DATA);
+			// }
+			MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+			MultipartFile multipartFile = multipartRequest.getFile(conf.get("fieldName").toString());
+			if(multipartFile==null){
+				return new BaseState(false, AppInfo.NOTFOUND_UPLOAD_DATA);
+			}
+
+			String savePath = (String) conf.get("savePath");
+			String dirPath = savePath;
+			//String originFileName = fileStream.getName();
+			String originFileName = multipartFile.getOriginalFilename();
+			String suffix = FileType.getSuffixByFilename(originFileName);
+
+			originFileName = originFileName.substring(0, originFileName.length() - suffix.length());
+			savePath = savePath + suffix;
+
+			long maxSize = ((Long) conf.get("maxSize")).longValue();
+
+			if (!validType(suffix, (String[]) conf.get("allowFiles"))) {
+				return new BaseState(false, AppInfo.NOT_ALLOW_FILE_TYPE);
+			}
+
+			savePath = PathFormat.parse(savePath, originFileName);
+
+			//String physicalPath = (String) conf.get("rootPath") + savePath;
+			String basePath=(String) conf.get("basePath");
+			String physicalPath = basePath + savePath;
+
+			//InputStream is = fileStream.openStream();
+			InputStream is = multipartFile.getInputStream();
+			State storageState = StorageManager.saveFileByInputStream(is,
+					physicalPath, maxSize);
+			is.close();
+
+			if (storageState.isSuccess()) {
+				storageState.putInfo("url", PathFormat.format(savePath));
+				storageState.putInfo("type", suffix);
+				storageState.putInfo("original", originFileName + suffix);
+			}
+
+			// 缩略图宽高
+			String[] widths = (String[]) conf.get("thumWidths");
+			String[] heights = (String[]) conf.get("thumHeights");
+			if (widths.length > 0 && heights.length > 0) {
+				// 生成缩略图
+				ThumbnailUtils thumbnailUtils = new ThumbnailUtils();
+				// 字符串处理
+				String filePath = physicalPath.substring(0, physicalPath.lastIndexOf("/"));
+				String fileName = physicalPath.substring(physicalPath.lastIndexOf("/") + 1);
+				String url = savePath.substring(0, savePath.lastIndexOf("/"));
+				// 生成缩略图
+				String thumUrl;
+				for (int i = 0; i < widths.length; i++) {
+					thumUrl = thumbnailUtils.thumbnail(multipartFile, filePath, fileName, url, Integer.valueOf(widths[i]), Integer.valueOf(heights[i]));
+					if (i == 0)
+						storageState.putInfo("thumb_url", thumUrl);
+				}
+			}
+
+			return storageState;
+		// } catch (FileUploadException e) {
+		// 	return new BaseState(false, AppInfo.PARSE_REQUEST_ERROR);
+		} catch (IOException e) {
+		}
+		return new BaseState(false, AppInfo.IO_ERROR);
+	}
+
+	private static boolean validType(String type, String[] allowTypes) {
+		List<String> list = Arrays.asList(allowTypes);
+
+		return list.contains(type);
+	}
+}

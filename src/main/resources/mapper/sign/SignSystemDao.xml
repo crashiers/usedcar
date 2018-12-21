@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cn.jhsoft.usedcar.modules.sign.dao.SignSystemDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.cn.jhsoft.usedcar.modules.sign.entity.SignSystemEntity" id="signSystemMap">
+        <result property="id" column="id"/>
+        <result property="customerId" column="customer_id"/>
+        <result property="companyName" column="company_name"/>
+        <result property="industry" column="industry"/>
+        <result property="city" column="city"/>
+        <result property="pin" column="pin"/>
+        <result property="utmSource" column="utm_source"/>
+        <result property="isCustomer" column="is_customer"/>
+        <result property="isWorkloads" column="is_workloads"/>
+        <result property="businessDeploy" column="business_deploy"/>
+        <result property="isTechservice" column="is_techservice"/>
+        <result property="isStability" column="is_stability"/>
+        <result property="isSecurity" column="is_security"/>
+        <result property="isHappyCustomers" column="is_happy_customers"/>
+        <result property="isVip" column="is_vip"/>
+        <result property="isVvip" column="is_vvip"/>
+        <result property="contactLevel" column="contact_level"/>
+        <result property="seepLevel" column="seep_level"/>
+        <result property="isListed" column="is_listed"/>
+        <result property="isInvested" column="is_invested"/>
+        <result property="registeCapital" column="registe_capital"/>
+        <result property="yearSpend" column="year_spend"/>
+        <result property="usingDetail" column="using_detail"/>
+        <result property="isLighthouse" column="is_lighthouse"/>
+        <result property="isInnerCustomer" column="is_inner_customer"/>
+        <result property="isSelfProducts" column="is_self_products"/>
+        <result property="isMatrix" column="is_matrix"/>
+        <result property="isPlus" column="is_plus"/>
+        <result property="isInnerEmpowerment" column="is_inner_empowerment"/>
+        <result property="isCloudTripod" column="is_cloud_tripod"/>
+        <result property="reviewPeriod" column="review_period"/>
+        <result property="isTrial" column="is_trial"/>
+        <result property="isFormal" column="is_formal"/>
+        <result property="isQuit" column="is_quit"/>
+        <result property="isGeneral" column="is_general"/>
+        <result property="reason" column="reason"/>
+        <result property="mainArchitect" column="main_architect"/>
+        <result property="bakArchitect" column="bak_architect"/>
+        <result property="sale" column="sale"/>
+        <result property="preSale" column="pre_sale"/>
+        <result property="isPicture" column="is_picture"/>
+        <result property="saleStage" column="sale_stage"/>
+        <result property="productCode" column="product_code"/>
+        <result property="isIaas" column="is_iaas"/>
+        <result property="isLb" column="is_lb"/>
+        <result property="isCdn" column="is_cdn"/>
+        <result property="isIdc" column="is_idc"/>
+        <result property="isDb" column="is_db"/>
+        <result property="isRedis" column="is_redis"/>
+        <result property="isStorage" column="is_storage"/>
+        <result property="isSaas" column="is_saas"/>
+        <result property="isDataSaas" column="is_data_saas"/>
+        <result property="isOtherSaas" column="is_other_saas"/>
+        <result property="isGroupSaas" column="is_group_saas"/>
+        <result property="isNorthBjUsing" column="is_north_bj_using"/>
+        <result property="isNorthBjAz" column="is_north_bj_az"/>
+        <result property="isEastShUsing" column="is_east_sh_using"/>
+        <result property="isEastShAz" column="is_east_sh_az"/>
+        <result property="isEastSqUsing" column="is_east_sq_using"/>
+        <result property="isEastSqAz" column="is_east_sq_az"/>
+        <result property="isSouthGzUsing" column="is_south_gz_using"/>
+        <result property="isSouthGzAz" column="is_south_gz_az"/>
+        <result property="isNodbNostorage" column="is_nodb_nostorage"/>
+        <result property="isNoaz" column="is_noaz"/>
+        <result property="isNolb" column="is_nolb"/>
+        <result property="isSingle" column="is_single"/>
+        <result property="isDouble" column="is_double"/>
+        <result property="isBackup" column="is_backup"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.cn.jhsoft.usedcar.modules.sign.entity.SignSystemEntity">
+		select * from tbl_sign_system where id = #{value}
+	</select>
+
+    <sql id="queryList_where">
+		<if test="pin != null and pin.trim() != ''">
+			and `pin` = #{pin}
+		</if>
+		<if test="utm_source != null and utm_source.trim() != ''">
+			and `utm_source` = #{utm_source}
+		</if>
+		<if test="is_vip != null and is_vip.trim() != ''">
+			and `is_vip` = #{is_vip}
+		</if>
+		<if test="is_vvip != null and is_vvip.trim() != ''">
+			and `is_vvip` = #{is_vvip}
+		</if>
+    </sql>
+
+	<select id="queryList" resultType="com.cn.jhsoft.usedcar.modules.sign.entity.SignSystemEntity">
+		select * from tbl_sign_system
+        <where>
+            <include refid="queryList_where"></include>
+        </where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="queryObjectList" resultType="java.util.Map">
+		select * from tbl_sign_system
+		<where>
+			<include refid="queryList_where"></include>
+		</where>
+		<choose>
+			<when test="sidx != null and sidx.trim() != ''">
+				order by ${sidx} ${order}
+			</when>
+			<otherwise>
+				order by id desc
+			</otherwise>
+		</choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from tbl_sign_system
+        <where>
+            <include refid="queryList_where"></include>
+        </where>
+	</select>
+	 
+	<insert id="save" parameterType="com.cn.jhsoft.usedcar.modules.sign.entity.SignSystemEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into tbl_sign_system
+		(
+			`customer_id`, 
+			`company_name`, 
+			`industry`, 
+			`city`, 
+			`pin`, 
+			`utm_source`, 
+			`is_customer`, 
+			`is_workloads`, 
+			`business_deploy`, 
+			`is_techservice`, 
+			`is_stability`, 
+			`is_security`, 
+			`is_happy_customers`, 
+			`is_vip`, 
+			`is_vvip`, 
+			`contact_level`, 
+			`seep_level`, 
+			`is_listed`, 
+			`is_invested`, 
+			`registe_capital`, 
+			`year_spend`, 
+			`using_detail`, 
+			`is_lighthouse`, 
+			`is_inner_customer`, 
+			`is_self_products`, 
+			`is_matrix`, 
+			`is_plus`, 
+			`is_inner_empowerment`, 
+			`is_cloud_tripod`, 
+			`review_period`, 
+			`is_trial`, 
+			`is_formal`, 
+			`is_quit`, 
+			`is_general`, 
+			`reason`, 
+			`main_architect`, 
+			`bak_architect`, 
+			`sale`, 
+			`pre_sale`, 
+			`is_picture`, 
+			`sale_stage`, 
+			`product_code`, 
+			`is_iaas`, 
+			`is_lb`, 
+			`is_cdn`, 
+			`is_idc`, 
+			`is_db`, 
+			`is_redis`, 
+			`is_storage`, 
+			`is_saas`, 
+			`is_data_saas`, 
+			`is_other_saas`, 
+			`is_group_saas`, 
+			`is_north_bj_using`, 
+			`is_north_bj_az`, 
+			`is_east_sh_using`, 
+			`is_east_sh_az`, 
+			`is_east_sq_using`, 
+			`is_east_sq_az`, 
+			`is_south_gz_using`, 
+			`is_south_gz_az`, 
+			`is_nodb_nostorage`, 
+			`is_noaz`, 
+			`is_nolb`, 
+			`is_single`, 
+			`is_double`, 
+			`is_backup`
+		)
+		values
+		(
+			#{customerId}, 
+			#{companyName}, 
+			#{industry}, 
+			#{city}, 
+			#{pin}, 
+			#{utmSource}, 
+			#{isCustomer}, 
+			#{isWorkloads}, 
+			#{businessDeploy}, 
+			#{isTechservice}, 
+			#{isStability}, 
+			#{isSecurity}, 
+			#{isHappyCustomers}, 
+			#{isVip}, 
+			#{isVvip}, 
+			#{contactLevel}, 
+			#{seepLevel}, 
+			#{isListed}, 
+			#{isInvested}, 
+			#{registeCapital}, 
+			#{yearSpend}, 
+			#{usingDetail}, 
+			#{isLighthouse}, 
+			#{isInnerCustomer}, 
+			#{isSelfProducts}, 
+			#{isMatrix}, 
+			#{isPlus}, 
+			#{isInnerEmpowerment}, 
+			#{isCloudTripod}, 
+			#{reviewPeriod}, 
+			#{isTrial}, 
+			#{isFormal}, 
+			#{isQuit}, 
+			#{isGeneral}, 
+			#{reason}, 
+			#{mainArchitect}, 
+			#{bakArchitect}, 
+			#{sale}, 
+			#{preSale}, 
+			#{isPicture}, 
+			#{saleStage}, 
+			#{productCode}, 
+			#{isIaas}, 
+			#{isLb}, 
+			#{isCdn}, 
+			#{isIdc}, 
+			#{isDb}, 
+			#{isRedis}, 
+			#{isStorage}, 
+			#{isSaas}, 
+			#{isDataSaas}, 
+			#{isOtherSaas}, 
+			#{isGroupSaas}, 
+			#{isNorthBjUsing}, 
+			#{isNorthBjAz}, 
+			#{isEastShUsing}, 
+			#{isEastShAz}, 
+			#{isEastSqUsing}, 
+			#{isEastSqAz}, 
+			#{isSouthGzUsing}, 
+			#{isSouthGzAz}, 
+			#{isNodbNostorage}, 
+			#{isNoaz}, 
+			#{isNolb}, 
+			#{isSingle}, 
+			#{isDouble}, 
+			#{isBackup}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.cn.jhsoft.usedcar.modules.sign.entity.SignSystemEntity">
+		update tbl_sign_system 
+		<set>
+			<if test="customerId != null">`customer_id` = #{customerId}, </if>
+			<if test="companyName != null">`company_name` = #{companyName}, </if>
+			<if test="industry != null">`industry` = #{industry}, </if>
+			<if test="city != null">`city` = #{city}, </if>
+			<if test="pin != null">`pin` = #{pin}, </if>
+			<if test="utmSource != null">`utm_source` = #{utmSource}, </if>
+			<if test="isCustomer != null">`is_customer` = #{isCustomer}, </if>
+			<if test="isWorkloads != null">`is_workloads` = #{isWorkloads}, </if>
+			<if test="businessDeploy != null">`business_deploy` = #{businessDeploy}, </if>
+			<if test="isTechservice != null">`is_techservice` = #{isTechservice}, </if>
+			<if test="isStability != null">`is_stability` = #{isStability}, </if>
+			<if test="isSecurity != null">`is_security` = #{isSecurity}, </if>
+			<if test="isHappyCustomers != null">`is_happy_customers` = #{isHappyCustomers}, </if>
+			<if test="isVip != null">`is_vip` = #{isVip}, </if>
+			<if test="isVvip != null">`is_vvip` = #{isVvip}, </if>
+			<if test="contactLevel != null">`contact_level` = #{contactLevel}, </if>
+			<if test="seepLevel != null">`seep_level` = #{seepLevel}, </if>
+			<if test="isListed != null">`is_listed` = #{isListed}, </if>
+			<if test="isInvested != null">`is_invested` = #{isInvested}, </if>
+			<if test="registeCapital != null">`registe_capital` = #{registeCapital}, </if>
+			<if test="yearSpend != null">`year_spend` = #{yearSpend}, </if>
+			<if test="usingDetail != null">`using_detail` = #{usingDetail}, </if>
+			<if test="isLighthouse != null">`is_lighthouse` = #{isLighthouse}, </if>
+			<if test="isInnerCustomer != null">`is_inner_customer` = #{isInnerCustomer}, </if>
+			<if test="isSelfProducts != null">`is_self_products` = #{isSelfProducts}, </if>
+			<if test="isMatrix != null">`is_matrix` = #{isMatrix}, </if>
+			<if test="isPlus != null">`is_plus` = #{isPlus}, </if>
+			<if test="isInnerEmpowerment != null">`is_inner_empowerment` = #{isInnerEmpowerment}, </if>
+			<if test="isCloudTripod != null">`is_cloud_tripod` = #{isCloudTripod}, </if>
+			<if test="reviewPeriod != null">`review_period` = #{reviewPeriod}, </if>
+			<if test="isTrial != null">`is_trial` = #{isTrial}, </if>
+			<if test="isFormal != null">`is_formal` = #{isFormal}, </if>
+			<if test="isQuit != null">`is_quit` = #{isQuit}, </if>
+			<if test="isGeneral != null">`is_general` = #{isGeneral}, </if>
+			<if test="reason != null">`reason` = #{reason}, </if>
+			<if test="mainArchitect != null">`main_architect` = #{mainArchitect}, </if>
+			<if test="bakArchitect != null">`bak_architect` = #{bakArchitect}, </if>
+			<if test="sale != null">`sale` = #{sale}, </if>
+			<if test="preSale != null">`pre_sale` = #{preSale}, </if>
+			<if test="isPicture != null">`is_picture` = #{isPicture}, </if>
+			<if test="saleStage != null">`sale_stage` = #{saleStage}, </if>
+			<if test="productCode != null">`product_code` = #{productCode}, </if>
+			<if test="isIaas != null">`is_iaas` = #{isIaas}, </if>
+			<if test="isLb != null">`is_lb` = #{isLb}, </if>
+			<if test="isCdn != null">`is_cdn` = #{isCdn}, </if>
+			<if test="isIdc != null">`is_idc` = #{isIdc}, </if>
+			<if test="isDb != null">`is_db` = #{isDb}, </if>
+			<if test="isRedis != null">`is_redis` = #{isRedis}, </if>
+			<if test="isStorage != null">`is_storage` = #{isStorage}, </if>
+			<if test="isSaas != null">`is_saas` = #{isSaas}, </if>
+			<if test="isDataSaas != null">`is_data_saas` = #{isDataSaas}, </if>
+			<if test="isOtherSaas != null">`is_other_saas` = #{isOtherSaas}, </if>
+			<if test="isGroupSaas != null">`is_group_saas` = #{isGroupSaas}, </if>
+			<if test="isNorthBjUsing != null">`is_north_bj_using` = #{isNorthBjUsing}, </if>
+			<if test="isNorthBjAz != null">`is_north_bj_az` = #{isNorthBjAz}, </if>
+			<if test="isEastShUsing != null">`is_east_sh_using` = #{isEastShUsing}, </if>
+			<if test="isEastShAz != null">`is_east_sh_az` = #{isEastShAz}, </if>
+			<if test="isEastSqUsing != null">`is_east_sq_using` = #{isEastSqUsing}, </if>
+			<if test="isEastSqAz != null">`is_east_sq_az` = #{isEastSqAz}, </if>
+			<if test="isSouthGzUsing != null">`is_south_gz_using` = #{isSouthGzUsing}, </if>
+			<if test="isSouthGzAz != null">`is_south_gz_az` = #{isSouthGzAz}, </if>
+			<if test="isNodbNostorage != null">`is_nodb_nostorage` = #{isNodbNostorage}, </if>
+			<if test="isNoaz != null">`is_noaz` = #{isNoaz}, </if>
+			<if test="isNolb != null">`is_nolb` = #{isNolb}, </if>
+			<if test="isSingle != null">`is_single` = #{isSingle}, </if>
+			<if test="isDouble != null">`is_double` = #{isDouble}, </if>
+			<if test="isBackup != null">`is_backup` = #{isBackup}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from tbl_sign_system where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from tbl_sign_system where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

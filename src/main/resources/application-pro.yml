@@ -1,0 +1,77 @@
+server:
+  port: 8080
+
+db:
+  dbname: db_usedcar
+
+kafka_server:
+  server: 127.0.0.1:9092
+
+spring:
+    datasource:
+        druid:
+            first:  #数据源1
+                url: jdbc:mysql://127.0.0.1:3358/${db.dbname}?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+                username: wx_sqoop
+                password: wx_sqoop
+            second:  #数据源2
+                url: jdbc:mysql://127.0.0.1:3358/xxx?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+                username: xxx
+                password: xxx
+            third:  #数据源3
+                url: jdbc:mysql://127.0.0.1:3358/xxx?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+                username: xxx
+                password: xxx
+            four:  #数据源4
+                url: jdbc:mysql://127.0.0.1:3306/xxx?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+                username: xxx
+                password: xxx
+            five:  #数据源5
+                url: jdbc:mysql://127.0.0.1:3358/xxx?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+                username: xxx
+                password: xxx
+            six:  #数据源 6
+                url: jdbc:mysql://127.0.0.1:3358/xxx?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+                username: xxx
+                password: xxx
+            initial-size: 10
+            max-active: 100
+            min-idle: 10
+            max-wait: 60000
+            pool-prepared-statements: true
+            max-pool-prepared-statement-per-connection-size: 20
+            time-between-eviction-runs-millis: 60000
+            min-evictable-idle-time-millis: 300000
+            validation-query: SELECT 1 FROM DUAL
+            test-while-idle: true
+            test-on-borrow: false
+            test-on-return: false
+            stat-view-servlet:
+                enabled: false # 禁用网页端监控界面
+                url-pattern: /druid/*
+                login-username: admin
+                login-password: admin
+            filter:
+                stat:
+                    log-slow-sql: true
+                    slow-sql-millis: 1000
+                    merge-sql: true
+                wall:
+                    config:
+                        multi-statement-allow: true
+
+
+    redis:
+        host: 127.0.0.1
+        port: 6379
+        password: 123456
+    kafka:
+        bootstrap-servers: ${kafka_server.server}
+        consumer:
+            group-id: myGroup
+            auto-offset-reset: earliest #从最早的地方开始消费
+    fileupload:
+        upload_path: /root/usedcar/
+    logpath:
+        tmp_log_path: /root/usedcar/
+        flume_log_path: /export/wwwlogs/

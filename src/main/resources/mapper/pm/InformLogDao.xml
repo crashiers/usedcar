@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cn.jhsoft.usedcar.modules.pm.dao.InformLogDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.cn.jhsoft.usedcar.modules.pm.entity.InformLogEntity" id="informLogMap">
+        <result property="id" column="id"/>
+        <result property="informId" column="inform_id"/>
+        <result property="informant" column="informant"/>
+        <result property="informTheme" column="inform_theme"/>
+        <result property="informContent" column="inform_content"/>
+        <result property="createDate" column="create_date"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createTimestamp" column="create_timestamp"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.InformLogEntity">
+		select * from tbl_inform_log where id = #{value}
+	</select>
+
+    <sql id="queryList_where">
+        <if test="name != null and name.trim() != ''">
+            and `title` like concat('%',#{name},'%')
+        </if>
+    </sql>
+
+	<select id="queryList" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.InformLogEntity">
+		select * from tbl_inform_log
+        <where>
+            <include refid="queryList_where"></include>
+        </where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from tbl_inform_log
+        <where>
+            <include refid="queryList_where"></include>
+        </where>
+	</select>
+	 
+	<insert id="save" parameterType="com.cn.jhsoft.usedcar.modules.pm.entity.InformLogEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into tbl_inform_log
+		(
+			`inform_id`, 
+			`informant`, 
+			`inform_theme`, 
+			`inform_content`, 
+			`create_date`, 
+			`create_time`, 
+			`create_timestamp`
+		)
+		values
+		(
+			#{informId}, 
+			#{informant}, 
+			#{informTheme}, 
+			#{informContent}, 
+			#{createDate}, 
+			#{createTime}, 
+			#{createTimestamp}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.cn.jhsoft.usedcar.modules.pm.entity.InformLogEntity">
+		update tbl_inform_log 
+		<set>
+			<if test="informId != null">`inform_id` = #{informId}, </if>
+			<if test="informant != null">`informant` = #{informant}, </if>
+			<if test="informTheme != null">`inform_theme` = #{informTheme}, </if>
+			<if test="informContent != null">`inform_content` = #{informContent}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}, </if>
+			<if test="createTime != null">`create_time` = #{createTime}, </if>
+			<if test="createTimestamp != null">`create_timestamp` = #{createTimestamp}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from tbl_inform_log where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from tbl_inform_log where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>
