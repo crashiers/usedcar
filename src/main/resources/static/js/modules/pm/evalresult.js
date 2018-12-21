@@ -33,6 +33,7 @@ $(function () {
         ],
 		viewrecords: true,
         height: 'auto',
+		//height: $(window).height() - 100,
         rowNum: 1000,
 		rowList : [10,30,50],
         rownumbers: true,
@@ -54,8 +55,25 @@ $(function () {
         gridComplete:function(){
         	//隐藏grid底部滚动条
         	$("#jqGrid").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" }); 
+        },
+        loadComplete: function () {
+            //debugger;
+            //在表格加载完成后执行
+            var ids = $("#jqGrid").jqGrid("getDataIDs");//获取所有行的id
+            var rowDatas = $("#jqGrid").jqGrid("getRowData");//获取所有行的数据
+            for (var ii = 0; ii < rowDatas.length; ii++) {
+                var rowData = rowDatas[ii];
+                if (rowData.num == 235) {//如果某一行中的“tax”为0，那就把这一整行的背景颜色设为红色
+                    //$("#" + ids[ii] + " td").css("background-color", "red");
+                }
+            }
         }
     });
+});
+
+//自应高度
+$(window).resize(function () {
+    //$("#jqGrid").setGridHeight($(window).height() - 100);
 });
 
 var vm = new Vue({
