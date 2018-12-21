@@ -195,7 +195,7 @@
 
   Distpicker.DEFAULTS = {
     autoSelect: true,
-    placeholder: true,
+    placeholder: true,//在第一行显示 --省-- 之类的
     province: '—— 省 ——',
     city: '—— 市 ——',
     district: '—— 区 ——'

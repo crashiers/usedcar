@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cn.jhsoft.usedcar.modules.pm.dao.EvalStageDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.cn.jhsoft.usedcar.modules.pm.entity.EvalStageEntity" id="evalStageMap">
+        <result property="id" column="id"/>
+        <result property="stageNum" column="stage_num"/>
+        <result property="score1" column="score1"/>
+        <result property="score2" column="score2"/>
+        <result property="score3" column="score3"/>
+        <result property="score4" column="score4"/>
+        <result property="score5" column="score5"/>
+        <result property="score6" column="score6"/>
+        <result property="score7" column="score7"/>
+        <result property="score8" column="score8"/>
+        <result property="score9" column="score9"/>
+        <result property="createDate" column="create_date"/>
+        <result property="createDatetime" column="create_datetime"/>
+        <result property="createAdminid" column="create_adminid"/>
+        <result property="createAdmin" column="create_admin"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.EvalStageEntity">
+		select * from tbl_eval_stage where id = #{value}
+	</select>
+
+    <sql id="queryList_where">
+        <if test="name != null and name.trim() != ''">
+            and (`stage_num` like concat('%',#{name},'%') or `create_admin` like concat('%',#{name},'%'))
+        </if>
+		<if test="createAdminid != null and createAdminid > 0">
+			and `create_adminid` = #{createAdminid}
+		</if>
+    </sql>
+
+	<select id="queryList" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.EvalStageEntity">
+		select * from tbl_eval_stage
+        <where>
+            <include refid="queryList_where"></include>
+        </where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from tbl_eval_stage
+        <where>
+            <include refid="queryList_where"></include>
+        </where>
+	</select>
+	 
+	<insert id="save" parameterType="com.cn.jhsoft.usedcar.modules.pm.entity.EvalStageEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into tbl_eval_stage
+		(
+			`stage_num`, 
+			`score1`, 
+			`score2`, 
+			`score3`, 
+			`score4`, 
+			`score5`, 
+			`score6`, 
+			`score7`, 
+			`score8`, 
+			`score9`, 
+			`create_date`, 
+			`create_datetime`, 
+			`create_adminid`
+			`create_admin`
+		)
+		values
+		(
+			#{stageNum}, 
+			#{score1}, 
+			#{score2}, 
+			#{score3}, 
+			#{score4}, 
+			#{score5}, 
+			#{score6}, 
+			#{score7}, 
+			#{score8}, 
+			#{score9}, 
+			#{createDate}, 
+			#{createDatetime}, 
+			#{createAdminid}
+			#{createAdmin}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.cn.jhsoft.usedcar.modules.pm.entity.EvalStageEntity">
+		update tbl_eval_stage 
+		<set>
+			<if test="stageNum != null">`stage_num` = #{stageNum}, </if>
+			<if test="score1 != null">`score1` = #{score1}, </if>
+			<if test="score2 != null">`score2` = #{score2}, </if>
+			<if test="score3 != null">`score3` = #{score3}, </if>
+			<if test="score4 != null">`score4` = #{score4}, </if>
+			<if test="score5 != null">`score5` = #{score5}, </if>
+			<if test="score6 != null">`score6` = #{score6}, </if>
+			<if test="score7 != null">`score7` = #{score7}, </if>
+			<if test="score8 != null">`score8` = #{score8}, </if>
+			<if test="score9 != null">`score9` = #{score9}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}, </if>
+			<if test="createDatetime != null">`create_datetime` = #{createDatetime}, </if>
+			<if test="createAdminid != null">`create_adminid` = #{createAdminid}</if>
+			<if test="createAdmin != null">`create_admin` = #{createAdmin}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from tbl_eval_stage where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from tbl_eval_stage where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

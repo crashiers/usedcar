@@ -33,7 +33,7 @@ public class SysDeptController extends AbstractController {
 	 * 列表
 	 */
 	@RequestMapping("/list")
-	@RequiresPermissions("sys:dept:list")
+	//@RequiresPermissions("sys:dept:list")
 	public List<SysDeptEntity> list(){
 		Map<String, Object> map = new HashMap<>();
 		//如果不是超级管理员，则只能查询本部门及子部门数据
@@ -49,7 +49,7 @@ public class SysDeptController extends AbstractController {
 	 * 选择部门(添加、修改菜单)
 	 */
 	@RequestMapping("/select")
-	@RequiresPermissions("sys:dept:select")
+	//@RequiresPermissions("sys:dept:select")
 	public R select(){
 		Map<String, Object> map = new HashMap<>();
 		//如果不是超级管理员，则只能查询本部门及子部门数据
@@ -75,7 +75,7 @@ public class SysDeptController extends AbstractController {
 	 * 上级部门Id(管理员则为0)
 	 */
 	@RequestMapping("/info")
-	@RequiresPermissions("sys:dept:list")
+	//@RequiresPermissions("sys:dept:list")
 	public R info(){
 		long deptId = 0;
 		if(getUserId() != Constant.SUPER_ADMIN){
@@ -90,7 +90,7 @@ public class SysDeptController extends AbstractController {
 	 * 信息
 	 */
 	@RequestMapping("/info/{deptId}")
-	@RequiresPermissions("sys:dept:info")
+	//@RequiresPermissions("sys:dept:info")
 	public R info(@PathVariable("deptId") Long deptId){
 		SysDeptEntity dept = sysDeptService.queryObject(deptId);
 		

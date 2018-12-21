@@ -30,9 +30,19 @@ DROP TABLE IF EXISTS `tbl_eval_stage`;
 CREATE TABLE IF NOT EXISTS `tbl_eval_stage` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `stage_num` varchar(32) COMMENT '批次编号',
+  `score1` float DEFAULT 0 COMMENT '业务规划',
+  `score2` float DEFAULT 0 COMMENT '业务运营',
+  `score3` float DEFAULT 0 COMMENT '业务推广',
+  `score4` float DEFAULT 0 COMMENT '业务执行',
+  `score5` float DEFAULT 0 COMMENT '置换流程',
+  `score6` float DEFAULT 0 COMMENT '零售流程',
+  `score7` float DEFAULT 0 COMMENT '管理层',
+  `score8` float DEFAULT 0 COMMENT '运营层',
+  `score9` float DEFAULT 0 COMMENT '执行层',
   `create_date` varchar(16) COMMENT '提交日期',
   `create_datetime` varchar(32) COMMENT '提交时间',
   `create_adminid` bigint DEFAULT 0 COMMENT '答题人ID',
+  `create_admin` varchar(128) COMMENT '答题人',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='评测批次';
 
@@ -41,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `tbl_eval_stage` (
 DROP TABLE IF EXISTS `tbl_eval_result`;
 CREATE TABLE IF NOT EXISTS `tbl_eval_result` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号',
-  `question_id` bigint COMMENT '题目编号',
+  `question_num` int COMMENT '题目序号',
   `stage_id` bigint COMMENT '答题批次ID',
   `stage_num` varchar(32) COMMENT '答题批次编号',
   `answer` varchar(32) COMMENT '答案',
@@ -112,4 +122,23 @@ insert into tbl_basic_data values (69, 44, '', '批售', 4, '0:4:8:44:', 9, '201
 -- 初始化系统参数
 insert into sys_config (`key`, `value`, remark) values('answerMaxTime', '3', '答题最长时间，3天');
 
--- 初始化菜单
+-- 题目管理菜单SQL
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) VALUES ('1', '题目管理', 'modules/pm/evalquestion.html', NULL, '1', 'fa fa-sticky-note', '11');
+set @parentId = @@identity;
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @parentId, '查看', null, 'pm:evalquestion:list,pm:evalquestion:info', '2', null, '6';
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @parentId, '新增', null, 'pm:evalquestion:save', '2', null, '6';
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @parentId, '导入', null, 'pm:evalquestion:upload', '2', null, '6';
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @parentId, '修改', null, 'pm:evalquestion:update', '2', null, '6';
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @parentId, '删除', null, 'pm:evalquestion:delete', '2', null, '6';
+
+-- 评测系统
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) VALUES ('1', '评测系统', 'modules/pm/evalstage.html', NULL, '1', 'fa fa-bullhorn', '12');
+set @evalRootId = @@identity;
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @evalRootId, '使用', null, 'pm:evalstage:list,pm:evalstage:info,pm:evalstage:used,pm:evalresult:list,pm:evalresult:info', '2', null, '6';
+set @evalUse = @@identity;
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @evalRootId, '评测管理', null, 'pm:evalstage:manager', '2', null, '6';
+
+insert into sys_role (role_id, role_name) values(1,'客户');
+insert into sys_role_menu (role_id, menu_id) values(1,1);
+insert into sys_role_menu (role_id, menu_id) values(1,@evalRootId);
+insert into sys_role_menu (role_id, menu_id) values(1,@evalUse);

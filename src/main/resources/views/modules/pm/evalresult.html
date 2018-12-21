@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>评测结果</title>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+	<link rel="stylesheet" href="../../css/bootstrap.min.css">
+	<link rel="stylesheet" href="../../css/font-awesome.min.css">
+	<link rel="stylesheet" href="../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
+	<link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+	<link rel="stylesheet" href="../../css/main.css">
+	<script src="../../libs/jquery.min.js"></script>
+	<script src="../../plugins/layer/layer.js"></script>
+	<script src="../../libs/bootstrap.min.js"></script>
+	<script src="../../libs/vue.min.js"></script>
+	<script src="../../plugins/jqgrid/grid.locale-cn.js"></script>
+	<script src="../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
+	<script src="../../plugins/ztree/jquery.ztree.all.min.js"></script>
+	<script src="../../js/common.js"></script>
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+            <div class="form-group col-sm-2">
+                <input type="text" class="form-control" v-model="q.name" @keyup.enter="query" placeholder="关键词">
+            </div>
+            <a class="btn btn-default" @click="query">查询</a>
+			<a v-if="hasPermission('pm:evalresult:save')" class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			<a v-if="hasPermission('pm:evalresult:update')" class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+			<a v-if="hasPermission('pm:evalresult:delete')" class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+    
+    <div v-show="!showList" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+
+		</form>
+	</div>
+</div>
+
+<script src="../../js/modules/pm/evalresult.js"></script>
+<style>
+
+	/*!
+     * #jqgrid表格的列自动换行
+    !*/
+	.ui-jqgrid tr.jqgrow td {
+		white-space: normal !important;
+		height:auto;
+		vertical-align:text-top;
+		/*padding-top:2px;*/
+		word-break:break-all;
+	}
+
+	/*样式1*/
+	.jqgrow label{
+		margin:10px;
+	}
+	.jqgrow .a-radio{
+		  display: none;
+	  }
+	.jqgrow .b-radio{
+			display: inline-block;
+			border:1px solid #ccc;
+			width:16px;
+			height: 16px;
+			border-radius:100%;
+			vertical-align: middle;
+			margin-right: 5px;
+			position: relative;
+		}
+	.jqgrow .b-radio:before{
+			  content: '';
+			  font-size: 0;
+			  width: 10px;
+			  height: 10px;
+			  background: rgb(143, 188, 238);
+			  position: absolute;
+			  left:50%;
+			  top:50%;
+			  margin-left: -5px;
+			  margin-top: -5px;
+			  border-radius: 2px;
+			  display: none;
+		  }
+	.jqgrow .a-radio:checked~.b-radio:before{
+				display: block;
+			}
+
+
+	/*样式2*/
+
+</style>
+</body>
+</html>

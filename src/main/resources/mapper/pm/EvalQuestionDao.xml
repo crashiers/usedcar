@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cn.jhsoft.usedcar.modules.pm.dao.EvalQuestionDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.cn.jhsoft.usedcar.modules.pm.entity.EvalQuestionEntity" id="evalQuestionMap">
+        <result property="id" column="id"/>
+        <result property="num" column="num"/>
+        <result property="title" column="title"/>
+        <result property="fullScore" column="full_score"/>
+        <result property="evaluateWay" column="evaluate_way"/>
+        <result property="evaluateWayScore" column="evaluate_way_score"/>
+        <result property="category1" column="category1"/>
+        <result property="category2" column="category2"/>
+        <result property="category3" column="category3"/>
+        <result property="businessStage" column="business_stage"/>
+        <result property="tier" column="tier"/>
+        <result property="personnelAbility1" column="personnel_ability1"/>
+        <result property="personnelAbility2" column="personnel_ability2"/>
+        <result property="checkContent" column="check_content"/>
+        <result property="remark" column="remark"/>
+        <result property="createDate" column="create_date"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createDatetime" column="create_datetime"/>
+        <result property="createdip" column="createdip"/>
+        <result property="createAdminid" column="create_adminid"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.EvalQuestionEntity">
+		select * from tbl_eval_question where id = #{value}
+	</select>
+
+    <sql id="queryList_where">
+        <if test="name != null and name.trim() != ''">
+            and (`title` like concat('%',#{name},'%') or `evaluate_way` like concat('%',#{name},'%') or `category1` like concat('%',#{name},'%') or `category2` like concat('%',#{name},'%') or `category3` like concat('%',#{name},'%') or `business_stage` like concat('%',#{name},'%') or `tier` like concat('%',#{name},'%'))
+        </if>
+    </sql>
+
+	<select id="queryList" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.EvalQuestionEntity">
+		select * from tbl_eval_question
+        <where>
+            <include refid="queryList_where"></include>
+        </where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from tbl_eval_question
+        <where>
+            <include refid="queryList_where"></include>
+        </where>
+	</select>
+	 
+	<insert id="save" parameterType="com.cn.jhsoft.usedcar.modules.pm.entity.EvalQuestionEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into tbl_eval_question
+		(
+			`num`, 
+			`title`, 
+			`full_score`, 
+			`evaluate_way`, 
+			`evaluate_way_score`, 
+			`category1`, 
+			`category2`, 
+			`category3`, 
+			`business_stage`, 
+			`tier`, 
+			`personnel_ability1`, 
+			`personnel_ability2`, 
+			`check_content`, 
+			`remark`, 
+			`create_date`, 
+			`create_time`, 
+			`create_datetime`, 
+			`createdip`, 
+			`create_adminid`
+		)
+		values
+		(
+			#{num}, 
+			#{title}, 
+			#{fullScore}, 
+			#{evaluateWay}, 
+			#{evaluateWayScore}, 
+			#{category1}, 
+			#{category2}, 
+			#{category3}, 
+			#{businessStage}, 
+			#{tier}, 
+			#{personnelAbility1}, 
+			#{personnelAbility2}, 
+			#{checkContent}, 
+			#{remark}, 
+			#{createDate}, 
+			#{createTime}, 
+			#{createDatetime}, 
+			#{createdip}, 
+			#{createAdminid}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.cn.jhsoft.usedcar.modules.pm.entity.EvalQuestionEntity">
+		update tbl_eval_question 
+		<set>
+			<if test="num != null">`num` = #{num}, </if>
+			<if test="title != null">`title` = #{title}, </if>
+			<if test="fullScore != null">`full_score` = #{fullScore}, </if>
+			<if test="evaluateWay != null">`evaluate_way` = #{evaluateWay}, </if>
+			<if test="evaluateWayScore != null">`evaluate_way_score` = #{evaluateWayScore}, </if>
+			<if test="category1 != null">`category1` = #{category1}, </if>
+			<if test="category2 != null">`category2` = #{category2}, </if>
+			<if test="category3 != null">`category3` = #{category3}, </if>
+			<if test="businessStage != null">`business_stage` = #{businessStage}, </if>
+			<if test="tier != null">`tier` = #{tier}, </if>
+			<if test="personnelAbility1 != null">`personnel_ability1` = #{personnelAbility1}, </if>
+			<if test="personnelAbility2 != null">`personnel_ability2` = #{personnelAbility2}, </if>
+			<if test="checkContent != null">`check_content` = #{checkContent}, </if>
+			<if test="remark != null">`remark` = #{remark}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}, </if>
+			<if test="createTime != null">`create_time` = #{createTime}, </if>
+			<if test="createDatetime != null">`create_datetime` = #{createDatetime}, </if>
+			<if test="createdip != null">`createdip` = #{createdip}, </if>
+			<if test="createAdminid != null">`create_adminid` = #{createAdminid}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from tbl_eval_question where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from tbl_eval_question where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<delete id="deleteAll">
+		delete from tbl_eval_question
+	</delete>
+
+</mapper>
