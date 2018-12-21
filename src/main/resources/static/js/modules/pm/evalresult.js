@@ -18,7 +18,7 @@ $(function () {
                     str += '<input type="radio" name="answer_'+row.num+'" class="a-radio"value="'+answerList[i]+'">';
                     str += '<span class="b-radio"></span>'+answerList[i];
                     str += '</label>';
-                    
+
                     // 样式2
                     // str += '<label for="man" class="radio">';
                     // str += '<span class="radio-bg"></span>';
