@@ -82,13 +82,13 @@ public class EvalResultController extends AbstractController {
 	 */
 	@RequestMapping("/save")
 	@RequiresPermissions("pm:evalstage:used")
-	public R save(Long rn,
+	public R save(Integer rn,
 				  String an){
 
 		if (rn == null || rn <= 0){
 			return R.error();
 		}
-		EvalQuestionEntity evalQuestion = evalQuestionService.queryObject(rn);
+		EvalQuestionEntity evalQuestion = evalQuestionService.queryObjectByNum(rn);
 		if (evalQuestion == null){
 			return R.error();
 		}
@@ -180,7 +180,7 @@ public class EvalResultController extends AbstractController {
 			evalResultService.update(entity);
 
 			// 按类别查分
-			evalQuestionEntity = evalQuestionService.queryObject(Long.valueOf(entity.getQuestionNum()));
+			evalQuestionEntity = evalQuestionService.queryObjectByNum(entity.getQuestionNum());
 			if (evalQuestionEntity == null){
 				continue;
 			}

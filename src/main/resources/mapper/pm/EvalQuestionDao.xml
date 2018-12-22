@@ -28,6 +28,10 @@
     </resultMap>
 
 	<select id="queryObject" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.EvalQuestionEntity">
+		select * from tbl_eval_question where id = #{value}
+	</select>
+
+	<select id="queryObjectByNum" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.EvalQuestionEntity">
 		select * from tbl_eval_question where num = #{value}
 	</select>
 

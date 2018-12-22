@@ -88,7 +88,7 @@ public class EvalQuestionController extends AbstractController {
 	@RequiresPermissions("pm:evalquestion:info")
 	public R info(@PathVariable("id") Long id){
 		EvalQuestionEntity evalQuestion = evalQuestionService.queryObject(id);
-		
+
 		return R.ok().put("evalQuestion", evalQuestion);
 	}
 	

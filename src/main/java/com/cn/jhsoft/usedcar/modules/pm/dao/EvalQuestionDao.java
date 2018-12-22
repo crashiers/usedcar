@@ -26,5 +26,7 @@ public interface EvalQuestionDao extends BaseDao<EvalQuestionEntity> {
     List<EvalQuestionEntity> queryScoreListGroup(Map<String, Object> map);
 
     List<EvalQuestionEntity> queryScoreList2Group(Map<String, Object> map);
+
+    EvalQuestionEntity queryObjectByNum(Integer num);
 	
 }

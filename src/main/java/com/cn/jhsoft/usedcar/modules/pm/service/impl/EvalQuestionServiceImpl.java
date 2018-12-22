@@ -77,4 +77,9 @@ public class EvalQuestionServiceImpl implements EvalQuestionService {
 		return evalQuestionDao.queryScoreList2Group(map);
 	}
 
+	@Override
+	public EvalQuestionEntity queryObjectByNum(Integer num) {
+		return evalQuestionDao.queryObjectByNum(num);
+	}
+
 }

@@ -37,4 +37,6 @@ public interface EvalQuestionService {
 	List<EvalQuestionEntity> queryScoreListGroup(Map<String, Object> map);
 
 	List<EvalQuestionEntity> queryScoreList2Group(Map<String, Object> map);
+
+	EvalQuestionEntity queryObjectByNum(Integer num);
 }

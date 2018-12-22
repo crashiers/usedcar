@@ -95,7 +95,6 @@ public class BasicDataController extends AbstractController {
 	public List<BasicDataEntityCus> list2(@PathVariable("ename") String ename){
 		List<Long> ids = basicDataService.queryBasicDataIdListByEname(ename);
 		Map<String, Object> evalMap = new HashMap<>();
-		evalMap.put("createAdminid", getUserId());
 
 		for (Long id : ids) {
 			Map<String, Object> map = new HashMap<>();
@@ -107,6 +106,8 @@ public class BasicDataController extends AbstractController {
 				BeanUtils.copyProperties(entity, bdCus);
 
 				// 题目数量
+				evalMap.clear();
+				evalMap.put("createAdminid", getUserId());
 				evalMap.put("type1", entity.getId());
 				bdCus.setAllQuestionSum(evalQuestionService.queryTotal2(evalMap));
 				// 已答数量
