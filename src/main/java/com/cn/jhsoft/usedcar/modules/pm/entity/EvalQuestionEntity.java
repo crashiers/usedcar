@@ -115,6 +115,11 @@ public class EvalQuestionEntity implements Serializable {
      */
 	private Long createAdminid;
 
+	/**
+	 * 扩充字段，答案，联合查询时用
+	 */
+	private String answer;
+
 
 	/**
 	 * 设置：编号
@@ -416,4 +421,11 @@ public class EvalQuestionEntity implements Serializable {
 		return createAdminid;
 	}
 
+	public String getAnswer() {
+		return answer;
+	}
+
+	public void setAnswer(String answer) {
+		this.answer = answer;
+	}
 }

@@ -61,6 +61,24 @@ public class EvalQuestionController extends AbstractController {
 		
 		return R.ok().put("page", pageUtil);
 	}
+
+	/**
+	 * 列表
+	 */
+	@RequestMapping("/list2")
+	@RequiresPermissions(value={"pm:evalquestion:list", "pm:evalstage:list"},logical= Logical.OR)
+	public R list2(@RequestParam Map<String, Object> params){
+		//查询列表数据
+		params.put("createAdminid", getUserId());
+		Query query = new Query(params);
+
+		List<EvalQuestionEntity> evalQuestionList = evalQuestionService.queryList2(query);
+		int total = evalQuestionService.queryTotal2(query);
+
+		PageUtils pageUtil = new PageUtils(evalQuestionList, total, query.getLimit(), query.getPage());
+
+		return R.ok().put("page", pageUtil);
+	}
 	
 	
 	/**

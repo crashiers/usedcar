@@ -17,6 +17,10 @@ public interface EvalQuestionService {
 	EvalQuestionEntity queryObject(Long id);
 	
 	List<EvalQuestionEntity> queryList(Map<String, Object> map);
+
+	List<EvalQuestionEntity> queryList2(Map<String, Object> map);
+
+	int queryTotal2(Map<String, Object> map);
 	
 	int queryTotal(Map<String, Object> map);
 	
@@ -29,4 +33,8 @@ public interface EvalQuestionService {
 	void deleteBatch(Long[] ids);
 
 	void deleteAll();
+
+	List<EvalQuestionEntity> queryScoreListGroup(Map<String, Object> map);
+
+	List<EvalQuestionEntity> queryScoreList2Group(Map<String, Object> map);
 }

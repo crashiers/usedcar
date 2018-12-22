@@ -1,11 +1,11 @@
 package com.cn.jhsoft.usedcar.modules.pm.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Date;
+import java.util.*;
 
 import com.cn.jhsoft.usedcar.modules.api.annotation.AuthIgnore;
+import com.cn.jhsoft.usedcar.modules.pm.service.EvalQuestionService;
+import com.cn.jhsoft.usedcar.modules.pm.service.EvalResultService;
+import com.cn.jhsoft.usedcar.modules.pm.vo.BasicDataEntityCus;
 import com.cn.jhsoft.usedcar.modules.sys.controller.AbstractController;
 import com.cn.jhsoft.usedcar.common.utils.R;
 import com.cn.jhsoft.usedcar.common.validator.ValidatorUtils;
@@ -14,6 +14,7 @@ import com.cn.jhsoft.usedcar.common.validator.group.UpdateGroup;
 import com.cn.jhsoft.usedcar.modules.pm.entity.BasicDataEntity;
 import com.cn.jhsoft.usedcar.modules.pm.service.BasicDataService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,6 +36,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class BasicDataController extends AbstractController {
 	@Autowired
 	private BasicDataService basicDataService;
+	@Autowired
+	private EvalResultService evalResultService;
+	@Autowired
+	private EvalQuestionService evalQuestionService;
 	
 	/**
 	 * 列表
@@ -77,6 +82,76 @@ public class BasicDataController extends AbstractController {
 		map.put("parentId", parentId);
 		List<BasicDataEntity> basicDataList = basicDataService.queryList(map);
 		return basicDataList;
+	}
+
+
+
+
+	/**
+	 * 根据标识得到儿子
+	 */
+	@RequestMapping("/list2/{ename}")
+	@AuthIgnore
+	public List<BasicDataEntityCus> list2(@PathVariable("ename") String ename){
+		List<Long> ids = basicDataService.queryBasicDataIdListByEname(ename);
+		Map<String, Object> evalMap = new HashMap<>();
+		evalMap.put("createAdminid", getUserId());
+
+		for (Long id : ids) {
+			Map<String, Object> map = new HashMap<>();
+			map.put("parentId", id);
+			List<BasicDataEntityCus> basicDataCusList = new LinkedList<>();
+			List<BasicDataEntity> basicDataList = basicDataService.queryList(map);
+			for (BasicDataEntity entity : basicDataList){
+				BasicDataEntityCus bdCus = new BasicDataEntityCus();
+				BeanUtils.copyProperties(entity, bdCus);
+
+				// 题目数量
+				evalMap.put("type1", entity.getId());
+				bdCus.setAllQuestionSum(evalQuestionService.queryTotal2(evalMap));
+				// 已答数量
+				evalMap.put("type1name", entity.getName());
+				bdCus.setAllUnAnswerSum(bdCus.getAllQuestionSum() - evalResultService.queryTotal2(evalMap));
+
+
+				basicDataCusList.add(bdCus);
+			}
+			return basicDataCusList;
+		}
+
+		return null;
+	}
+
+
+	/**
+	 * 根据父id得到儿子
+	 */
+	@RequestMapping("/list2/getchild/{parentId}/leavel/{leavel}")
+	@AuthIgnore
+	public List<BasicDataEntityCus> list2(@PathVariable("parentId") int parentId, @PathVariable("leavel") int leavel){
+		Map<String, Object> map = new HashMap<>();
+		map.put("parentId", parentId);
+		Map<String, Object> evalMap = new HashMap<>();
+		List<BasicDataEntity> basicDataList = basicDataService.queryList(map);
+		List<BasicDataEntityCus> basicDataCusList = new LinkedList<>();
+		for (BasicDataEntity entity : basicDataList){
+			evalMap.clear();
+			BasicDataEntityCus bdCus = new BasicDataEntityCus();
+			BeanUtils.copyProperties(entity, bdCus);
+
+			// 题目数量
+			evalMap.put("createAdminid", getUserId());
+			evalMap.put("type"+leavel, entity.getId());
+			bdCus.setAllQuestionSum(evalQuestionService.queryTotal2(evalMap));
+			// 已答数量
+			evalMap.put("type"+leavel+"name", entity.getName());
+			bdCus.setAllUnAnswerSum(bdCus.getAllQuestionSum() - evalResultService.queryTotal2(evalMap));
+
+
+			basicDataCusList.add(bdCus);
+		}
+
+		return basicDataCusList;
 	}
 
 	/**

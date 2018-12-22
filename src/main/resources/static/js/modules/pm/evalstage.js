@@ -7,7 +7,9 @@ if (hasPermission('pm:evalstage:manager')){
             datatype: "json",
             colModel: [
                 { label: 'id', name: 'id', index: 'id', width: 35, key: true, hidden: true },
-                { label: '评测记录', name: 'stageNum', index: 'stage_num', width: 60 },
+                { label: '评测记录', name: 'stageNum', index: 'stage_num', width: 60, formatter: function(value, options, row){
+                    return '<a href="/report?n='+row.stageNum+'&token='+localStorage.getItem("token")+'" target="_blank">'+value+'</a>';
+                }},
                 { label: '业务规划分', name: 'score1', index: 'score1', width: 40 },
                 { label: '业务运营分', name: 'score2', index: 'score2', width: 40 },
                 { label: '业务推广分', name: 'score3', index: 'score3', width: 40 },
@@ -56,7 +58,9 @@ else
 			datatype: "json",
 			colModel: [
 				{ label: 'id', name: 'id', index: 'id', width: 35, key: true, hidden: true },
-				{ label: '评测记录', name: 'stageNum', index: 'stage_num', width: 60 },
+                { label: '评测记录', name: 'stageNum', index: 'stage_num', width: 60, formatter: function(value, options, row){
+                    return '<a href="/report?n='+row.stageNum+'&token='+localStorage.getItem("token")+'" target="_blank">'+value+'</a>';
+                }},
 				{ label: '业务规划分', name: 'score1', index: 'score1', width: 40 },
 				{ label: '业务运营分', name: 'score2', index: 'score2', width: 40 },
 				{ label: '业务推广分', name: 'score3', index: 'score3', width: 40 },

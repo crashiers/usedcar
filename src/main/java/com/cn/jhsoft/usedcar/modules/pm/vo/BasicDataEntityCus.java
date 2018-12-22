@@ -32,6 +32,16 @@ public class BasicDataEntityCus extends BasicDataEntity {
      */
     private String mainImage;
 
+    /**
+     * 总题数
+     */
+    private Integer allQuestionSum;
+
+    /**
+     * 未答数
+     */
+    private Integer allUnAnswerSum;
+
 
 
     public List<BasicDataEntityCus> getChildLists() {
@@ -66,5 +76,21 @@ public class BasicDataEntityCus extends BasicDataEntity {
 
     public void setMainImage(String mainImage) {
         this.mainImage = mainImage;
+    }
+
+    public Integer getAllQuestionSum() {
+        return allQuestionSum;
+    }
+
+    public void setAllQuestionSum(Integer allQuestionSum) {
+        this.allQuestionSum = allQuestionSum;
+    }
+
+    public Integer getAllUnAnswerSum() {
+        return allUnAnswerSum;
+    }
+
+    public void setAllUnAnswerSum(Integer allUnAnswerSum) {
+        this.allUnAnswerSum = allUnAnswerSum;
     }
 }

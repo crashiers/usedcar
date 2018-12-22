@@ -26,6 +26,10 @@
 		select * from tbl_eval_stage where id = #{value}
 	</select>
 
+	<select id="queryObjectByNum" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.EvalStageEntity">
+		select * from tbl_eval_stage where stage_num = #{value}
+	</select>
+
     <sql id="queryList_where">
         <if test="name != null and name.trim() != ''">
             and (`stage_num` like concat('%',#{name},'%') or `create_admin` like concat('%',#{name},'%'))
@@ -75,7 +79,7 @@
 			`score9`, 
 			`create_date`, 
 			`create_datetime`, 
-			`create_adminid`
+			`create_adminid`,
 			`create_admin`
 		)
 		values
@@ -92,7 +96,7 @@
 			#{score9}, 
 			#{createDate}, 
 			#{createDatetime}, 
-			#{createAdminid}
+			#{createAdminid},
 			#{createAdmin}
 		)
 	</insert>
@@ -112,7 +116,7 @@
 			<if test="score9 != null">`score9` = #{score9}, </if>
 			<if test="createDate != null">`create_date` = #{createDate}, </if>
 			<if test="createDatetime != null">`create_datetime` = #{createDatetime}, </if>
-			<if test="createAdminid != null">`create_adminid` = #{createAdminid}</if>
+			<if test="createAdminid != null">`create_adminid` = #{createAdminid},</if>
 			<if test="createAdmin != null">`create_admin` = #{createAdmin}</if>
 		</set>
 		where id = #{id}

@@ -27,4 +27,8 @@ public interface EvalResultService {
 	void delete(Long id);
 	
 	void deleteBatch(Long[] ids);
+
+	EvalResultEntity queryObjectByRn(Map<String, Object> map);
+
+	int queryTotal2(Map<String, Object> map);
 }

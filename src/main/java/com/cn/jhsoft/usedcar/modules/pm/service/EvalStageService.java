@@ -27,4 +27,6 @@ public interface EvalStageService {
 	void delete(Long id);
 	
 	void deleteBatch(Long[] ids);
+
+	EvalStageEntity queryObjectByNum(String num);
 }

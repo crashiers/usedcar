@@ -45,6 +45,12 @@ public class EvalResultEntity implements Serializable {
      */
 	private Integer fullScore;
 
+	/**
+	 * 答案对应分
+
+	 */
+	private Float answerScore;
+
     /**
      * 得分
      */
@@ -256,4 +262,11 @@ public class EvalResultEntity implements Serializable {
 		return createAdminid;
 	}
 
+	public Float getAnswerScore() {
+		return answerScore;
+	}
+
+	public void setAnswerScore(Float answerScore) {
+		this.answerScore = answerScore;
+	}
 }

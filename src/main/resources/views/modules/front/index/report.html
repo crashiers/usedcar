@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head th:include="modules/front/header::header" />
+
+<body class="met-navfixed" style="padding-top: 0px;">
+
+<script src="/front/js/metinfo.min.js"></script>
+<nav class="navbar navbar-default met-nav navbar-fixed-top" role="navigation" style="display:none;"></nav>
+<div class="met-position  pattern-show" style="display:none;"></div>
+
+<section class="met-shownews animsition" style="margin-top: 0px; padding-top: 0px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 met-shownews-body" th:if="${obj} != null">
+                <div class="row">
+                    <div class="met-shownews-header">
+                        <h1 th:text="'二手车业务测评结果分析 - ' + ${obj.stageNum}"></h1>
+                        <div class="info">
+                            <span th:text="${obj.createDatetime}"></span>
+                            <!--<span><i class="icon wb-eye margin-right-5" aria-hidden="true"></i></span>-->
+                        </div>
+                    </div>
+                    <div class="met-editor lazyload clearfix" style="font-size:12px;">
+
+                            <div class="col-md-3">
+                                <table>
+                                    <tr>
+                                        <td><b>项目</b></td>
+                                        <td><b>满分</b></td>
+                                        <td><b>得分</b></td>
+                                    </tr>
+                                    <tr th:replace="modules/front/plug::thend(thisObj=${category1_1})">
+                                    </tr>
+                                    <tr th:replace="modules/front/plug::thend(thisObj=${category1_2})">
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-md-3">
+                                <table>
+                                    <tr>
+                                        <td><b>项目</b></td>
+                                        <td><b>满分</b></td>
+                                        <td><b>得分</b></td>
+                                    </tr>
+                                    <tr th:replace="modules/front/plug::thend(thisObj=${category1_3})">
+                                    </tr>
+                                    <tr th:replace="modules/front/plug::thend(thisObj=${category1_4})">
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-md-6" id="div_radar1" style="height:220px;">
+
+                            </div>
+
+                    </div>
+
+
+                    <!-- 4大一级类对应的二级类 图和表格展示 -->
+                    <div class="met-editor lazyload clearfix divtwo" style="padding-bottom: 15px; padding-top:0px;">
+
+                        <!-- #d9534f,  #337ab7,  #5cb85c-->
+                        <div class="col-md-3" style="background-color: #f0ad4e; height:630px;">
+                            <div class="tit">业务规划</div>
+
+                            <div id="div_radar2" class="div_chars" style="height:280px;padding:10px">
+                            </div>
+
+                            <table th:replace="modules/front/plug::category2table(category2Lists=${category20Lists})">
+                            </table>
+                        </div>
+
+                        <div class="col-md-3" style="background-color: #ab78ba; height:630px;">
+                            <div class="tit">业务运营</div>
+
+                            <div id="div_radar3" class="div_chars" style="height:280px;padding:10px">
+                            </div>
+
+                            <table th:replace="modules/front/plug::category2table(category2Lists=${category21Lists})">
+                            </table>
+                        </div>
+
+                        <div class="col-md-3" style="background-color: #f8a761; height:630px;">
+                            <div class="tit">业务推广</div>
+
+                            <div id="div_radar4" class="div_chars" style="height:280px;padding:10px">
+                            </div>
+
+                            <table th:replace="modules/front/plug::category2table(category2Lists=${category22Lists})">
+                            </table>
+                        </div>
+
+                        <div class="col-md-3" style="background-color: #5cb85c; height:630px;">
+                            <div class="tit">业务执行</div>
+
+                            <div id="div_radar5" class="div_chars" style="height:280px;padding:10px">
+                            </div>
+
+                            <table th:replace="modules/front/plug::category2table(category2Lists=${category23Lists})">
+                            </table>
+                        </div>
+
+                    </div>
+
+
+
+                    <!--中间置换和零售对应的 三级分类 图和表格展示-->
+                    <div class="met-editor lazyload clearfix divtwo" style="padding-top: 0px;padding-bottom: 15px;">
+
+                        <!-- #d9534f,  #337ab7,  #5cb85c-->
+                        <div class="col-md-6" style="background-color: #5bc0de; height:420px;padding: 0px;">
+                            <div class="tit">置换流程</div>
+                            <div>
+                                <div class="col-md-6" style="padding-right: 5px;">
+                                    <table style="margin-top: 0px;" th:replace="modules/front/plug::category3table(category3Lists=${category30Lists})">
+                                    </table>
+                                </div>
+                                <div class="col-md-6" style="padding-left: 5px;">
+                                    <div id="div_radar6" class="div_chars" style="height:280px;padding:10px">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--#337ab7-->
+                        <div class="col-md-6" style="background-color: #dcac6c; height:420px;padding: 0px;">
+                            <div class="tit">零售流程</div>
+                            <div>
+                                <div class="col-md-6" style="padding-right: 5px;">
+                                    <table style="margin-top: 0px;" th:replace="modules/front/plug::category3table(category3Lists=${category31Lists})">
+                                    </table>
+                                </div>
+                                <div class="col-md-6" style="padding-left: 5px;">
+                                    <div id="div_radar7" class="div_chars" style="height:280px;padding:10px">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+                    <!--最底下三块管理层、运营层、执行层 table -->
+                    <div class="met-editor lazyload clearfix divtwo" style="padding-top: 0px;">
+                        <div class="tit" style="color:#000;text-align:left;font-size: 18px;padding: 0px;">管理层</div>
+                        <div class="col-md-12" style="padding: 0px;">
+                            <div th:each="listMapData : ${category30Sets}">
+                                <div class="col-md-3" style="padding-left: 0px;" th:each="entry : ${listMapData}">
+                                    <div class="tit" style="padding: 0px;background: #5cb85c;font-size:14px;" th:text="${entry.key}"></div>
+                                    <table th:replace="modules/front/plug::category2table(category2Lists=${entry.value})">
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tit" style="color:#000;text-align:left;font-size: 18px;padding: 0px;">运营层</div>
+                        <div class="col-md-12" style="padding: 0px;">
+                            <div th:each="listMapData : ${category31Sets}">
+                                <div class="col-md-3" style="padding-left: 0px;" th:each="entry : ${listMapData}">
+                                    <div class="tit" style="padding: 0px;background: #5cb85c;font-size:14px;" th:text="${entry.key}"></div>
+                                    <table th:replace="modules/front/plug::category2table(category2Lists=${entry.value})">
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tit" style="color:#000;text-align:left;font-size: 18px;padding: 0px;">执行层</div>
+                        <div class="col-md-12" style="padding: 0px;">
+                            <div th:each="listMapData : ${category32Sets}">
+                                <div class="col-md-3" style="padding-left: 0px;" th:each="entry : ${listMapData}">
+                                    <div class="tit" style="padding: 0px;background: #5cb85c;font-size:14px;" th:text="${entry.key}"></div>
+                                    <table th:replace="modules/front/plug::category2table(category2Lists=${entry.value})">
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!--echarts-->
+<script src="../../../plugins/echarts/echarts.min.js"></script>
+<script src="../../../js/modules/front/echars_fun.js"></script>
+<footer th:replace="modules/front/footer::footer"></footer>
+<div th:replace="modules/front/footer::footer_button"></div>
+<script>
+    getRadar('div_radar1');
+    getRadar('div_radar2');
+    getRadar('div_radar3');
+    getRadar('div_radar4');
+    getRadar('div_radar5');
+    getRadar('div_radar6');
+    getRadar('div_radar7');
+
+
+</script>
+
+<style>
+    .tit {
+        text-align: center;
+        padding: 10px 0;
+        font-size: 15px;
+        font-weight: bold;
+        color: #fff;
+    }
+    .divtwo {
+        font-size:12px;
+    }
+    .divtwo .div_chars{
+        background-color: #fff;
+    }
+    .divtwo table{
+        background-color: #fff;
+        margin-top:5px;
+    }
+
+    table tr td {text-align: center;}
+</style>
+</body>
+</html>

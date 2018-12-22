@@ -22,19 +22,53 @@
 <body>
 <div id="rrapp" v-cloak>
 	<div v-show="showList">
+		<!--按类别查询-->
+		<div class="grid-btn" style="margin-top: 22px;">
+			<!--<a v-bind:class="{'btn':true, 'btn-primary': null == q.type1, 'btn-default': null != q.type1 }" style="border-radius:0px;" @click="clearOneType()">全部一级栏目</a>-->
+			一级：
+			<!-- 一级类别 -->
+			<span v-for="data in menu.oneDatas">
+				<a class="picture" v-bind:class="{'btn':true, 'btn-primary': data.id == q.type1, 'btn-default': data.id != q.type1 }" style="border-radius:1px;" @click="getChildMenuData(data.id, 2)">{{data.name}}</a>
+				<span class="badge" v-if="data.allUnAnswerSum>0">{{data.allUnAnswerSum}}</span>
+			</span>
+		</div>
+		<div class="grid-btn" v-if="menu.twoDatas != null" style="margin-top: 22px;">
+			<!--<a v-bind:class="{'btn':true, 'btn-primary': null == q.type2, 'btn-default': null != q.type2 }" style="border-radius:0px;" @click="clearTwoType()">全部二级栏目</a>-->
+			二级：
+			<!-- 二级类别 -->
+			<span v-for="data in menu.twoDatas">
+				<a v-bind:class="{'btn':true, 'btn-primary': data.id == q.type2, 'btn-default': data.id != q.type2 }" style="border-radius:1px;" @click="getChildMenuData(data.id, 3)">{{data.name}}</a>
+				<span class="badge" v-if="data.allUnAnswerSum>0">{{data.allUnAnswerSum}}</span>
+			</span>
+		</div>
+		<div class="grid-btn" v-if="menu.threeDatas" style="margin-top: 22px;">
+			<!--<a v-bind:class="{'btn':true, 'btn-primary': null == q.type3, 'btn-default': null != q.type3 }" style="border-radius:0px;" @click="clearTType()">全部三级栏目</a>-->
+			三级：
+			<!-- 三级类别 -->
+			<span v-for="data in menu.threeDatas">
+				<a v-bind:class="{'btn':true, 'btn-primary': data.id == q.type3, 'btn-default': data.id != q.type3 }" style="border-radius:1px;" @click="getChildMenuData(data.id, 4)">{{data.name}}</a>
+				<span class="badge" v-if="data.allUnAnswerSum>0">{{data.allUnAnswerSum}}</span>
+			</span>
+		</div>
+
+
 		<div class="grid-btn">
-            <div class="form-group col-sm-2">
+            <div class="form-group col-sm-2" style="padding-left: 0px;">
                 <input type="text" class="form-control" v-model="q.name" @keyup.enter="query" placeholder="关键词">
             </div>
             <a class="btn btn-default" @click="query">查询</a>
+			<a class="btn btn-primary" @click="saveOrUpdate"><i class="fa fa-arrow-circle-right"></i>&nbsp;提交评测</a>
 			<a v-if="hasPermission('pm:evalresult:save')" class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
 			<a v-if="hasPermission('pm:evalresult:update')" class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
 			<a v-if="hasPermission('pm:evalresult:delete')" class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
 		</div>
-	    <table id="jqGrid" class="ui-jqgrid-btable ui-common-table table-bordered"></table>
-	    <div id="jqGridPager"></div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager" style="display:none;"></div>
+		<div class="grid-btn" style="padding-top:10px;">
+			<a class="btn btn-primary" @click="saveOrUpdate"><i class="fa fa-arrow-circle-right"></i>&nbsp;提交评测</a>
+		</div>
     </div>
-    
+
     <div v-show="!showList" class="panel panel-default">
 		<div class="panel-heading">{{title}}</div>
 		<form class="form-horizontal">
@@ -55,37 +89,43 @@
 		vertical-align:text-top;
 		/*padding-top:2px;*/
 		word-break:break-all;
+		padding:auto 5px;
+	}
+	.ui-jqgrid .ui-jqgrid-btable tbody tr.jqgrow td{
+		padding-right:5px;
 	}
 
 	/*样式1*/
 	.jqgrow label{
-		margin:10px;
+		margin:8px 15px;
+		cursor: pointer;
 	}
 	.jqgrow .a-radio{
 		  display: none;
+		cursor: pointer;
 	  }
 	.jqgrow .b-radio{
-			display: inline-block;
-			border:1px solid #ccc;
-			width:16px;
-			height: 16px;
-			border-radius:100%;
-			vertical-align: middle;
-			margin-right: 5px;
-			position: relative;
+		display: inline-block;
+		border: 1px solid #3c8dbc;
+		width: 18px;
+		height: 18px;
+		border-radius: 100%;
+		vertical-align: middle;
+		margin-right: 5px;
+		position: relative;
+		cursor: pointer;
 		}
 	.jqgrow .b-radio:before{
 			  content: '';
 			  font-size: 0;
-			  width: 10px;
-			  height: 10px;
-			  background: rgb(143, 188, 238);
+			  width: 14px;
+			  height: 14px;
+				top: 1px;
+				left: 1px;
+			  /*background: rgb(143, 188, 238);*/
+			  background: green;
 			  position: absolute;
-			  left:50%;
-			  top:50%;
-			  margin-left: -5px;
-			  margin-top: -5px;
-			  border-radius: 2px;
+			  border-radius: 100%;
 			  display: none;
 		  }
 	.jqgrow .a-radio:checked~.b-radio:before{
@@ -93,7 +133,32 @@
 			}
 
 
-	/*样式2*/
+	/*jqGrid 行选中不会变颜色*/
+	.table>tbody>tr.success>td, .table>tbody>tr.success>th, .table>tbody>tr>td.success, .table>tbody>tr>th.success, .table>tfoot>tr.success>td, .table>tfoot>tr.success>th, .table>tfoot>tr>td.success, .table>tfoot>tr>th.success, .table>thead>tr.success>td, .table>thead>tr.success>th, .table>thead>tr>td.success, .table>thead>tr>th.success{
+		background-color:#fff;
+	}
+	.table>tbody>tr.active>td, .table>tbody>tr.active>th, .table>tbody>tr>td.active, .table>tbody>tr>th.active, .table>tfoot>tr.active>td, .table>tfoot>tr.active>th, .table>tfoot>tr>td.active, .table>tfoot>tr>th.active, .table>thead>tr.active>td, .table>thead>tr.active>th, .table>thead>tr>td.active, .table>thead>tr>th.active{
+		background-color:#fff;
+	}
+
+	.picture {
+
+	}
+	.badge {
+		padding: 2px 5px;  /* 不需要定义height与width，添加合适的padding使圆圈随字符长短变化而改变 */
+		/*line-height: 20px;*/
+		text-align: center;
+		background-color: red;
+		color: white;
+		font-size: 12px;
+		font-weight: 700;
+		border-radius: 50%;
+		position: relative;
+		bottom: 15px;
+		left: -20px;
+	}
+
+
 
 </style>
 </body>

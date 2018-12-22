@@ -1,6 +1,6 @@
 $(function () {
     $("#jqGrid").jqGrid({
-        url: baseURL + 'pm/evalquestion/list',
+        url: baseURL + 'pm/evalquestion/list?sidx=num&order=asc',
         datatype: "json",
         colModel: [			
 			{ label: 'id', name: 'id', index: 'id', width: 35, key: true, hidden: true },
@@ -21,7 +21,7 @@ $(function () {
         //height: 385,
         rowNum: 50,
 		rowList : [10,30,50],
-        rownumbers: true,
+        rownumbers: false,
         rownumWidth: 25, 
         autowidth:true,
         multiselect: true,
@@ -116,14 +116,23 @@ var vm = new Vue({
                 data: {'token':localStorage.getItem("token")},
                 success: function(r){
                     if(r.code === 0){
-                        alert('操作成功', function(index){
+                        alert('已成功导入', function(index){
                             vm.reload();
                         });
                     }else{
                         alert(r.msg);
                     }
                 },
-                complete:function(r){}
+                complete:function(r){
+                	var _r = JSON.parse(r.responseText);
+                    if(_r.code === 0){
+                        alert('已成功导入', function(index){
+                            vm.reload();
+                        });
+                    }else{
+                        alert(_r.msg);
+                    }
+				}
             });
         },
 		del: function (event) {

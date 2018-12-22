@@ -430,7 +430,7 @@ public class SysUserEntity implements Serializable {
 	 * 获取：公司名
 	 */
 	public String getCompany() {
-		return company;
+		return company == null ? "" : company;
 	}
 
 	/**

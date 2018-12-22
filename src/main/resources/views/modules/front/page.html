@@ -1,0 +1,34 @@
+<div class="hidden-xs">
+    <div class='met_pager'>
+
+        <span class='PreSpan' th:if="${page == 1}">首页</span>
+        <a class='PreA' th:href="@{${pageUrl}+${paramStr}+'1.html'}" th:if="${page != 1}">首页</a>
+
+        <span class='PreSpan' th:if="${page == 1}">上一页</span>
+        <a class='PreA' th:href="@{${pageUrl}+${paramStr}+${page-1}+'.html'}" th:if="${page != 1}">上一页</a>
+
+
+        <!--如果当前显示的第一页不等于 1，说明前面还有页码，用...来代替-->
+        <span th:if="${query.startPage != 1}">...</span>
+
+        <li th:each="pageNo : ${#numbers.sequence(query.startPage, query.endPage)}">
+            <a th:href="@{${pageUrl}+${paramStr}+${pageNo}+'.html'}" th:text="${pageNo}" th:class="${page == pageNo}? 'Ahover' : ''"></a>
+        </li>
+
+        <!--如果当前显示的最后一页不等于总数，说明后面还有页码，用...来代替-->
+        <span th:if="${query.endPage != query.totalPage}">...</span>
+
+        <span class='NextSpan' th:if="${page == query.totalPage}">下一页</span>
+        <a class='NextA' th:href="@{${pageUrl}+${paramStr}+${page+1}+'.html'}" th:if="${page != query.totalPage}">下一页</a>
+
+        <span class='NextSpan' th:if="${page == query.totalPage}">末页</span>
+        <a class='NextA' th:href="@{${pageUrl}+${paramStr}+${#numbers.formatInteger(query.totalPage, 0)}+'.html'}" th:if="${page != query.totalPage}">末页</a>
+
+        <span class='PageText'>转至第</span>
+        <input type='text' id='metPageT' data-pageurl='' value='1' />
+        <input type='button' id='metPageB' value='页' />
+    </div>
+</div>
+<div class="met-page-ajax-body visible-xs-block invisible" data-plugin="appear" data-animate="slide-bottom" data-repeat="false">
+    <button type="button" class="btn btn-default btn-block btn-squared ladda-button" id="met-page-btn" data-style="slide-left" th:attr="data-url=@{${pageUrl}+${paramStr}+${page+1}+'.html'},data-page=${page},data-maxpage=${query.totalPage}"><i class="icon wb-chevron-down margin-right-5" aria-hidden="true"></i>更多</button>
+</div>

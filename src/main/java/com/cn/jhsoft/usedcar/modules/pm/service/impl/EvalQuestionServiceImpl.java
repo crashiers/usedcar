@@ -26,7 +26,17 @@ public class EvalQuestionServiceImpl implements EvalQuestionService {
 	public List<EvalQuestionEntity> queryList(Map<String, Object> map){
 		return evalQuestionDao.queryList(map);
 	}
-	
+
+	@Override
+	public List<EvalQuestionEntity> queryList2(Map<String, Object> map) {
+		return evalQuestionDao.queryList2(map);
+	}
+
+	@Override
+	public int queryTotal2(Map<String, Object> map) {
+		return evalQuestionDao.queryTotal2(map);
+	}
+
 	@Override
 	public int queryTotal(Map<String, Object> map){
 		return evalQuestionDao.queryTotal(map);
@@ -55,6 +65,16 @@ public class EvalQuestionServiceImpl implements EvalQuestionService {
 	@Override
 	public void deleteAll() {
 		evalQuestionDao.deleteAll();
+	}
+
+	@Override
+	public List<EvalQuestionEntity> queryScoreListGroup(Map<String, Object> map) {
+		return evalQuestionDao.queryScoreListGroup(map);
+	}
+
+	@Override
+	public List<EvalQuestionEntity> queryScoreList2Group(Map<String, Object> map) {
+		return evalQuestionDao.queryScoreList2Group(map);
 	}
 
 }

@@ -51,5 +51,15 @@ public class EvalResultServiceImpl implements EvalResultService {
 	public void deleteBatch(Long[] ids){
 		evalResultDao.deleteBatch(ids);
 	}
-	
+
+	@Override
+	public EvalResultEntity queryObjectByRn(Map<String, Object> map) {
+		return evalResultDao.queryObjectByRn(map);
+	}
+
+	@Override
+	public int queryTotal2(Map<String, Object> map) {
+		return evalResultDao.queryTotal2(map);
+	}
+
 }

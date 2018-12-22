@@ -87,7 +87,7 @@ public class ExcelPOIUtils {
         //判断文件是否是excel文件
         if(!fileName.endsWith(xls) && !fileName.endsWith(xlsx)){
             logger.error(fileName + "不是excel文件");
-            throw new IOException(fileName + "不是excel文件");
+            throw new IOException(fileName + "文件格式不正确，请上传xls格式文件。");
         }
     }
     public static Workbook getWorkBook(MultipartFile file) {

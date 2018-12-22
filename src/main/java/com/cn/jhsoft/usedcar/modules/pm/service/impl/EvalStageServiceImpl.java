@@ -51,5 +51,10 @@ public class EvalStageServiceImpl implements EvalStageService {
 	public void deleteBatch(Long[] ids){
 		evalStageDao.deleteBatch(ids);
 	}
-	
+
+	@Override
+	public EvalStageEntity queryObjectByNum(String num) {
+		return evalStageDao.queryObjectByNum(num);
+	}
+
 }
