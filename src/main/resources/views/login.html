@@ -20,7 +20,7 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<body class="hold-transition login-page" style="background:#fff;">
+<body class="hold-transition login-page" id="login-page" style="color: #fff;">
 <div class="login-box" id="rrapp" style="margin-top:7%;" v-cloak>
     <div class="login-logo">
         <b>德普平台</b>
@@ -285,5 +285,14 @@
         }
     });
 </script>
+<style>
+    #login-page{
+        background: url(front/images/bg2.jpeg) no-repeat center center fixed;
+        background-color: #393D49;
+        background-size: 100% 100%;
+        position:relative
+    }
+    .login-logo{color:#fff;}
+</style>
 </body>
 </html>
