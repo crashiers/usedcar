@@ -1,7 +1,8 @@
 <tr th:fragment="thend">
     <td style="line-height: 50px; height:50px;" th:text="${thisObj.category1}"></td>
     <td style="line-height: 50px; height:50px;" th:text="${thisObj.fullScore}"></td>
-    <td style="line-height: 50px; height:50px;" th:text="${thisObj.evaluateWayScore}"></td>
+    <td th:if="${numbersSize == 1}" style="line-height: 50px; height:50px;" th:text="${thisObj.evaluateWayScore}"></td>
+    <td th:if="${numbersSize > 1}" style="line-height: 50px; height:50px;" th:each="i:${#numbers.sequence(1,numbersSize)}" th:text="${i == 1 ? thisObj.evaluateWayScore : (i == 2 ? thisObj.evaluateWay : thisObj.remark)}"></td>
 </tr>
 
 
@@ -9,12 +10,14 @@
     <tr>
         <td><b>项目</b></td>
         <td><b>满分</b></td>
-        <td><b>得分</b></td>
+        <td th:if="${numbersSize == 1}"><b>得分</b></td>
+        <td th:if="${numbersSize > 1}" th:each="i:${#numbers.sequence(1,numbersSize)}"><b th:text="'评测'+${i}"></b></td>
     </tr>
     <tr th:each="data : ${category2Lists}">
         <td th:text="${data.category2}"></td>
         <td th:text="${data.fullScore}"></td>
-        <td th:text="${data.evaluateWayScore}"></td>
+        <td th:if="${numbersSize == 1}" th:text="${data.evaluateWayScore}"></td>
+        <td th:if="${numbersSize > 1}" th:each="i:${#numbers.sequence(1,numbersSize)}" th:text="${i == 1 ? data.evaluateWayScore : (i == 2 ? data.evaluateWay : data.remark)}"></td>
     </tr>
 </table>
 
@@ -23,11 +26,13 @@
     <tr>
         <td><b>项目</b></td>
         <td><b>满分</b></td>
-        <td><b>得分</b></td>
+        <td th:if="${numbersSize == 1}"><b>得分</b></td>
+        <td th:if="${numbersSize > 1}" th:each="i:${#numbers.sequence(1,numbersSize)}"><b th:text="'评测'+${i}"></b></td>
     </tr>
     <tr th:each="data : ${category3Lists}">
         <td th:text="${data.category3}"></td>
         <td th:text="${data.fullScore}"></td>
-        <td th:text="${data.evaluateWayScore}"></td>
+        <td th:if="${numbersSize == 1}" th:text="${data.evaluateWayScore}"></td>
+        <td th:if="${numbersSize > 1}" th:each="i:${#numbers.sequence(1,numbersSize)}" th:text="${i == 1 ? data.evaluateWayScore : (i == 2 ? data.evaluateWay : data.remark)}"></td>
     </tr>
 </table>

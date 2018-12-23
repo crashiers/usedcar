@@ -193,7 +193,7 @@ public class EvalQuestionEntity implements Serializable {
 	 * 获取：评价方式
 	 */
 	public String getEvaluateWay() {
-		return evaluateWay;
+		return (evaluateWay == null || evaluateWay.equals("")) ? "" : evaluateWay;
 	}
 
 	/**
@@ -208,7 +208,7 @@ public class EvalQuestionEntity implements Serializable {
 	 * 获取：评价方式分数百分比
 	 */
 	public String getEvaluateWayScore() {
-		return evaluateWayScore;
+		return (evaluateWayScore == null || evaluateWayScore.equals("")) ? "" : evaluateWayScore;
 	}
 
 	/**
@@ -343,7 +343,7 @@ public class EvalQuestionEntity implements Serializable {
 	 * 获取：备注
 	 */
 	public String getRemark() {
-		return remark;
+		return (remark == null || remark.equals("")) ? "" : remark;
 	}
 
 	/**

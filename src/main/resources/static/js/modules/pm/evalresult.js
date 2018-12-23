@@ -161,6 +161,9 @@ var vm = new Vue({
                 page:page
             }).trigger("reloadGrid");
 		},
+        back: function () {
+            history.go(-1);
+        },
 
         // 下面的所有方法 是用来实现菜单栏目的
         getMenuData: function () {

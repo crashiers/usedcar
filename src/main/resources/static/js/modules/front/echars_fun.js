@@ -324,35 +324,37 @@ function getPointHour(divId, chartsTitle, thisTitles, thisDatas, thisColor) {
 }
 
 // 雷达图
-function getRadar(divId) {
+function getRadar(divId, indicatorArr, dataArr) {
+    indicatorArr = indicatorArr || [];
+    dataArr = dataArr || [];
 
     // 基于准备好的dom，初始化echarts实例
     var myChart = echarts.init(document.getElementById(divId));
-    console.log('123');
 
     option = {
         title: {
             //text: '基础雷达图'
         },
         tooltip: {},
-        legend: {
-            show:false,
-            data: ['预算分配（Allocated Budget）', '实际开销（Actual Spending）']
-        },
+        // legend: {
+        //     show:false,
+        //     data: ['预算分配（Allocated Budget）', '实际开销（Actual Spending）']
+        // },
         radar: {
             name: {
                 textStyle: {
                     color: '#000'
                 }
             },
-            indicator: [
-                { name: '销售销售销售', max: 6500},
-                { name: '管理销售销售', max: 16000},
-                { name: '信息技术销售', max: 30000},
-                { name: '客服销售销售', max: 38000},
-                { name: '研发销售销售', max: 52000},
-                { name: '市场销售销售', max: 25000}
-            ],
+            // indicator: [
+            //     { name: '销售销售销售', max: 6500},
+            //     { name: '管理销售销售', max: 16000},
+            //     { name: '信息技术销售', max: 30000},
+            //     { name: '客服销售销售', max: 38000},
+            //     { name: '研发销售销售', max: 52000},
+            //     { name: '市场销售销售', max: 25000}
+            // ],
+            indicator: indicatorArr,
             radius: 80
         },
         series: [{
@@ -373,45 +375,46 @@ function getRadar(divId) {
                     opacity: 1
                 }
             },
-            data : [
-                {
-                    value : [4300, 10000, 28000, 35000, 50000, 19000],
-                    name : '预算分配（Allocated Budget）',
-
-                    // label: {                    // 单个拐点文本的样式设置
-                    //     normal: {
-                    //         show: true,             // 单个拐点文本的样式设置。[ default: false ]
-                    //         position: 'top',        // 标签的位置。[ default: top ]
-                    //         distance: 5,            // 距离图形元素的距离。当 position 为字符描述值（如 'top'、'insideRight'）时候有效。[ default: 5 ]
-                    //         color: 'rgba(255,0,0,1)',          // 文字的颜色。如果设置为 'auto'，则为视觉映射得到的颜色，如系列色。[ default: "#fff" ]
-                    //         fontSize: 14,           // 文字的字体大小
-                    //         formatter:function(params) {
-                    //             return params.value;
-                    //         }
-                    //     }
-                    // },
-                    // itemStyle: {                // 单个拐点标志的样式设置。
-                    //     normal: {
-                    //         borderColor: 'rgba(255,0,0,1)',       // 拐点的描边颜色。[ default: '#000' ]
-                    //         borderWidth: 3,                        // 拐点的描边宽度，默认不描边。[ default: 0 ]
-                    //     }
-                    // },
-                    // lineStyle: {                // 单项线条样式。
-                    //     normal: {
-                    //         opacity: 0.5            // 图形透明度
-                    //     }
-                    // },
-                    // areaStyle: {                // 单项区域填充样式
-                    //     normal: {
-                    //         color: 'rgba(255,0,0,0.6)'       // 填充的颜色。[ default: "#000" ]
-                    //     }
-                    // }
-                },
-                {
-                    value : [5000, 14000, 28000, 31000, 42000, 21000],
-                    name : '实际开销（Actual Spending）'
-                }
-            ]
+            // data : [
+            //     {
+            //         value : [4300, 10000, 28000, 35000, 50000, 19000],
+            //         name : '预算分配（Allocated Budget）',
+            //
+            //         // label: {                    // 单个拐点文本的样式设置
+            //         //     normal: {
+            //         //         show: true,             // 单个拐点文本的样式设置。[ default: false ]
+            //         //         position: 'top',        // 标签的位置。[ default: top ]
+            //         //         distance: 5,            // 距离图形元素的距离。当 position 为字符描述值（如 'top'、'insideRight'）时候有效。[ default: 5 ]
+            //         //         color: 'rgba(255,0,0,1)',          // 文字的颜色。如果设置为 'auto'，则为视觉映射得到的颜色，如系列色。[ default: "#fff" ]
+            //         //         fontSize: 14,           // 文字的字体大小
+            //         //         formatter:function(params) {
+            //         //             return params.value;
+            //         //         }
+            //         //     }
+            //         // },
+            //         // itemStyle: {                // 单个拐点标志的样式设置。
+            //         //     normal: {
+            //         //         borderColor: 'rgba(255,0,0,1)',       // 拐点的描边颜色。[ default: '#000' ]
+            //         //         borderWidth: 3,                        // 拐点的描边宽度，默认不描边。[ default: 0 ]
+            //         //     }
+            //         // },
+            //         // lineStyle: {                // 单项线条样式。
+            //         //     normal: {
+            //         //         opacity: 0.5            // 图形透明度
+            //         //     }
+            //         // },
+            //         // areaStyle: {                // 单项区域填充样式
+            //         //     normal: {
+            //         //         color: 'rgba(255,0,0,0.6)'       // 填充的颜色。[ default: "#000" ]
+            //         //     }
+            //         // }
+            //     },
+            //     {
+            //         value : [5000, 14000, 28000, 31000, 42000, 21000],
+            //         name : '实际开销（Actual Spending）'
+            //     }
+            // ]
+            data: dataArr
         }]
     };
 

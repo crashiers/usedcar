@@ -15,7 +15,7 @@
             <div class="col-md-12 met-shownews-body" th:if="${obj} != null">
                 <div class="row">
                     <div class="met-shownews-header">
-                        <h1 th:text="'二手车业务测评结果分析 - ' + ${obj.stageNum}"></h1>
+                        <h1 th:text="'二手车业务测评结果分析'"></h1>
                         <div class="info">
                             <span th:text="${obj.createDatetime}"></span>
                             <!--<span><i class="icon wb-eye margin-right-5" aria-hidden="true"></i></span>-->
@@ -23,12 +23,13 @@
                     </div>
                     <div class="met-editor lazyload clearfix" style="font-size:12px;">
 
-                            <div class="col-md-4">
+                            <div class="col-md-4" style="padding-left: 0px;">
                                 <table>
                                     <tr>
                                         <td><b>项目</b></td>
                                         <td><b>满分</b></td>
-                                        <td><b>得分</b></td>
+                                        <td th:if="${numbersSize == 1}"><b>得分</b></td>
+                                        <td th:if="${numbersSize > 1}" th:each="i:${#numbers.sequence(1,numbersSize)}"><b th:text="'评测'+${i}"></b></td>
                                     </tr>
                                     <tr th:replace="modules/front/plug::thend(thisObj=${category1_1})">
                                     </tr>
@@ -41,7 +42,8 @@
                                     <tr>
                                         <td><b>项目</b></td>
                                         <td><b>满分</b></td>
-                                        <td><b>得分</b></td>
+                                        <td th:if="${numbersSize == 1}"><b>得分</b></td>
+                                        <td th:if="${numbersSize > 1}" th:each="i:${#numbers.sequence(1,numbersSize)}"><b th:text="'评测'+${i}"></b></td>
                                     </tr>
                                     <tr th:replace="modules/front/plug::thend(thisObj=${category1_3})">
                                     </tr>
@@ -188,21 +190,49 @@
     </div>
 </section>
 
+
 <!--echarts-->
 <script src="../../../plugins/echarts/echarts.min.js"></script>
 <script src="../../../js/modules/front/echars_fun.js"></script>
 <footer th:replace="modules/front/footer::footer"></footer>
 <div th:replace="modules/front/footer::footer_button"></div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var n = [[${params.n}]];
+    var token = [[${params.token}]];
+
+    function getEcharts() {
+        if (n == "")    return;
+
+        // 去请求数据以生成报表
+        var url = "/echarts?n="+n+"&token="+token;
+        $.ajax({
+            type: 'GET',
+            url: url,
+            contentType: "application/json",
+            success: function(r){
+                if (r.code === 0){
+                    getRadar('div_radar1', r.thisData.resultIndicator1List, r.thisData.resultData1List);
+                    getRadar('div_radar2', r.thisData.resultIndicator20List, r.thisData.resultData20List);
+                    getRadar('div_radar3', r.thisData.resultIndicator21List, r.thisData.resultData21List);
+                    getRadar('div_radar4', r.thisData.resultIndicator22List, r.thisData.resultData22List);
+                    getRadar('div_radar5', r.thisData.resultIndicator23List, r.thisData.resultData23List);
+                    getRadar('div_radar6', r.thisData.resultIndicator30List, r.thisData.resultData30List);
+                    getRadar('div_radar7', r.thisData.resultIndicator31List, r.thisData.resultData31List);
+                }
+
+            }
+        });
+    }
+    /*]]>*/
+
+</script>
 <script>
-    getRadar('div_radar1');
-    getRadar('div_radar2');
-    getRadar('div_radar3');
-    getRadar('div_radar4');
-    getRadar('div_radar5');
-    getRadar('div_radar6');
-    getRadar('div_radar7');
-
-
+    $(document).ready(function($) {
+        //getEcharts();
+    });
+    getEcharts();
 </script>
 
 <style>

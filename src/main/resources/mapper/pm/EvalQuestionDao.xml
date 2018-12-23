@@ -121,9 +121,22 @@
 	<select id="queryScoreListGroup" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.EvalQuestionEntity">
 		select sum(full_score) as full_score,
 		${categoryName},
+
 		(select ROUND(sum(score)) from tbl_eval_result where
 		question_num in (select num from tbl_eval_question where ${categoryName} = a.${categoryName} ${stageAndtierWhere})
 		and stage_num=#{stageNum}) as evaluate_way_score
+
+		<if test="stageNum2 != null and stageNum2.trim() != ''">
+			,(select ROUND(sum(score)) from tbl_eval_result where
+			question_num in (select num from tbl_eval_question where ${categoryName} = a.${categoryName} ${stageAndtierWhere})
+			and stage_num=#{stageNum2}) as evaluate_way
+		</if>
+		<if test="stageNum3 != null and stageNum3.trim() != ''">
+			,(select ROUND(sum(score)) from tbl_eval_result where
+			question_num in (select num from tbl_eval_question where ${categoryName} = a.${categoryName} ${stageAndtierWhere})
+			and stage_num=#{stageNum2}) as remark
+		</if>
+
 		from tbl_eval_question a
 		${searchStr}
 		group by ${categoryName}
@@ -132,8 +145,19 @@
 
 	<select id="queryScoreList2Group" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.EvalQuestionEntity">
 		select category1,category2,sum(full_score) as full_score,
+
 		(select ROUND(sum(score)) from tbl_eval_result where
-			question_num in (select num from tbl_eval_question where category2 = a.category2 and tier=#{tier}) and stage_num=#{stageNum}) as score
+			question_num in (select num from tbl_eval_question where category2 = a.category2 and tier=#{tier}) and stage_num=#{stageNum}) as evaluate_way_score
+
+		<if test="stageNum2 != null and stageNum2.trim() != ''">
+			,(select ROUND(sum(score)) from tbl_eval_result where
+			question_num in (select num from tbl_eval_question where category2 = a.category2 and tier=#{tier}) and stage_num=#{stageNum2}) as evaluate_way
+		</if>
+		<if test="stageNum3 != null and stageNum3.trim() != ''">
+			,(select ROUND(sum(score)) from tbl_eval_result where
+			question_num in (select num from tbl_eval_question where category2 = a.category2 and tier=#{tier}) and stage_num=#{stageNum3}) as remark
+		</if>
+
 		from tbl_eval_question a where tier=#{tier}
 		group by category1,category2
 	</select>

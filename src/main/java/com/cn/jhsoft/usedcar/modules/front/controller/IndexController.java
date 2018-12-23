@@ -1,5 +1,6 @@
 package com.cn.jhsoft.usedcar.modules.front.controller;
 
+import com.cn.jhsoft.usedcar.common.utils.R;
 import com.cn.jhsoft.usedcar.modules.api.annotation.AuthIgnore;
 import com.cn.jhsoft.usedcar.modules.api.annotation.LoginUser;
 import com.cn.jhsoft.usedcar.modules.api.entity.UserEntity;
@@ -15,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -55,24 +58,36 @@ public class IndexController extends AbstractController {
     /**
      * 报表
      */
-    @AuthIgnore
     @GetMapping("/report")
-    public String report(HttpServletRequest request, HttpServletResponse response, Model model) throws IOException {
+    public String report(HttpServletRequest request, Model model) throws IOException {
         // 权限判断
         Subject subject = SecurityUtils.getSubject();
         // 有评测管理权限，能看所有人的
         // subject.isPermitted("pm:evalstage:manager")
+        Set<String> numbers = new LinkedHashSet<>();
 
         if (request.getParameter("n") != null && !"".equals(request.getParameter("n").toString())){
-            EvalStageEntity entity = evalStageService.queryObjectByNum(request.getParameter("n").toString());
-            if (entity != null){
-                // 权限判断，自己的，或者管理者
-                if (entity.getCreateAdminid() == getUserId() || subject.isPermitted("pm:evalstage:manager")){
-                    model.addAttribute("obj", entity);
-                    showPage(model, entity);
+            String[] nArray = request.getParameter("n").toString().split(",");
+            EvalStageEntity entity;
+            for(int i=0; i<nArray.length; i++){
+                entity = evalStageService.queryObjectByNum(nArray[i]);
+                // 存在 而且 有权限
+                if (entity != null && (entity.getCreateAdminid() == getUserId() || subject.isPermitted("pm:evalstage:manager"))){
+                    numbers.add(entity.getStageNum());
+                    if (i==0)
+                        model.addAttribute("obj", entity);
                 }
             }
+
+            if (numbers.size() > 0)
+                showPage(model, numbers);
         }
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("n", request.getParameter("n"));
+        params.put("token", request.getParameter("token"));
+        model.addAttribute("params", params);
+        model.addAttribute("numbersSize", numbers.size());
 
         return "modules/front/index/report";
     }
@@ -80,18 +95,22 @@ public class IndexController extends AbstractController {
     /**
      * 页面数据封装
      * @param model
-     * @param entity
+     * @param stageNums
      */
-    private void showPage(Model model, EvalStageEntity entity){
+    private void showPage(Model model, Set<String> stageNums){
+
         Map<String, Object> params = new HashMap<>();
-        params.put("stageNum", entity.getStageNum());
+        int j = 1;
+        for (String num : stageNums){
+            params.put("stageNum" + ( j==1 ? "" : j ), num);
+            j++;
+        }
         params.put("categoryName", "category1");
         String[] categorys = new String[]{"业务规划", "业务运营", "业务推广", "业务执行"};
 
         List<EvalQuestionEntity> category1Lists = evalQuestionService.queryScoreListGroup(params);
         for(EvalQuestionEntity category1Entity : category1Lists){
             //category1Entity.setEvaluateWayScore(Math.round(Float.parseFloat(category1Entity.getEvaluateWayScore()))+"");
-
             // 最上方表格
             if (category1Entity.getCategory1().equals(categorys[0])) {
                 model.addAttribute("category1_1", category1Entity);
@@ -106,28 +125,31 @@ public class IndexController extends AbstractController {
 
 
         // 二级分类汇总
-        params.put("stageNum", entity.getStageNum());
         params.put("categoryName", "category2");
         for (int i=0; i<categorys.length; i++) {
             params.put("searchStr", " where category1='"+categorys[i]+"'");
             List<EvalQuestionEntity> lists = evalQuestionService.queryScoreListGroup(params);
             EvalQuestionEntity _entity = new EvalQuestionEntity();
             int _fullScore = 0;
-            int _myScore = 0;
+            int _myScore, _myScore2, _myScore3;
+            _myScore = _myScore2 = _myScore3 = 0;
             for (EvalQuestionEntity evalQuestionEntity : lists) {
                 _fullScore += evalQuestionEntity.getFullScore();
-                _myScore += Integer.valueOf(evalQuestionEntity.getEvaluateWayScore());
+                _myScore += evalQuestionEntity.getEvaluateWayScore() == "" ? 0 : Integer.valueOf(evalQuestionEntity.getEvaluateWayScore());
+                _myScore2 += evalQuestionEntity.getEvaluateWay() == "" ? 0 : Integer.valueOf(evalQuestionEntity.getEvaluateWay());
+                _myScore3 += evalQuestionEntity.getRemark() == "" ? 0 : Integer.valueOf(evalQuestionEntity.getRemark());
             }
             _entity.setCategory2("总分");
             _entity.setFullScore(_fullScore);
             _entity.setEvaluateWayScore(_myScore+"");
+            _entity.setEvaluateWay(_myScore2+"");
+            _entity.setRemark(_myScore3+"");
             lists.add(lists.size(), _entity);
             model.addAttribute("category2"+i+"Lists", lists);
         }
 
         // 置换与零售
         String[] businessStages = new String[]{"置换", "零售"};
-        params.put("stageNum", entity.getStageNum());
         params.put("categoryName", "category3");
         for (int i=0; i<businessStages.length; i++) {
             params.put("stageAndtierWhere", "and business_stage = '"+businessStages[i]+"'");
@@ -135,21 +157,25 @@ public class IndexController extends AbstractController {
             List<EvalQuestionEntity> lists = evalQuestionService.queryScoreListGroup(params);
             EvalQuestionEntity _entity = new EvalQuestionEntity();
             int _fullScore = 0;
-            int _myScore = 0;
+            int _myScore, _myScore2, _myScore3;
+            _myScore = _myScore2 = _myScore3 = 0;
             for (EvalQuestionEntity evalQuestionEntity : lists) {
                 _fullScore += evalQuestionEntity.getFullScore();
-                _myScore += Integer.valueOf(evalQuestionEntity.getEvaluateWayScore());
+                _myScore += evalQuestionEntity.getEvaluateWayScore() == "" ? 0 : Integer.valueOf(evalQuestionEntity.getEvaluateWayScore());
+                _myScore2 += evalQuestionEntity.getEvaluateWay() == "" ? 0 : Integer.valueOf(evalQuestionEntity.getEvaluateWay());
+                _myScore3 += evalQuestionEntity.getRemark() == "" ? 0 : Integer.valueOf(evalQuestionEntity.getRemark());
             }
             _entity.setCategory3("总分");
             _entity.setFullScore(_fullScore);
             _entity.setEvaluateWayScore(_myScore+"");
+            _entity.setEvaluateWay(_myScore2+"");
+            _entity.setRemark(_myScore3+"");
             lists.add(lists.size(), _entity);
             model.addAttribute("category3"+i+"Lists", lists);
         }
 
-        // 置换与零售
+        // 阶层
         String[] tiers = new String[]{"管理层", "运营层", "执行层"};
-        params.put("stageNum", entity.getStageNum());
         for (int i=0; i<tiers.length; i++) {
             params.put("tier", tiers[i]);
             List<EvalQuestionEntity> lists = evalQuestionService.queryScoreList2Group(params);
@@ -177,8 +203,157 @@ public class IndexController extends AbstractController {
             model.addAttribute("category3"+i+"Sets", finalSet);
         }
 
+    }
 
 
+
+
+    /**
+     * 雷达图
+     */
+    @GetMapping("/echarts")
+    @ResponseBody
+    public R echarts(@RequestParam Map<String, Object> params) throws IOException {
+        // 权限判断
+        Subject subject = SecurityUtils.getSubject();
+        // 有评测管理权限，能看所有人的
+        // subject.isPermitted("pm:evalstage:manager")
+        Set<String> numbers = new LinkedHashSet<>();
+
+        if (params.get("n") != null && !"".equals(params.get("n").toString())){
+            String[] nArray = params.get("n").toString().split(",");
+            EvalStageEntity entity;
+            for(int i=0; i<nArray.length; i++){
+                entity = evalStageService.queryObjectByNum(nArray[i]);
+                // 存在 而且 有权限
+                if (entity != null && (entity.getCreateAdminid() == getUserId() || subject.isPermitted("pm:evalstage:manager"))){
+                    numbers.add(entity.getStageNum());
+                }
+            }
+        }
+        if (numbers.size() == 0){
+            return R.error();
+        }
+
+        Map dataMap = new HashMap();
+        Map<String, Object> _params = new HashMap<>();
+        int j = 1;
+        for (String num : numbers){
+            _params.put("stageNum" + ( j==1 ? "" : j ), num);
+            j++;
+        }
+        _params.put("categoryName", "category1");
+        String[] categorys = new String[]{"业务规划", "业务运营", "业务推广", "业务执行"};
+        List<EvalQuestionEntity> category1Lists = evalQuestionService.queryScoreListGroup(_params);
+
+        // 输出给 雷达图 数据封装，返回两个List，List里都是Map。一个是每个角的名字和最大值。第二个是某一次测评征对第一个里每个角他的值。
+        List<Map<String, Object>> resultIndicator1List = new LinkedList<>();
+        List<Map<String, Object>> resultData1List = new LinkedList<>();
+        Map<String, Object> _mapIndicator;
+        Map<String, Object> _mapData;
+        List<Integer> _valuesList1 = new LinkedList<>();
+        List<Integer> _valuesList2 = new LinkedList<>();
+        List<Integer> _valuesList3 = new LinkedList<>();
+        for(EvalQuestionEntity category1Entity : category1Lists){
+            _mapIndicator = new HashMap<>();
+            _mapIndicator.put("name", category1Entity.getCategory1());
+            _mapIndicator.put("max", category1Entity.getFullScore());
+            resultIndicator1List.add(_mapIndicator);
+
+            // 第一个评测的分数
+            _valuesList1.add(category1Entity.getEvaluateWayScore().equals("") ? 0 : Integer.valueOf(category1Entity.getEvaluateWayScore()));
+            // 第二个评测的分数
+            _valuesList2.add(category1Entity.getEvaluateWay().equals("") ? 0 : Integer.valueOf(category1Entity.getEvaluateWay()));
+            // 第三个评测的分数
+            _valuesList3.add(category1Entity.getRemark().equals("") ? 0 : Integer.valueOf(category1Entity.getRemark()));
+        }
+        for (int k=1; k<=numbers.size(); k++){
+            _mapData = new HashMap<>();
+            _mapData.put("name", "评测"+k);
+            if (k == 1) _mapData.put("value", _valuesList1);
+            if (k == 2) _mapData.put("value", _valuesList2);
+            if (k == 3) _mapData.put("value", _valuesList3);
+            resultData1List.add(_mapData);
+        }
+        dataMap.put("resultIndicator1List", resultIndicator1List);
+        dataMap.put("resultData1List", resultData1List);
+
+
+        // 二级分类汇总
+        _params.put("categoryName", "category2");
+        for (int i=0; i<categorys.length; i++) {
+            _params.put("searchStr", " where category1='"+categorys[i]+"'");
+            List<EvalQuestionEntity> lists = evalQuestionService.queryScoreListGroup(_params);
+
+            // 输出给 雷达图 数据封装，返回两个List，List里都是Map。一个是每个角的名字和最大值。第二个是某一次测评征对第一个里每个角他的值。
+            List<Map<String, Object>> resultIndicator2List = new LinkedList<>();
+            List<Map<String, Object>> resultData2List = new LinkedList<>();
+            Map<String, Object> _mapIndicator2;
+            Map<String, Object> _mapData2;
+            List<Integer> _valuesList21 = new LinkedList<>();
+            List<Integer> _valuesList22 = new LinkedList<>();
+            List<Integer> _valuesList23 = new LinkedList<>();
+            for(EvalQuestionEntity _entity : lists){
+                _mapIndicator2 = new HashMap<>();
+                _mapIndicator2.put("name", _entity.getCategory2());
+                _mapIndicator2.put("max", _entity.getFullScore());
+                resultIndicator2List.add(_mapIndicator2);
+
+                _valuesList21.add(_entity.getEvaluateWayScore().equals("") ? 0 : Integer.valueOf(_entity.getEvaluateWayScore()));
+                _valuesList22.add(_entity.getEvaluateWay().equals("") ? 0 : Integer.valueOf(_entity.getEvaluateWay()));
+                _valuesList23.add(_entity.getRemark().equals("") ? 0 : Integer.valueOf(_entity.getRemark()));
+            }
+            for (int k=1; k<=numbers.size(); k++){
+                _mapData2 = new HashMap<>();
+                _mapData2.put("name", "评测"+k);
+                if (k == 1) _mapData2.put("value", _valuesList21);
+                if (k == 2) _mapData2.put("value", _valuesList22);
+                if (k == 3) _mapData2.put("value", _valuesList23);
+                resultData2List.add(_mapData2);
+            }
+            dataMap.put("resultIndicator2"+i+"List", resultIndicator2List);
+            dataMap.put("resultData2"+i+"List", resultData2List);
+        }
+
+        // 置换与零售
+        String[] businessStages = new String[]{"置换", "零售"};
+        _params.put("categoryName", "category3");
+        for (int i=0; i<businessStages.length; i++) {
+            _params.put("stageAndtierWhere", "and business_stage = '"+businessStages[i]+"'");
+            _params.put("searchStr", " where business_stage = '"+businessStages[i]+"'");
+            List<EvalQuestionEntity> lists = evalQuestionService.queryScoreListGroup(_params);
+
+            // 输出给 雷达图 数据封装，返回两个List，List里都是Map。一个是每个角的名字和最大值。第二个是某一次测评征对第一个里每个角他的值。
+            List<Map<String, Object>> resultIndicator3List = new LinkedList<>();
+            List<Map<String, Object>> resultData3List = new LinkedList<>();
+            Map<String, Object> _mapIndicator3;
+            Map<String, Object> _mapData3;
+            List<Integer> _valuesList31 = new LinkedList<>();
+            List<Integer> _valuesList32 = new LinkedList<>();
+            List<Integer> _valuesList33 = new LinkedList<>();
+            for(EvalQuestionEntity _entity : lists){
+                _mapIndicator3 = new HashMap<>();
+                _mapIndicator3.put("name", _entity.getCategory3());
+                _mapIndicator3.put("max", _entity.getFullScore());
+                resultIndicator3List.add(_mapIndicator3);
+
+                _valuesList31.add(_entity.getEvaluateWayScore().equals("") ? 0 : Integer.valueOf(_entity.getEvaluateWayScore()));
+                _valuesList32.add(_entity.getEvaluateWay().equals("") ? 0 : Integer.valueOf(_entity.getEvaluateWay()));
+                _valuesList33.add(_entity.getRemark().equals("") ? 0 : Integer.valueOf(_entity.getRemark()));
+            }
+            for (int k=1; k<=numbers.size(); k++){
+                _mapData3 = new HashMap<>();
+                _mapData3.put("name", "评测"+k);
+                if (k == 1) _mapData3.put("value", _valuesList31);
+                if (k == 2) _mapData3.put("value", _valuesList32);
+                if (k == 3) _mapData3.put("value", _valuesList33);
+                resultData3List.add(_mapData3);
+            }
+            dataMap.put("resultIndicator3"+i+"List", resultIndicator3List);
+            dataMap.put("resultData3"+i+"List", resultData3List);
+        }
+
+        return R.ok().put("thisData", dataMap);
     }
 
 }

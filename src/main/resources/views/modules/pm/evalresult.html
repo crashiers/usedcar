@@ -58,6 +58,7 @@
             </div>
             <a class="btn btn-default" @click="query">查询</a>
 			<a class="btn btn-primary" @click="saveOrUpdate"><i class="fa fa-arrow-circle-right"></i>&nbsp;提交评测</a>
+			<input type="button" class="btn btn-warning" @click="back" value="返回"/>
 			<a v-if="hasPermission('pm:evalresult:save')" class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
 			<a v-if="hasPermission('pm:evalresult:update')" class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
 			<a v-if="hasPermission('pm:evalresult:delete')" class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
