@@ -134,7 +134,7 @@
 		<if test="stageNum3 != null and stageNum3.trim() != ''">
 			,(select ROUND(sum(score)) from tbl_eval_result where
 			question_num in (select num from tbl_eval_question where ${categoryName} = a.${categoryName} ${stageAndtierWhere})
-			and stage_num=#{stageNum2}) as remark
+			and stage_num=#{stageNum3}) as remark
 		</if>
 
 		from tbl_eval_question a

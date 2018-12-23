@@ -138,6 +138,7 @@ set @evalRootId = @@identity;
 INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @evalRootId, '使用', null, 'pm:evalstage:list,pm:evalstage:info,pm:evalstage:used,pm:evalresult:list,pm:evalresult:info', '2', null, '6';
 set @evalUse = @@identity;
 INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @evalRootId, '评测管理', null, 'pm:evalstage:manager', '2', null, '6';
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @evalRootId, '机器人考试', null, 'pm:evalstage:evaljqr', '2', null, '6';
 
 insert into sys_role (role_id, role_name) values(1,'客户');
 insert into sys_role_menu (role_id, menu_id) values(1,1);

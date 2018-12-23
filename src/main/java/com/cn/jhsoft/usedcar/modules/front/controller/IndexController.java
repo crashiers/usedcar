@@ -107,7 +107,6 @@ public class IndexController extends AbstractController {
         }
         params.put("categoryName", "category1");
         String[] categorys = new String[]{"业务规划", "业务运营", "业务推广", "业务执行"};
-
         List<EvalQuestionEntity> category1Lists = evalQuestionService.queryScoreListGroup(params);
         for(EvalQuestionEntity category1Entity : category1Lists){
             //category1Entity.setEvaluateWayScore(Math.round(Float.parseFloat(category1Entity.getEvaluateWayScore()))+"");

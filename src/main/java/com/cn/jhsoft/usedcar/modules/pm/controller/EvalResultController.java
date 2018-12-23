@@ -1,9 +1,6 @@
 package com.cn.jhsoft.usedcar.modules.pm.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Date;
+import java.util.*;
 
 import com.cn.jhsoft.usedcar.modules.pm.entity.EvalQuestionEntity;
 import com.cn.jhsoft.usedcar.modules.pm.entity.EvalStageEntity;
@@ -78,7 +75,7 @@ public class EvalResultController extends AbstractController {
 	}
 
 	/**
-	 * 保存
+	 * 回答每一题时，ajax 保存入库
 	 */
 	@RequestMapping("/save")
 	@RequiresPermissions("pm:evalstage:used")
@@ -115,9 +112,7 @@ public class EvalResultController extends AbstractController {
 					continue;
 				}
 			}
-		}catch (Exception ex){
-
-		}
+		}catch (Exception ex){}
 
 		evalResult.setQuestionNum(rn.intValue());
 		evalResult.setAnswer(an);
@@ -142,7 +137,7 @@ public class EvalResultController extends AbstractController {
 	}
 	
 	/**
-	 * 修改
+	 * 提交评测
 	 */
 	@RequestMapping("/update")
 	@RequiresPermissions("pm:evalstage:used")
@@ -210,6 +205,102 @@ public class EvalResultController extends AbstractController {
 			}
 			if (evalQuestionEntity.getTier().equals("执行层")){
 				score9 += entity.getScore();
+			}
+		}
+
+		// 更新批次
+		evalStageEntity.setScore1(score1);
+		evalStageEntity.setScore2(score2);
+		evalStageEntity.setScore3(score3);
+		evalStageEntity.setScore4(score4);
+		evalStageEntity.setScore5(score5);
+		evalStageEntity.setScore6(score6);
+		evalStageEntity.setScore7(score7);
+		evalStageEntity.setScore8(score8);
+		evalStageEntity.setScore9(score9);
+
+		evalStageService.update(evalStageEntity);
+
+		return R.ok();
+	}
+
+	/**
+	 * 机器人自动提交评测
+	 */
+	@RequestMapping("/auto")
+	@RequiresPermissions("pm:evalstage:evaljqr")
+	public R autoEval(){
+
+		// 在批次中创建批次
+		EvalStageEntity evalStageEntity = new EvalStageEntity();
+		evalStageEntity.setCreateAdminid(getUserId());
+		evalStageEntity.setCreateAdmin(getUser().getCompany()+getUser().getRelname());
+		evalStageEntity.setCreateDate(DateUtils.getTodayDate());
+		evalStageEntity.setCreateDatetime(DateUtils.getTodayDateYMDHMS());
+		evalStageEntity.setStageNum(getUserId() + DateUtils.format(new Date(), "yyyyMMddHHmmss"));
+		evalStageService.save(evalStageEntity);
+
+		Map<String, Object> params = new HashMap<>();
+		List<EvalQuestionEntity> lists = evalQuestionService.queryList(params);
+		EvalResultEntity evalResult;
+		float score1, score2, score3, score4, score5, score6, score7, score8, score9;
+		score1 = score2 = score3 = score4 = score5 = score6 = score7 = score8 = score9 = 0;
+		for (EvalQuestionEntity evalQuestion : lists){
+
+
+			String[] answers = evalQuestion.getEvaluateWay().split(",");
+			String[] scores = evalQuestion.getEvaluateWayScore().split(",");
+			Float answerScore = 0f;
+			// 随机选择一个答案
+			int randomNumber = new Random().nextInt(answers.length);
+			String an = answers[randomNumber];
+			try {
+				answerScore = Float.parseFloat(scores[randomNumber]);
+			}catch (Exception ex){}
+
+			evalResult = new EvalResultEntity();
+			evalResult.setQuestionNum(evalQuestion.getNum());
+			evalResult.setAnswer(an);
+			evalResult.setFullScore(evalQuestion.getFullScore());
+			evalResult.setAnswerScore(answerScore);
+			// 根据满分和答案分比例计算最后得分
+			evalResult.setScore(evalQuestion.getFullScore() * answerScore / 100);
+			evalResult.setCreateTime(DateUtils.getTimeStamp());
+			evalResult.setCreateAdminid(getUserId());
+			evalResult.setCreateDate(DateUtils.getTodayDate());
+			evalResult.setCreateDatetime(DateUtils.getTodayDateYMDHMS());
+			evalResult.setCreatedip(IPUtils.getIpAddr());
+			evalResult.setStageId(evalStageEntity.getId());
+			evalResult.setStageNum(evalStageEntity.getStageNum());
+			evalResultService.save(evalResult);
+
+			// 按类别查分
+			if (evalQuestion.getCategory1().equals("业务规划")){
+				score1 += evalResult.getScore();
+			}
+			if (evalQuestion.getCategory1().equals("业务运营")){
+				score2 += evalResult.getScore();
+			}
+			if (evalQuestion.getCategory1().equals("业务推广")){
+				score3 += evalResult.getScore();
+			}
+			if (evalQuestion.getCategory1().equals("业务执行")){
+				score4 += evalResult.getScore();
+			}
+			if (evalQuestion.getBusinessStage().equals("置换")){
+				score5 += evalResult.getScore();
+			}
+			if (evalQuestion.getBusinessStage().equals("零售")){
+				score6 += evalResult.getScore();
+			}
+			if (evalQuestion.getTier().equals("管理层")){
+				score7 += evalResult.getScore();
+			}
+			if (evalQuestion.getTier().equals("运营层")){
+				score8 += evalResult.getScore();
+			}
+			if (evalQuestion.getTier().equals("执行层")){
+				score9 += evalResult.getScore();
 			}
 		}
 

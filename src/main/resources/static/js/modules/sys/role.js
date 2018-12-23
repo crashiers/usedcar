@@ -5,7 +5,7 @@ $(function () {
         colModel: [			
 			{ label: '角色ID', name: 'roleId', index: "role_id", width: 45, key: true },
 			{ label: '角色名称', name: 'roleName', index: "role_name", width: 75 },
-            { label: '所属部门', name: 'deptName', width: 75 },
+            { label: '所属部门', name: 'deptName', width: 75, hidden:true },
 			{ label: '备注', name: 'remark', width: 100 }
         ],
 		viewrecords: true,

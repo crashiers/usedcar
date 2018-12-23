@@ -11,6 +11,8 @@ if (hasPermission('pm:evalstage:manager')){
                 { label: '评测记录', name: '', index: 'stage_num', width: 60, formatter: function(value, options, row){
                     return '<a href="/report?n='+row.stageNum+'&token='+localStorage.getItem("token")+'" target="_blank">'+row.stageNum+'</a>';
                 }},
+                { label: '提交时间', name: 'createDatetime', index: 'create_datetime', width: 65 },
+                { label: '评测人', name: 'createAdmin', index: 'create_admin', width: 40 },
                 { label: '业务规划分', name: 'score1', index: 'score1', width: 40 },
                 { label: '业务运营分', name: 'score2', index: 'score2', width: 40 },
                 { label: '业务推广分', name: 'score3', index: 'score3', width: 40 },
@@ -19,9 +21,7 @@ if (hasPermission('pm:evalstage:manager')){
                 { label: '零售流程分', name: 'score6', index: 'score6', width: 40 },
                 { label: '管理层分', name: 'score7', index: 'score7', width: 35 },
                 { label: '运营层分', name: 'score8', index: 'score8', width: 35 },
-                { label: '执行层分', name: 'score9', index: 'score9', width: 35 }	,
-                { label: '提交时间', name: 'createDatetime', index: 'create_datetime', width: 65 },
-                { label: '评测人', name: 'createAdmin', index: 'create_admin', width: 40 }
+                { label: '执行层分', name: 'score9', index: 'score9', width: 35 }
             ],
             viewrecords: true,
             height: 'auto',
@@ -63,6 +63,7 @@ else
                 { label: '评测记录', name: '', index: 'stage_num', width: 60, formatter: function(value, options, row){
                     return '<a href="/report?n='+row.stageNum+'&token='+localStorage.getItem("token")+'" target="_blank">'+row.stageNum+'</a>';
                 }},
+                { label: '提交时间', name: 'createDatetime', index: 'create_datetime', width: 65 },
                 { label: '业务规划分', name: 'score1', index: 'score1', width: 40 },
                 { label: '业务运营分', name: 'score2', index: 'score2', width: 40 },
                 { label: '业务推广分', name: 'score3', index: 'score3', width: 40 },
@@ -71,8 +72,7 @@ else
                 { label: '零售流程分', name: 'score6', index: 'score6', width: 40 },
                 { label: '管理层分', name: 'score7', index: 'score7', width: 35 },
                 { label: '运营层分', name: 'score8', index: 'score8', width: 35 },
-                { label: '执行层分', name: 'score9', index: 'score9', width: 35 }	,
-                { label: '提交时间', name: 'createDatetime', index: 'create_datetime', width: 65 }
+                { label: '执行层分', name: 'score9', index: 'score9', width: 35 }
             ],
             viewrecords: true,
             height: 'auto',

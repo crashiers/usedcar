@@ -37,7 +37,7 @@ public class SysRoleEntity implements Serializable {
 	/**
 	 * 部门ID
 	 */
-	@NotNull(message="部门不能为空")
+	//@NotNull(message="部门不能为空")
 	private Long deptId;
 
 	/**

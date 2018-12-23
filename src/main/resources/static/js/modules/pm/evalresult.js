@@ -104,7 +104,6 @@ var vm = new Vue({
             vm.getInfo(id);
 		},
 		saveOrUpdate: function (event) {
-
             var url = "pm/evalresult/update";
             var data = "";
 			$.ajax({
@@ -124,6 +123,25 @@ var vm = new Vue({
 				}
 			});
 		},
+        autoEval: function (event) {
+            var url = "pm/evalresult/auto";
+            var data = "";
+            $.ajax({
+                type: "POST",
+                url: baseURL + url,
+                data: data,
+                dataType: "json",
+                success: function(r){
+                    if(r.code === 0){
+                        alert('提交成功！', function(index){
+                            parent.location.reload();
+                        });
+                    }else{
+                        alert(r.msg);
+                    }
+                }
+            });
+        },
 		del: function (event) {
 			var ids = getSelectedRows();
 			if(ids == null){
