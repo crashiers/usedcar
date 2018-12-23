@@ -191,7 +191,7 @@ var vm = new Vue({
     }
 });
 
-// 批量查看报告 
+// 批量查看报告
 function gotoReport(obj) {
     var grid = $("#jqGrid");
     var selectedIDs = grid.getGridParam("selarrrow");

@@ -1,3 +1,4 @@
+drop database db_usedcar;
 CREATE DATABASE IF NOT EXISTS db_usedcar default charset utf8 COLLATE utf8_general_ci;
 use db_usedcar;
 

@@ -15,7 +15,7 @@ clean package -P pro -Dmaven.test.skip=true
 clean package -f pom-war.xml -P pro -Dmaven.test.skip=true
 #线上运行
 #java -jar xxx.jar --spring.profiles.active=pro
-nohup java -jar /export/App/usedcar/usedcar-1.0.0.jar --spring.profiles.active=pro --db.dbname=usedcar > /export/App/usedcar/run.log 2>&1 &
+nohup java -jar /export/App/usedcar/usedcar-1.0.0.jar --spring.profiles.active=pro --db.dbname=db_usedcar > /export/App/usedcar/run.log 2>&1 &
 
 
 
