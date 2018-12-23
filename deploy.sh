@@ -1,5 +1,5 @@
 #!/bin/bash
-sudo -s
+#sudo -s
 source /etc/profile
 cd /export/web/usedcar
 git pull
