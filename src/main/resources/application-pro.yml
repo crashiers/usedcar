@@ -15,25 +15,25 @@ spring:
                 username: wx_sqoop
                 password: wx_sqoop
             second:  #数据源2
-                url: jdbc:mysql://127.0.0.1:3358/xxx?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
-                username: xxx
-                password: xxx
+                url: jdbc:mysql://127.0.0.1:3358/${db.dbname}?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+                username: wx_sqoop
+                password: wx_sqoop
             third:  #数据源3
-                url: jdbc:mysql://127.0.0.1:3358/xxx?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
-                username: xxx
-                password: xxx
+                url: jdbc:mysql://127.0.0.1:3358/${db.dbname}?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+                username: wx_sqoop
+                password: wx_sqoop
             four:  #数据源4
-                url: jdbc:mysql://127.0.0.1:3306/xxx?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
-                username: xxx
-                password: xxx
+                url: jdbc:mysql://127.0.0.1:3358/${db.dbname}?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+                username: wx_sqoop
+                password: wx_sqoop
             five:  #数据源5
-                url: jdbc:mysql://127.0.0.1:3358/xxx?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
-                username: xxx
-                password: xxx
+                url: jdbc:mysql://127.0.0.1:3358/${db.dbname}?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+                username: wx_sqoop
+                password: wx_sqoop
             six:  #数据源 6
-                url: jdbc:mysql://127.0.0.1:3358/xxx?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
-                username: xxx
-                password: xxx
+                url: jdbc:mysql://127.0.0.1:3358/${db.dbname}?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+                username: wx_sqoop
+                password: wx_sqoop
             initial-size: 10
             max-active: 100
             min-idle: 10
