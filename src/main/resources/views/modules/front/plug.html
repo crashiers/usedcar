@@ -1,8 +1,8 @@
 <tr th:fragment="thend">
-    <td style="line-height: 50px; height:50px;" th:text="${thisObj.category1}"></td>
-    <td style="line-height: 50px; height:50px;" th:text="${thisObj.fullScore}"></td>
-    <td th:if="${numbersSize == 1}" style="line-height: 50px; height:50px;" th:text="${thisObj.evaluateWayScore}"></td>
-    <td th:if="${numbersSize > 1}" style="line-height: 50px; height:50px;" th:each="i:${#numbers.sequence(1,numbersSize)}" th:text="${i == 1 ? thisObj.evaluateWayScore : (i == 2 ? thisObj.evaluateWay : thisObj.remark)}"></td>
+    <td th:text="${thisObj.category1}"></td>
+    <td th:text="${thisObj.fullScore}"></td>
+    <td th:if="${numbersSize == 1}" th:text="${thisObj.evaluateWayScore}"></td>
+    <td th:if="${numbersSize > 1}" th:each="i:${#numbers.sequence(1,numbersSize)}" th:text="${i == 1 ? thisObj.evaluateWayScore : (i == 2 ? thisObj.evaluateWay : thisObj.remark)}"></td>
 </tr>
 
 

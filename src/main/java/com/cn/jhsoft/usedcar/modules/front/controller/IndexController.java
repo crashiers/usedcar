@@ -1,5 +1,6 @@
 package com.cn.jhsoft.usedcar.modules.front.controller;
 
+import com.cn.jhsoft.usedcar.common.utils.DateUtils;
 import com.cn.jhsoft.usedcar.common.utils.R;
 import com.cn.jhsoft.usedcar.modules.api.annotation.AuthIgnore;
 import com.cn.jhsoft.usedcar.modules.api.annotation.LoginUser;
@@ -74,6 +75,7 @@ public class IndexController extends AbstractController {
                 // 存在 而且 有权限
                 if (entity != null && (entity.getCreateAdminid() == getUserId() || subject.isPermitted("pm:evalstage:manager"))){
                     numbers.add(entity.getStageNum());
+                    entity.setCreateDatetime(DateUtils.getTodayDateYMDHMS());
                     if (i==0)
                         model.addAttribute("obj", entity);
                 }

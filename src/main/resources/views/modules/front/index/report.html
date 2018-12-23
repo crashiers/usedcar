@@ -23,9 +23,9 @@
                     </div>
                     <div class="met-editor lazyload clearfix" style="font-size:12px;">
 
-                            <div class="col-md-4" style="padding-left: 0px;">
+                            <div class="col-md-4 oneTable" style="padding-left: 0px;">
                                 <table>
-                                    <tr>
+                                    <tr class="oneTableHeader">
                                         <td><b>项目</b></td>
                                         <td><b>满分</b></td>
                                         <td th:if="${numbersSize == 1}"><b>得分</b></td>
@@ -37,9 +37,9 @@
                                     </tr>
                                 </table>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4 oneTable">
                                 <table>
-                                    <tr>
+                                    <tr class="oneTableHeader">
                                         <td><b>项目</b></td>
                                         <td><b>满分</b></td>
                                         <td th:if="${numbersSize == 1}"><b>得分</b></td>
@@ -255,6 +255,8 @@
     }
 
     table tr td {text-align: center;}
+    .oneTable .oneTableHeader td{ height:50px; line-height:50px; }
+    .oneTable table tr td{ height:50px; line-height:50px; font-size:12px; }
 </style>
 </body>
 </html>
