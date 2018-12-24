@@ -270,7 +270,7 @@ public class IndexController extends AbstractController {
         }
         for (int k=1; k<=numbers.size(); k++){
             _mapData = new HashMap<>();
-            _mapData.put("name", "评测"+k);
+            _mapData.put("name", numbers.size() > 1 ? "评测"+k : "");
             if (k == 1) _mapData.put("value", _valuesList1);
             if (k == 2) _mapData.put("value", _valuesList2);
             if (k == 3) _mapData.put("value", _valuesList3);
@@ -278,7 +278,6 @@ public class IndexController extends AbstractController {
         }
         dataMap.put("resultIndicator1List", resultIndicator1List);
         dataMap.put("resultData1List", resultData1List);
-
 
         // 二级分类汇总
         _params.put("categoryName", "category2");
@@ -306,7 +305,7 @@ public class IndexController extends AbstractController {
             }
             for (int k=1; k<=numbers.size(); k++){
                 _mapData2 = new HashMap<>();
-                _mapData2.put("name", "评测"+k);
+                _mapData2.put("name", numbers.size() > 1 ? "评测"+k : "");
                 if (k == 1) _mapData2.put("value", _valuesList21);
                 if (k == 2) _mapData2.put("value", _valuesList22);
                 if (k == 3) _mapData2.put("value", _valuesList23);
@@ -344,7 +343,7 @@ public class IndexController extends AbstractController {
             }
             for (int k=1; k<=numbers.size(); k++){
                 _mapData3 = new HashMap<>();
-                _mapData3.put("name", "评测"+k);
+                _mapData3.put("name", numbers.size() > 1 ? "评测"+k : "");
                 if (k == 1) _mapData3.put("value", _valuesList31);
                 if (k == 2) _mapData3.put("value", _valuesList32);
                 if (k == 3) _mapData3.put("value", _valuesList33);
