@@ -330,20 +330,20 @@ function getRadar(divId, indicatorArr, dataArr) {
 
     // 基于准备好的dom，初始化echarts实例
     var myChart = echarts.init(document.getElementById(divId));
-
-    option = {
+    var option = {
         title: {
             //text: '基础雷达图'
         },
         tooltip: {},
-        // legend: {
-        //     show:false,
-        //     data: ['预算分配（Allocated Budget）', '实际开销（Actual Spending）']
-        // },
+        legend: {
+            //show:false,
+            data: []
+        },
         radar: {
+            nameGap : 5, // 图中每个角文字 距离图的距离 ****
             name: {
                 textStyle: {
-                    color: '#000'
+                    color: '#666'
                 }
             },
             // indicator: [
@@ -355,7 +355,7 @@ function getRadar(divId, indicatorArr, dataArr) {
             //     { name: '市场销售销售', max: 25000}
             // ],
             indicator: indicatorArr,
-            radius: 80
+            radius: 70
         },
         series: [{
             name: '预算 vs 开销（Budget vs spending）',
@@ -414,9 +414,46 @@ function getRadar(divId, indicatorArr, dataArr) {
             //         name : '实际开销（Actual Spending）'
             //     }
             // ]
-            data: dataArr
+
+            // //这里的配置显示数值 这是data里的属性
+            // label: {
+            //     normal: {
+            //         show: true,
+            //         formatter:function(params) {
+            //             return params.value;
+            //         }
+            //     }
+            // }
+
+            //data: dataArr
+            data:[]
         }]
     };
+
+    for (var k = 0; k < dataArr.length; k++) {
+        var item = {
+            name:dataArr[k].name,
+            value:dataArr[k].value
+        };
+
+        //这里的配置显示数值
+        if (dataArr.length == 1){
+            item.label = {
+                normal: {
+                    show: true,
+                    formatter:function(params) {
+                        return params.value;
+                    }
+                }
+            };
+        }
+
+
+        if (dataArr.length > 1)
+            option.legend.data.push(dataArr[k].name);
+
+        option.series[0].data.push(item);
+    }
 
     // 使用刚指定的配置项和数据显示图表。
     myChart.setOption(option);
