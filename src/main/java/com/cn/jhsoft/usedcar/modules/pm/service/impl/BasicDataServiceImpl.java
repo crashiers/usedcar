@@ -65,4 +65,14 @@ public class BasicDataServiceImpl implements BasicDataService {
 		return basicDataDao.queryObjectByEname(ename);
 	}
 
+	@Override
+	public BasicDataEntity queryObjectByName(String name) {
+		return basicDataDao.queryObjectByName(name);
+	}
+
+	@Override
+	public BasicDataEntity queryObjectByNameAndParentId(Map<String, Object> map) {
+		return basicDataDao.queryObjectByNameAndParentId(map);
+	}
+
 }

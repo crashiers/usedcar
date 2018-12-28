@@ -2,7 +2,10 @@ package com.cn.jhsoft.usedcar.common.utils;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -121,9 +124,18 @@ public class ExcelPOIUtils {
             cell.setCellType(Cell.CELL_TYPE_STRING);
         }
         //判断数据的类型
+        DateFormat formater;
         switch (cell.getCellType()){
             case Cell.CELL_TYPE_NUMERIC: //数字
-                cellValue = String.valueOf(cell.getNumericCellValue());
+//                if(HSSFDateUtil.isCellDateFormatted(cell)){
+//                    //用于转化为日期格式
+//                    Date d = cell.getDateCellValue();
+//                    formater = new SimpleDateFormat("yyyy-MM-dd");
+//                    cellValue = formater.format(d);
+//                }else {
+                    cellValue = String.valueOf(cell.getNumericCellValue());
+//                }
+
                 break;
             case Cell.CELL_TYPE_STRING: //字符串
                 cellValue = String.valueOf(cell.getStringCellValue());

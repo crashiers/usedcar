@@ -103,6 +103,12 @@ public class DateUtils {
         return cal.getTime();
     }
 
+    public static Date getDateFrom1900(int amount){
+        Calendar calendar = new GregorianCalendar(1900,0,-1);
+        calendar.add(Calendar.DATE, amount);
+        return calendar.getTime();
+    }
+
     public static String getTodayDate(){
         return format(new Date(), DateUtils.DATE_PATTERN);
     }

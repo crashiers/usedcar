@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cn.jhsoft.usedcar.modules.pm.dao.DrDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.cn.jhsoft.usedcar.modules.pm.entity.DrEntity" id="drMap">
+        <result property="id" column="id"/>
+        <result property="dealerId" column="dealer_id"/>
+        <result property="yearMonth" column="year_month"/>
+        <result property="year" column="year"/>
+        <result property="month" column="month"/>
+        <result property="createdAmount" column="created_amount"/>
+        <result property="dccAmount" column="dcc_amount"/>
+        <result property="allAmount" column="all_amount"/>
+        <result property="retailAmount" column="retail_amount"/>
+        <result property="twoNetAmount" column="two_net_amount"/>
+        <result property="bigClientAmount" column="big_client_amount"/>
+        <result property="latentAmount" column="latent_amount"/>
+        <result property="latentAssessAmount" column="latent_assess_amount"/>
+        <result property="latentAssessDealAmount" column="latent_assess_deal_amount"/>
+        <result property="latentRate" column="latent_rate"/>
+        <result property="latentAssessRate" column="latent_assess_rate"/>
+        <result property="latentAssessDealRate" column="latent_assess_deal_rate"/>
+        <result property="generalizedRate" column="generalized_rate"/>
+        <result property="narrowlyRate" column="narrowly_rate"/>
+        <result property="sellCreatedAmount" column="sell_created_amount"/>
+        <result property="sellDealAmount" column="sell_deal_amount"/>
+        <result property="sellDealRate" column="sell_deal_rate"/>
+        <result property="createDate" column="create_date"/>
+        <result property="createDatetime" column="create_datetime"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.DrEntity">
+		select * from tbl_dr where id = #{value}
+	</select>
+
+	<select id="queryObjectByDealerIdAndYearMonth" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.DrEntity">
+		select * from tbl_dr where dealer_id = #{dealerId} and `year_month` = #{yearMonth}
+	</select>
+
+    <sql id="queryList_where">
+        <if test="name != null and name.trim() != ''">
+            and `title` like concat('%',#{name},'%')
+        </if>
+		and `dealer_id` = #{dealerId}
+    </sql>
+
+	<select id="queryList" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.DrEntity">
+		select * from tbl_dr
+        <where>
+            <include refid="queryList_where"></include>
+        </where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by `${sidx}` ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from tbl_dr
+        <where>
+            <include refid="queryList_where"></include>
+        </where>
+	</select>
+	 
+	<insert id="save" parameterType="com.cn.jhsoft.usedcar.modules.pm.entity.DrEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into tbl_dr
+		(
+			`dealer_id`, 
+			`year_month`, 
+			`year`, 
+			`month`, 
+			`created_amount`, 
+			`dcc_amount`, 
+			`all_amount`, 
+			`retail_amount`, 
+			`two_net_amount`, 
+			`big_client_amount`, 
+			`latent_amount`, 
+			`latent_assess_amount`, 
+			`latent_assess_deal_amount`, 
+			`latent_rate`, 
+			`latent_assess_rate`, 
+			`latent_assess_deal_rate`, 
+			`generalized_rate`, 
+			`narrowly_rate`, 
+			`sell_created_amount`, 
+			`sell_deal_amount`, 
+			`sell_deal_rate`, 
+			`create_date`, 
+			`create_datetime`
+		)
+		values
+		(
+			#{dealerId}, 
+			#{yearMonth}, 
+			#{year}, 
+			#{month}, 
+			#{createdAmount}, 
+			#{dccAmount}, 
+			#{allAmount}, 
+			#{retailAmount}, 
+			#{twoNetAmount}, 
+			#{bigClientAmount}, 
+			#{latentAmount}, 
+			#{latentAssessAmount}, 
+			#{latentAssessDealAmount}, 
+			#{latentRate}, 
+			#{latentAssessRate}, 
+			#{latentAssessDealRate}, 
+			#{generalizedRate}, 
+			#{narrowlyRate}, 
+			#{sellCreatedAmount}, 
+			#{sellDealAmount}, 
+			#{sellDealRate}, 
+			#{createDate}, 
+			#{createDatetime}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.cn.jhsoft.usedcar.modules.pm.entity.DrEntity">
+		update tbl_dr 
+		<set>
+			<if test="dealerId != null">`dealer_id` = #{dealerId}, </if>
+			<if test="yearMonth != null">`year_month` = #{yearMonth}, </if>
+			<if test="year != null">`year` = #{year}, </if>
+			<if test="month != null">`month` = #{month}, </if>
+			<if test="createdAmount != null">`created_amount` = #{createdAmount}, </if>
+			<if test="dccAmount != null">`dcc_amount` = #{dccAmount}, </if>
+			<if test="allAmount != null">`all_amount` = #{allAmount}, </if>
+			<if test="retailAmount != null">`retail_amount` = #{retailAmount}, </if>
+			<if test="twoNetAmount != null">`two_net_amount` = #{twoNetAmount}, </if>
+			<if test="bigClientAmount != null">`big_client_amount` = #{bigClientAmount}, </if>
+			<if test="latentAmount != null">`latent_amount` = #{latentAmount}, </if>
+			<if test="latentAssessAmount != null">`latent_assess_amount` = #{latentAssessAmount}, </if>
+			<if test="latentAssessDealAmount != null">`latent_assess_deal_amount` = #{latentAssessDealAmount}, </if>
+			<if test="latentRate != null">`latent_rate` = #{latentRate}, </if>
+			<if test="latentAssessRate != null">`latent_assess_rate` = #{latentAssessRate}, </if>
+			<if test="latentAssessDealRate != null">`latent_assess_deal_rate` = #{latentAssessDealRate}, </if>
+			<if test="generalizedRate != null">`generalized_rate` = #{generalizedRate}, </if>
+			<if test="narrowlyRate != null">`narrowly_rate` = #{narrowlyRate}, </if>
+			<if test="sellCreatedAmount != null">`sell_created_amount` = #{sellCreatedAmount}, </if>
+			<if test="sellDealAmount != null">`sell_deal_amount` = #{sellDealAmount}, </if>
+			<if test="sellDealRate != null">`sell_deal_rate` = #{sellDealRate}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}, </if>
+			<if test="createDatetime != null">`create_datetime` = #{createDatetime}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from tbl_dr where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from tbl_dr where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

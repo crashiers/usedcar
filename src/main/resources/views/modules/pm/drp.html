@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>进销存</title>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+	<link rel="stylesheet" href="../../css/bootstrap.min.css">
+	<link rel="stylesheet" href="../../css/font-awesome.min.css">
+	<link rel="stylesheet" href="../../plugins/jqgrid/ui.jqgrid-bootstrap.css">
+	<link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+	<link rel="stylesheet" href="../../css/main.css">
+	<script src="../../libs/jquery.min.js"></script>
+	<script src="../../plugins/layer/layer.js"></script>
+	<script src="../../libs/bootstrap.min.js"></script>
+	<script src="../../libs/vue.min.js"></script>
+	<script src="../../plugins/jqgrid/grid.locale-cn.js"></script>
+	<script src="../../plugins/jqgrid/jquery.jqGrid.min.js"></script>
+	<script src="../../plugins/ztree/jquery.ztree.all.min.js"></script>
+	<script src="../../js/common.js"></script>
+</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+            <div class="form-group col-sm-2" style="padding-left: 0px;">
+                <input type="text" class="form-control" v-model="q.name" @keyup.enter="query" placeholder="关键词">
+            </div>
+            <a class="btn btn-default" @click="query">查询</a>
+			<a v-if="hasPermission('pm:drp:save')" class="btn btn-primary" @click="upload"><i class="fa fa-arrow-circle-right"></i>&nbsp;导入</a>
+			<a v-if="hasPermission('pm:drp:delete')" class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+		</div>
+	    <table id="jqGrid"></table>
+	    <div id="jqGridPager"></div>
+    </div>
+    
+    <div v-show="showAdd" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+											<div class="form-group">
+			   	<div class="col-sm-2 control-label">经销商ID</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.dealerId" placeholder="经销商ID选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">序号</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.num" placeholder="序号选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">入库号</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.rkdh" placeholder="入库号选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">品牌</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.brand" placeholder="品牌选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">车型</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.arctic" placeholder="车型选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">车款</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.carModel" placeholder="车款选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">颜色</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.color" placeholder="颜色选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">表征里程</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.mileage" placeholder="表征里程选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">初登日期</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.firstDate" placeholder="初登日期选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">排量</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.displacement" placeholder="排量选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">变速箱</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.gearbox" placeholder="变速箱选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">车架号</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.vin" placeholder="车架号选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">车况简述</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.remark" placeholder="车况简述选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">收购类型:置换收购,直客收购,渠道收购,车辆寄售,内部转入</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.buyType" placeholder="收购类型:置换收购,直客收购,渠道收购,车辆寄售,内部转入选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">收购客户来源:基盘客户挖掘,内部全员营销,网络营销,自媒体营销,活动营销,展厅展场营销,转介绍,其他</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.buyClientRef" placeholder="收购客户来源:基盘客户挖掘,内部全员营销,网络营销,自媒体营销,活动营销,展厅展场营销,转介绍,其他选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">收购单位</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.buyCompany" placeholder="收购单位选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">推荐人</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.buyReferrer" placeholder="推荐人选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">推荐人职务</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.buyReferrerDuty" placeholder="推荐人职务选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">收购人</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.buyer" placeholder="收购人选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">旧车主姓名</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.rawCarOwner" placeholder="旧车主姓名选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">联系电话</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.rawPhone" placeholder="联系电话选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">置换车型</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.permuteArctic" placeholder="置换车型选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">收购日期</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.buyDate" placeholder="收购日期选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">收购价格</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.buyPrice" placeholder="收购价格选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">过户费用</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.buyTransferFee" placeholder="过户费用选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">其他收购成本</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.buyOtherFee" placeholder="其他收购成本选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">预期库存风险期（盈亏平衡点）</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.bep" placeholder="预期库存风险期（盈亏平衡点）选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">库位号</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.slNum" placeholder="库位号选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">上架销售时间</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.sellDate" placeholder="上架销售时间选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">是否认证</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.isAuth" placeholder="是否认证选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">整备费用</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.servicingCosts" placeholder="整备费用选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">日常维护费用</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.upkeep" placeholder="日常维护费用选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">验车费</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.checkFee" placeholder="验车费选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">购买交强险</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.sali" placeholder="购买交强险选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">库存时间</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.storeTime" placeholder="库存时间选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">是否超期</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.isExceed" placeholder="是否超期选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">批售起竞价/零售底价</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.minPrice" placeholder="批售起竞价/零售底价选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">批售保留价/零售定价</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.sellPrice" placeholder="批售保留价/零售定价选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">销售类型:内部转出,外部批售,零售,认证零售</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.sellType" placeholder="销售类型:内部转出,外部批售,零售,认证零售选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">销售客户来源:内部全员营销,网络营销,自媒体营销,活动营销,展厅展场营销,转介绍,其他</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.sellClientRef" placeholder="销售客户来源:内部全员营销,网络营销,自媒体营销,活动营销,展厅展场营销,转介绍,其他选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">推荐人</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.sellReferrer" placeholder="推荐人选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">推荐人职务</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.sellReferrerDuty" placeholder="推荐人职务选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">销售人</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.seller" placeholder="销售人选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">新车主名称</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.newCarOwner" placeholder="新车主名称选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">联系电话</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.newPhone" placeholder="联系电话选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">批售渠道名称（零售不需要填写）</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.channel" placeholder="批售渠道名称（零售不需要填写）选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">销售日期</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.sellDateFinal" placeholder="销售日期选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">销售价格</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.sellPriceFinal" placeholder="销售价格选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">付款方式</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.paymentType" placeholder="付款方式选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">首付金额</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.paymentFirstMoney" placeholder="首付金额选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">贷款金额</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.paymentLoanMoney" placeholder="贷款金额选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">过户费用</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.transferFee" placeholder="过户费用选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">其他销售成本</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.sellOtherFee" placeholder="其他销售成本选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">退商业险</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.rbr" placeholder="退商业险选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">金融手续费</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.fhc" placeholder="金融手续费选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">保险利润</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.profitInsurance" placeholder="保险利润选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">装饰利润</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.profitDecorative" placeholder="装饰利润选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">手续代办</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.formalitieCharge" placeholder="手续代办选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">厂家返利</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.rebate" placeholder="厂家返利选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">其他</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.other" placeholder="其他选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">进销差毛利1</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.maori" placeholder="进销差毛利1选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">收购毛利率1</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.maoriRate" placeholder="收购毛利率1选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">直接成本</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.directCost" placeholder="直接成本选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">毛利2</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.maori2" placeholder="毛利2选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">收购毛利率2</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.maoriRate2" placeholder="收购毛利率2选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">衍生收益</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.otherEarnings" placeholder="衍生收益选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">厂家返利</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.rebate2" placeholder="厂家返利选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">综合毛利</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.synthesisMaori" placeholder="综合毛利选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">收购年</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.buyYear" placeholder="收购年选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">收购月</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.buyMonth" placeholder="收购月选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">销售年</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.sellYear" placeholder="销售年选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">销售月</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.sellMonth" placeholder="销售月选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">收购方式(采购来源=1)</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.buyWay" placeholder="收购方式(采购来源=1)选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">销售方式(零售=0，认证零售=1)</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.sellWay" placeholder="销售方式(零售=0，认证零售=1)选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">销售方式2</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.sellWay2" placeholder="销售方式2选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">车龄</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.carAge" placeholder="车龄选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">车龄阶梯</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.carAgeLeavel" placeholder="车龄阶梯选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">收车价格阶梯</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.buyPriceLeavel" placeholder="收车价格阶梯选填"/>
+			    </div>
+			</div>
+
+
+									<div class="form-group">
+			   	<div class="col-sm-2 control-label">是否库存</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.isStore" placeholder="是否库存选填"/>
+			    </div>
+			</div>
+
+
+													<div class="form-group">
+			   	<div class="col-sm-2 control-label">添加时间</div>
+			   	<div class="col-sm-10">
+			        <input type="text" class="form-control" v-model="drp.createDatetime" placeholder="添加时间选填"/>
+			    </div>
+			</div>
+
+
+							<div class="form-group">
+				<div class="col-sm-2 control-label"></div> 
+				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+
+	<div v-show="showUpload" class="panel panel-default">
+		<div class="panel-heading" v-if="showUpload">导入</div>
+		<form class="form-horizontal">
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">选择Excel文件</div>
+				<div class="col-sm-10">
+					<input type="file" name="file" id="file" />
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">格式参考</div>
+				<div class="col-sm-10 control-label" style="text-align: left;">
+					<a href="/file/drp.xls" target="_blank" v-if="showUpload">点此下载 Excel数据样本</a>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label"></div>
+				<input type="button" class="btn btn-primary" @click="upLoadFile" value="确定" v-if="showUpload" />
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+				&nbsp;&nbsp;点击上传后，请您耐心等待，上传完成后页面会提示您。
+			</div>
+		</form>
+	</div>
+
+</div>
+
+<script src="../../js/modules/pm/drp.js"></script>
+</body>
+</html>

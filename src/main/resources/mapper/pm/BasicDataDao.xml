@@ -123,4 +123,12 @@
 		select * from tbl_basic_data where ename =  #{value}
 	</select>
 
+	<select id="queryObjectByName" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.BasicDataEntity">
+		select * from tbl_basic_data where `name` =  #{value}
+	</select>
+
+	<select id="queryObjectByNameAndParentId" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.BasicDataEntity">
+		select * from tbl_basic_data where `name` =  #{name} and `parent_id` =  #{parentId}
+	</select>
+
 </mapper>

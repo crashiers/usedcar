@@ -1,6 +1,6 @@
 $(function () {
     $("#jqGrid").jqGrid({
-        url: baseURL + 'pm/evalquestion/list?sidx=num&order=asc',
+        url: baseURL + 'pm/evalquestion/list',
         datatype: "json",
         colModel: [			
 			{ label: 'id', name: 'id', index: 'id', width: 35, key: true, hidden: true },
@@ -88,6 +88,11 @@ var vm = new Vue({
             vm.getInfo(id);
 		},
 		saveOrUpdate: function (event) {
+
+            vm.evalQuestion.category1 = $("#province1").val();
+            vm.evalQuestion.category2 = $("#city1").val();
+            vm.evalQuestion.category3 = $("#district1").val();
+
 			var url = vm.evalQuestion.id == null ? "pm/evalquestion/save" : "pm/evalquestion/update";
 			$.ajax({
 				type: "POST",

@@ -66,6 +66,163 @@ CREATE TABLE IF NOT EXISTS `tbl_eval_result` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='评测结果';
 
+-- 经销商
+DROP TABLE IF EXISTS `tbl_dealer`;
+CREATE TABLE IF NOT EXISTS `tbl_dealer` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `title` varchar(512) COMMENT '名称',
+  `province` varchar(64) COMMENT '省',
+  `city` varchar(128) COMMENT '市',
+  `district` varchar(128) COMMENT '区',
+  `address` varchar(512) COMMENT '地址',
+  `relname` varchar(64) COMMENT '联系人',
+  `tel` varchar(32) COMMENT '联系电话',
+  `email` varchar(100) COMMENT '邮箱',
+  `mobile` varchar(100) COMMENT '手机号',
+  `basement_client_sum` bigint COMMENT '基盘客户量',
+  `create_date` varchar(16) COMMENT '添加日期',
+  `create_datetime` varchar(32) COMMENT '添加时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='经销商';
+
+-- 置换零售业务
+DROP TABLE IF EXISTS `tbl_dr`;
+CREATE TABLE IF NOT EXISTS `tbl_dr` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `dealer_id` bigint COMMENT '经销商ID',
+  `year_month` varchar(16) COMMENT '年月',
+  `year` varchar(4) COMMENT '年',
+  `month` varchar(4) COMMENT '月',
+  `created_amount` int COMMENT '新车展厅建卡量',
+  `dcc_amount` int COMMENT '新车DCC邀约到店量',
+  `all_amount` int COMMENT '总量',
+  `retail_amount` int COMMENT '零售',
+  `two_net_amount` int COMMENT '二网',
+  `big_client_amount` int COMMENT '大客户',
+  `latent_amount` int COMMENT '置换潜客量',
+  `latent_assess_amount` int COMMENT '潜客评估量',
+  `latent_assess_deal_amount` int COMMENT '评估成交量',
+  `latent_rate` float COMMENT '置换潜客率',
+  `latent_assess_rate` float COMMENT '潜客评估率',
+  `latent_assess_deal_rate` float COMMENT '评估成交率',
+  `generalized_rate` float COMMENT '广义置换率',
+  `narrowly_rate` float COMMENT '狭义置换率',
+  `sell_created_amount` int COMMENT '零售建卡量',
+  `sell_deal_amount` int COMMENT '零售成交量',
+  `sell_deal_rate` float COMMENT '零售成交转化率',
+  `create_date` varchar(16) COMMENT '添加日期',
+  `create_datetime` varchar(32) COMMENT '添加时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='置换零售业务';
+
+
+-- 置换零售量
+DROP TABLE IF EXISTS `tbl_dra`;
+CREATE TABLE IF NOT EXISTS `tbl_dra` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `dealer_id` bigint COMMENT '经销商ID',
+  `year_month` varchar(16) COMMENT '年月',
+  `year` varchar(4) COMMENT '年',
+  `month` varchar(4) COMMENT '月',
+  `brand` varchar(64) COMMENT '品牌',
+  `arctic` varchar(64) COMMENT '车型',
+  `atype` int COMMENT '类型,1置换,2零售',
+  `amount` int COMMENT '数量',
+  `create_date` varchar(16) COMMENT '添加日期',
+  `create_datetime` varchar(32) COMMENT '添加时间',
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `Index2` (`year_month`, `atype`, `arctic`, `dealer_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='置换零售量';
+
+
+-- 进销存
+DROP TABLE IF EXISTS `tbl_drp`;
+CREATE TABLE IF NOT EXISTS `tbl_drp` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `dealer_id` bigint COMMENT '经销商ID',
+  `num` bigint COMMENT '序号',
+  `rkdh` varchar(32) COMMENT '入库号',
+  `brand` varchar(64) COMMENT '品牌',
+  `arctic` varchar(64) COMMENT '车型',
+  `car_model` varchar(64) COMMENT '车款',
+  `color` varchar(16) COMMENT '颜色',
+  `mileage` varchar(32) COMMENT '表征里程',
+  `first_date` varchar(32) COMMENT '初登日期',
+  `displacement` varchar(32) COMMENT '排量',
+  `gearbox` varchar(32) COMMENT '变速箱',
+  `vin` varchar(32) COMMENT '车架号',
+  `remark` varchar(512) COMMENT '车况简述',
+  `buy_type` varchar(32) COMMENT '收购类型:置换收购,直客收购,渠道收购,车辆寄售,内部转入',
+  `buy_client_ref` varchar(32) COMMENT '收购客户来源:基盘客户挖掘,内部全员营销,网络营销,自媒体营销,活动营销,展厅展场营销,转介绍,其他',
+  `buy_company` varchar(128) COMMENT '收购单位',
+  `buy_referrer` varchar(32) COMMENT '推荐人',
+  `buy_referrer_duty` varchar(64) COMMENT '推荐人职务',
+  `buyer` varchar(32) COMMENT '收购人',
+  `raw_car_owner` varchar(32) COMMENT '旧车主姓名',
+  `raw_phone` varchar(32) COMMENT '联系电话',
+  `permute_arctic` varchar(64) COMMENT '置换车型',
+  `buy_date` varchar(32) COMMENT '收购日期',
+  `buy_price` varchar(32) COMMENT '收购价格',
+  `buy_transfer_fee` varchar(32) COMMENT '过户费用',
+  `buy_other_fee` varchar(32) COMMENT '其他收购成本',
+  `bep` varchar(32) COMMENT '预期库存风险期（盈亏平衡点）',
+  `sl_num` varchar(32) COMMENT '库位号',
+  `sell_date` varchar(32) COMMENT '上架销售时间',
+  `is_auth` varchar(32) COMMENT '是否认证',
+  `servicing_costs` varchar(32) COMMENT '整备费用',
+  `upkeep` varchar(32) COMMENT '日常维护费用',
+  `check_fee` varchar(32) COMMENT '验车费',
+  `sali` varchar(32) COMMENT '购买交强险',
+  `store_time` varchar(32) COMMENT '库存时间',
+  `is_exceed` varchar(32) COMMENT '是否超期',
+  `min_price` varchar(32) COMMENT '批售起竞价/零售底价',
+  `sell_price` varchar(32) COMMENT '批售保留价/零售定价',
+  `sell_type` varchar(32) COMMENT '销售类型:内部转出,外部批售,零售,认证零售',
+  `sell_client_ref` varchar(32) COMMENT '销售客户来源:内部全员营销,网络营销,自媒体营销,活动营销,展厅展场营销,转介绍,其他',
+  `sell_referrer` varchar(32) COMMENT '推荐人',
+  `sell_referrer_duty` varchar(64) COMMENT '推荐人职务',
+  `seller` varchar(32) COMMENT '销售人',
+  `new_car_owner` varchar(32) COMMENT '新车主名称',
+  `new_phone` varchar(32) COMMENT '联系电话',
+  `channel` varchar(32) COMMENT '批售渠道名称（零售不需要填写）',
+  `sell_date_final` varchar(32) COMMENT '销售日期',
+  `sell_price_final` varchar(32) COMMENT '销售价格',
+  `payment_type` varchar(32) COMMENT '付款方式',
+  `payment_first_money` varchar(32) COMMENT '首付金额',
+  `payment_loan_money` varchar(32) COMMENT '贷款金额',
+  `transfer_fee` varchar(32) COMMENT '过户费用',
+  `sell_other_fee` varchar(32) COMMENT '其他销售成本',
+  `rbr` varchar(32) COMMENT '退商业险',
+  `fhc` varchar(32) COMMENT '金融手续费',
+  `profit_insurance` varchar(32) COMMENT '保险利润',
+  `profit_decorative` varchar(32) COMMENT '装饰利润',
+  `formalitie_charge` varchar(32) COMMENT '手续代办',
+  `rebate` varchar(32) COMMENT '厂家返利',
+  `other` varchar(32) COMMENT '其他',
+  `maori` varchar(32) COMMENT '进销差毛利1',
+  `maori_rate` varchar(32) COMMENT '收购毛利率1',
+  `direct_cost` varchar(32) COMMENT '直接成本',
+  `maori2` varchar(32) COMMENT '毛利2',
+  `maori_rate2` varchar(32) COMMENT '收购毛利率2',
+  `other_earnings` varchar(32) COMMENT '衍生收益',
+  `rebate2` varchar(32) COMMENT '厂家返利',
+  `synthesis_maori` varchar(32) COMMENT '综合毛利',
+  `buy_year` varchar(8) COMMENT '收购年',
+  `buy_month` varchar(8) COMMENT '收购月',
+  `sell_year` varchar(8) COMMENT '销售年',
+  `sell_month` varchar(8) COMMENT '销售月',
+  `buy_way` varchar(32) COMMENT '收购方式(采购来源=1)',
+  `sell_way` varchar(32) COMMENT '销售方式(零售=0，认证零售=1)',
+  `sell_way2` varchar(32) COMMENT '销售方式2',
+  `car_age` varchar(16) COMMENT '车龄',
+  `car_age_leavel` varchar(32) COMMENT '车龄阶梯',
+  `buy_price_leavel` varchar(32) COMMENT '收车价格阶梯',
+  `is_store` varchar(32) COMMENT '是否库存',
+  `create_date` varchar(16) COMMENT '添加日期',
+  `create_datetime` varchar(32) COMMENT '添加时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='进销存';
+
 
 -- 分类初始化
 insert into tbl_basic_data values (4, 0, 'board', '评测版块', 1, '0:', 1, '2018-12-22 17:10:10', 1);
@@ -144,3 +301,316 @@ insert into sys_role (role_id, role_name) values(1,'客户');
 insert into sys_role_menu (role_id, menu_id) values(1,1);
 insert into sys_role_menu (role_id, menu_id) values(1,@evalRootId);
 insert into sys_role_menu (role_id, menu_id) values(1,@evalUse);
+
+
+-- 经销商菜单SQL
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) VALUES ('1', '经销商', 'modules/pm/dealer.html', NULL, '1', 'fa fa-briefcase', '13');
+set @parentId = @@identity;
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @parentId, '查看', null, 'pm:dealer:list,pm:dealer:info', '2', null, '6';
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @parentId, '新增', null, 'pm:dealer:save', '2', null, '6';
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @parentId, '修改', null, 'pm:dealer:update', '2', null, '6';
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @parentId, '删除', null, 'pm:dealer:delete', '2', null, '6';
+
+-- 置换零售业务菜单SQL
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) VALUES ('1', '置换零售业务', 'modules/pm/dr.html', NULL, '1', 'fa fa-sellsy', '14');
+set @parentId = @@identity;
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @parentId, '查看', null, 'pm:dr:list,pm:dr:info', '2', null, '6';
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @parentId, '新增', null, 'pm:dr:save', '2', null, '6';
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @parentId, '修改', null, 'pm:dr:update', '2', null, '6';
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @parentId, '删除', null, 'pm:dr:delete', '2', null, '6';
+
+-- 进销存菜单SQL
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) VALUES ('1', '进销存', 'modules/pm/drp.html', NULL, '1', 'fa fa-laptop', '15');
+set @parentId = @@identity;
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @parentId, '查看', null, 'pm:drp:list,pm:drp:info', '2', null, '6';
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @parentId, '新增', null, 'pm:drp:save', '2', null, '6';
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @parentId, '修改', null, 'pm:drp:update', '2', null, '6';
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @parentId, '删除', null, 'pm:drp:delete', '2', null, '6';
+
+
+
+-- 初始化品牌和子品牌
+insert into tbl_basic_data (parent_id, ename, `name`) select 0,'brand', '品牌';
+set @parent_id = @@identity;
+insert into tbl_basic_data (parent_id, ename, `name`) select @parent_id, '', '上汽大众';
+set @child_id = @@identity;
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '帕萨特';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '途观';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '途安';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '朗逸';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '朗行';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '朗境';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'POLO';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '桑塔纳';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '凌渡';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '途观L';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '途昂';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '辉昂';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '本品牌其他车型';
+
+
+insert into tbl_basic_data (parent_id, ename, `name`) select @parent_id, '', '一汽大众';
+set @child_id = @@identity;
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '迈腾';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '速腾';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '高尔夫';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '嘉旅';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'CC';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '宝来';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '捷达';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '蔚领';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '探歌';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '本品牌其他车型';
+
+
+insert into tbl_basic_data (parent_id, ename, `name`) select @parent_id, '', '一汽奥迪';
+set @child_id = @@identity;
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'A1';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'A3';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'A4';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'A5';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'A6';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'A7';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'A8';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'Q3';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'Q5';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'Q7';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'TT';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'R8';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '本品牌其他车型';
+
+
+insert into tbl_basic_data (parent_id, ename, `name`) select @parent_id, '', '东风日产';
+set @child_id = @@identity;
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '玛驰';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '阳光';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '蓝鸟';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '骐达';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '轩逸';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '天籁';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '西玛';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '逍客';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '奇骏';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '楼兰';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '骊威';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '途乐';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '本品牌其他车型';
+
+insert into tbl_basic_data (parent_id, ename, `name`) select @parent_id, '', '广汽菲克';
+set @child_id = @@identity;
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '酷威';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '300C';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '大捷龙';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '自由侠';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '自由客';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '指南者';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '自由光';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '牧马人';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '大切诺基';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '菲翔';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '致悦';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '菲跃';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '本品牌其他车型';
+
+
+insert into tbl_basic_data (parent_id, ename, `name`) select @parent_id, '', '广汽丰田';
+set @child_id = @@identity;
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '致炫';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '雅力士';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '雷凌';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '凯美瑞';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '汉兰达';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '逸致';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '本品牌其他车型';
+
+
+insert into tbl_basic_data (parent_id, ename, `name`) select @parent_id, '', '雷克萨斯';
+set @child_id = @@identity;
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'CT';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'IS';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'ES';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'GS';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'LS';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'NX';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'RX';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'GX';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'LX';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '本品牌其他车型';
+
+
+insert into tbl_basic_data (parent_id, ename, `name`) select @parent_id, '', '斯柯达';
+set @child_id = @@identity;
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '野帝';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '速派';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '全新明锐';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '明锐经典款';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '昕锐';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '昕动';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '晶锐';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '本品牌其他车型';
+
+
+insert into tbl_basic_data (parent_id, ename, `name`) select @parent_id, '', '通用别克';
+set @child_id = @@identity;
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '昂科拉';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '昂科威';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'GL8';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '君威';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '君越';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '凯越';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '威朗';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '英朗';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '本品牌其他车型';
+
+
+insert into tbl_basic_data (parent_id, ename, `name`) select @parent_id, '', '长安福特';
+set @child_id = @@identity;
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '福睿斯';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '翼博';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '福克斯';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '新蒙迪欧';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '翼虎';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '锐界';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '金牛座';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '探险者';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '本品牌其他车型';
+
+
+insert into tbl_basic_data (parent_id, ename, `name`) select @parent_id, '', '广汽本田';
+set @child_id = @@identity;
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '冠道';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '缤智';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '雅阁';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '飞度';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '凌派';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '奥德赛';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '锋范';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '歌诗图';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '锋范经典';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '雅阁混动';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '本品牌其他车型';
+
+
+insert into tbl_basic_data (parent_id, ename, `name`) select @parent_id, '', '一汽丰田';
+set @child_id = @@identity;
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '威驰';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '威驰FS';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '卡罗拉';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '卡罗拉双擎';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'RAV4荣放';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '皇冠';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '普拉多';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '普瑞维亚';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '86';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '海狮';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '柯斯达（中巴）';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '本品牌其他车型';
+
+
+insert into tbl_basic_data (parent_id, ename, `name`) select @parent_id, '', '广汽传祺';
+set @child_id = @@identity;
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'GA3S';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'GS5S';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'GA6';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'GA8';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'GS8 320T';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'GS4 1.3T';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'GS4 1.5T';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'GS4 PHEV';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'GA3S PHEV';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'GE3';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'GS7';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'GS3';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '本品牌其他车型';
+
+
+insert into tbl_basic_data (parent_id, ename, `name`) select @parent_id, '', '长安马自达';
+set @child_id = @@identity;
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'CX-3';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'CX-5';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '昂克赛拉';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '马自达2';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '马自达3';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '马自达3星骋';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '本品牌其他车型';
+
+
+insert into tbl_basic_data (parent_id, ename, `name`) select @parent_id, '', '东风悦达起亚';
+set @child_id = @@identity;
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'KX CROSS';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '焕驰';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '起亚K2';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '起亚K3';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '福瑞迪';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '起亚K4';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '起亚K5';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '凯绅';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '起亚KX3';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '起亚KX5';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '起亚KX7';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '智跑';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '本品牌其他车型';
+
+
+insert into tbl_basic_data (parent_id, ename, `name`) select @parent_id, '', '捷豹路虎';
+set @child_id = @@identity;
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '捷豹XEL';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '捷豹XFL';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '捷豹XE';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '捷豹XF';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '捷豹XJ';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '捷豹F-PACE';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '捷豹F-TYPE';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '发现神行';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '揽胜极光';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '揽胜极光(进口)';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '揽胜星脉';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '发现';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '揽胜运动版';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '揽胜';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '揽胜运动版新能源';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '本品牌其他车型';
+
+
+insert into tbl_basic_data (parent_id, ename, `name`) select @parent_id, '', '沃尔沃';
+set @child_id = @@identity;
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'S60';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'S60L';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'S60L新能源';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'S90';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'V40';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'V60';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'V90';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'XC60';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'XC60新能源';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'XC90';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'XC90新能源';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '本品牌其他车型';
+
+
+insert into tbl_basic_data (parent_id, ename, `name`) select @parent_id, '', '东风本田';
+set @child_id = @@identity;
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '杰德';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '思域';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '哥瑞';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '竞瑞';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '思铂睿';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'XR-V';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'CR-V';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'UR-V';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '艾力绅';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '本品牌其他车型';
+
+
+insert into tbl_basic_data (parent_id, ename, `name`) select @parent_id, '', '一汽奔腾';
+set @child_id = @@identity;
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'B30';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'B50';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'B70';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'B90';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'X40';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'X80';
+insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '本品牌其他车型';
+
+
+

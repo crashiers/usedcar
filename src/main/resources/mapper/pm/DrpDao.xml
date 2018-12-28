@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cn.jhsoft.usedcar.modules.pm.dao.DrpDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.cn.jhsoft.usedcar.modules.pm.entity.DrpEntity" id="drpMap">
+        <result property="id" column="id"/>
+        <result property="dealerId" column="dealer_id"/>
+        <result property="num" column="num"/>
+        <result property="rkdh" column="rkdh"/>
+        <result property="brand" column="brand"/>
+        <result property="arctic" column="arctic"/>
+        <result property="carModel" column="car_model"/>
+        <result property="color" column="color"/>
+        <result property="mileage" column="mileage"/>
+        <result property="firstDate" column="first_date"/>
+        <result property="displacement" column="displacement"/>
+        <result property="gearbox" column="gearbox"/>
+        <result property="vin" column="vin"/>
+        <result property="remark" column="remark"/>
+        <result property="buyType" column="buy_type"/>
+        <result property="buyClientRef" column="buy_client_ref"/>
+        <result property="buyCompany" column="buy_company"/>
+        <result property="buyReferrer" column="buy_referrer"/>
+        <result property="buyReferrerDuty" column="buy_referrer_duty"/>
+        <result property="buyer" column="buyer"/>
+        <result property="rawCarOwner" column="raw_car_owner"/>
+        <result property="rawPhone" column="raw_phone"/>
+        <result property="permuteArctic" column="permute_arctic"/>
+        <result property="buyDate" column="buy_date"/>
+        <result property="buyPrice" column="buy_price"/>
+        <result property="buyTransferFee" column="buy_transfer_fee"/>
+        <result property="buyOtherFee" column="buy_other_fee"/>
+        <result property="bep" column="bep"/>
+        <result property="slNum" column="sl_num"/>
+        <result property="sellDate" column="sell_date"/>
+        <result property="isAuth" column="is_auth"/>
+        <result property="servicingCosts" column="servicing_costs"/>
+        <result property="upkeep" column="upkeep"/>
+        <result property="checkFee" column="check_fee"/>
+        <result property="sali" column="sali"/>
+        <result property="storeTime" column="store_time"/>
+        <result property="isExceed" column="is_exceed"/>
+        <result property="minPrice" column="min_price"/>
+        <result property="sellPrice" column="sell_price"/>
+        <result property="sellType" column="sell_type"/>
+        <result property="sellClientRef" column="sell_client_ref"/>
+        <result property="sellReferrer" column="sell_referrer"/>
+        <result property="sellReferrerDuty" column="sell_referrer_duty"/>
+        <result property="seller" column="seller"/>
+        <result property="newCarOwner" column="new_car_owner"/>
+        <result property="newPhone" column="new_phone"/>
+        <result property="channel" column="channel"/>
+        <result property="sellDateFinal" column="sell_date_final"/>
+        <result property="sellPriceFinal" column="sell_price_final"/>
+        <result property="paymentType" column="payment_type"/>
+        <result property="paymentFirstMoney" column="payment_first_money"/>
+        <result property="paymentLoanMoney" column="payment_loan_money"/>
+        <result property="transferFee" column="transfer_fee"/>
+        <result property="sellOtherFee" column="sell_other_fee"/>
+        <result property="rbr" column="rbr"/>
+        <result property="fhc" column="fhc"/>
+        <result property="profitInsurance" column="profit_insurance"/>
+        <result property="profitDecorative" column="profit_decorative"/>
+        <result property="formalitieCharge" column="formalitie_charge"/>
+        <result property="rebate" column="rebate"/>
+        <result property="other" column="other"/>
+        <result property="maori" column="maori"/>
+        <result property="maoriRate" column="maori_rate"/>
+        <result property="directCost" column="direct_cost"/>
+        <result property="maori2" column="maori2"/>
+        <result property="maoriRate2" column="maori_rate2"/>
+        <result property="otherEarnings" column="other_earnings"/>
+        <result property="rebate2" column="rebate2"/>
+        <result property="synthesisMaori" column="synthesis_maori"/>
+        <result property="buyYear" column="buy_year"/>
+        <result property="buyMonth" column="buy_month"/>
+        <result property="sellYear" column="sell_year"/>
+        <result property="sellMonth" column="sell_month"/>
+        <result property="buyWay" column="buy_way"/>
+        <result property="sellWay" column="sell_way"/>
+        <result property="sellWay2" column="sell_way2"/>
+        <result property="carAge" column="car_age"/>
+        <result property="carAgeLeavel" column="car_age_leavel"/>
+        <result property="buyPriceLeavel" column="buy_price_leavel"/>
+        <result property="isStore" column="is_store"/>
+        <result property="createDate" column="create_date"/>
+        <result property="createDatetime" column="create_datetime"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.DrpEntity">
+		select * from tbl_drp where id = #{value}
+	</select>
+
+    <sql id="queryList_where">
+        <if test="name != null and name.trim() != ''">
+            and `title` like concat('%',#{name},'%')
+        </if>
+    </sql>
+
+	<select id="queryList" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.DrpEntity">
+		select * from tbl_drp
+        <where>
+            <include refid="queryList_where"></include>
+        </where>
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from tbl_drp
+        <where>
+            <include refid="queryList_where"></include>
+        </where>
+	</select>
+	 
+	<insert id="save" parameterType="com.cn.jhsoft.usedcar.modules.pm.entity.DrpEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into tbl_drp
+		(
+			`dealer_id`, 
+			`num`, 
+			`rkdh`, 
+			`brand`, 
+			`arctic`, 
+			`car_model`, 
+			`color`, 
+			`mileage`, 
+			`first_date`, 
+			`displacement`, 
+			`gearbox`, 
+			`vin`, 
+			`remark`, 
+			`buy_type`, 
+			`buy_client_ref`, 
+			`buy_company`, 
+			`buy_referrer`, 
+			`buy_referrer_duty`, 
+			`buyer`, 
+			`raw_car_owner`, 
+			`raw_phone`, 
+			`permute_arctic`, 
+			`buy_date`, 
+			`buy_price`, 
+			`buy_transfer_fee`, 
+			`buy_other_fee`, 
+			`bep`, 
+			`sl_num`, 
+			`sell_date`, 
+			`is_auth`, 
+			`servicing_costs`, 
+			`upkeep`, 
+			`check_fee`, 
+			`sali`, 
+			`store_time`, 
+			`is_exceed`, 
+			`min_price`, 
+			`sell_price`, 
+			`sell_type`, 
+			`sell_client_ref`, 
+			`sell_referrer`, 
+			`sell_referrer_duty`, 
+			`seller`, 
+			`new_car_owner`, 
+			`new_phone`, 
+			`channel`, 
+			`sell_date_final`, 
+			`sell_price_final`, 
+			`payment_type`, 
+			`payment_first_money`, 
+			`payment_loan_money`, 
+			`transfer_fee`, 
+			`sell_other_fee`, 
+			`rbr`, 
+			`fhc`, 
+			`profit_insurance`, 
+			`profit_decorative`, 
+			`formalitie_charge`, 
+			`rebate`, 
+			`other`, 
+			`maori`, 
+			`maori_rate`, 
+			`direct_cost`, 
+			`maori2`, 
+			`maori_rate2`, 
+			`other_earnings`, 
+			`rebate2`, 
+			`synthesis_maori`, 
+			`buy_year`, 
+			`buy_month`, 
+			`sell_year`, 
+			`sell_month`, 
+			`buy_way`, 
+			`sell_way`, 
+			`sell_way2`, 
+			`car_age`, 
+			`car_age_leavel`, 
+			`buy_price_leavel`, 
+			`is_store`, 
+			`create_date`, 
+			`create_datetime`
+		)
+		values
+		(
+			#{dealerId}, 
+			#{num}, 
+			#{rkdh}, 
+			#{brand}, 
+			#{arctic}, 
+			#{carModel}, 
+			#{color}, 
+			#{mileage}, 
+			#{firstDate}, 
+			#{displacement}, 
+			#{gearbox}, 
+			#{vin}, 
+			#{remark}, 
+			#{buyType}, 
+			#{buyClientRef}, 
+			#{buyCompany}, 
+			#{buyReferrer}, 
+			#{buyReferrerDuty}, 
+			#{buyer}, 
+			#{rawCarOwner}, 
+			#{rawPhone}, 
+			#{permuteArctic}, 
+			#{buyDate}, 
+			#{buyPrice}, 
+			#{buyTransferFee}, 
+			#{buyOtherFee}, 
+			#{bep}, 
+			#{slNum}, 
+			#{sellDate}, 
+			#{isAuth}, 
+			#{servicingCosts}, 
+			#{upkeep}, 
+			#{checkFee}, 
+			#{sali}, 
+			#{storeTime}, 
+			#{isExceed}, 
+			#{minPrice}, 
+			#{sellPrice}, 
+			#{sellType}, 
+			#{sellClientRef}, 
+			#{sellReferrer}, 
+			#{sellReferrerDuty}, 
+			#{seller}, 
+			#{newCarOwner}, 
+			#{newPhone}, 
+			#{channel}, 
+			#{sellDateFinal}, 
+			#{sellPriceFinal}, 
+			#{paymentType}, 
+			#{paymentFirstMoney}, 
+			#{paymentLoanMoney}, 
+			#{transferFee}, 
+			#{sellOtherFee}, 
+			#{rbr}, 
+			#{fhc}, 
+			#{profitInsurance}, 
+			#{profitDecorative}, 
+			#{formalitieCharge}, 
+			#{rebate}, 
+			#{other}, 
+			#{maori}, 
+			#{maoriRate}, 
+			#{directCost}, 
+			#{maori2}, 
+			#{maoriRate2}, 
+			#{otherEarnings}, 
+			#{rebate2}, 
+			#{synthesisMaori}, 
+			#{buyYear}, 
+			#{buyMonth}, 
+			#{sellYear}, 
+			#{sellMonth}, 
+			#{buyWay}, 
+			#{sellWay}, 
+			#{sellWay2}, 
+			#{carAge}, 
+			#{carAgeLeavel}, 
+			#{buyPriceLeavel}, 
+			#{isStore}, 
+			#{createDate}, 
+			#{createDatetime}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.cn.jhsoft.usedcar.modules.pm.entity.DrpEntity">
+		update tbl_drp 
+		<set>
+			<if test="dealerId != null">`dealer_id` = #{dealerId}, </if>
+			<if test="num != null">`num` = #{num}, </if>
+			<if test="rkdh != null">`rkdh` = #{rkdh}, </if>
+			<if test="brand != null">`brand` = #{brand}, </if>
+			<if test="arctic != null">`arctic` = #{arctic}, </if>
+			<if test="carModel != null">`car_model` = #{carModel}, </if>
+			<if test="color != null">`color` = #{color}, </if>
+			<if test="mileage != null">`mileage` = #{mileage}, </if>
+			<if test="firstDate != null">`first_date` = #{firstDate}, </if>
+			<if test="displacement != null">`displacement` = #{displacement}, </if>
+			<if test="gearbox != null">`gearbox` = #{gearbox}, </if>
+			<if test="vin != null">`vin` = #{vin}, </if>
+			<if test="remark != null">`remark` = #{remark}, </if>
+			<if test="buyType != null">`buy_type` = #{buyType}, </if>
+			<if test="buyClientRef != null">`buy_client_ref` = #{buyClientRef}, </if>
+			<if test="buyCompany != null">`buy_company` = #{buyCompany}, </if>
+			<if test="buyReferrer != null">`buy_referrer` = #{buyReferrer}, </if>
+			<if test="buyReferrerDuty != null">`buy_referrer_duty` = #{buyReferrerDuty}, </if>
+			<if test="buyer != null">`buyer` = #{buyer}, </if>
+			<if test="rawCarOwner != null">`raw_car_owner` = #{rawCarOwner}, </if>
+			<if test="rawPhone != null">`raw_phone` = #{rawPhone}, </if>
+			<if test="permuteArctic != null">`permute_arctic` = #{permuteArctic}, </if>
+			<if test="buyDate != null">`buy_date` = #{buyDate}, </if>
+			<if test="buyPrice != null">`buy_price` = #{buyPrice}, </if>
+			<if test="buyTransferFee != null">`buy_transfer_fee` = #{buyTransferFee}, </if>
+			<if test="buyOtherFee != null">`buy_other_fee` = #{buyOtherFee}, </if>
+			<if test="bep != null">`bep` = #{bep}, </if>
+			<if test="slNum != null">`sl_num` = #{slNum}, </if>
+			<if test="sellDate != null">`sell_date` = #{sellDate}, </if>
+			<if test="isAuth != null">`is_auth` = #{isAuth}, </if>
+			<if test="servicingCosts != null">`servicing_costs` = #{servicingCosts}, </if>
+			<if test="upkeep != null">`upkeep` = #{upkeep}, </if>
+			<if test="checkFee != null">`check_fee` = #{checkFee}, </if>
+			<if test="sali != null">`sali` = #{sali}, </if>
+			<if test="storeTime != null">`store_time` = #{storeTime}, </if>
+			<if test="isExceed != null">`is_exceed` = #{isExceed}, </if>
+			<if test="minPrice != null">`min_price` = #{minPrice}, </if>
+			<if test="sellPrice != null">`sell_price` = #{sellPrice}, </if>
+			<if test="sellType != null">`sell_type` = #{sellType}, </if>
+			<if test="sellClientRef != null">`sell_client_ref` = #{sellClientRef}, </if>
+			<if test="sellReferrer != null">`sell_referrer` = #{sellReferrer}, </if>
+			<if test="sellReferrerDuty != null">`sell_referrer_duty` = #{sellReferrerDuty}, </if>
+			<if test="seller != null">`seller` = #{seller}, </if>
+			<if test="newCarOwner != null">`new_car_owner` = #{newCarOwner}, </if>
+			<if test="newPhone != null">`new_phone` = #{newPhone}, </if>
+			<if test="channel != null">`channel` = #{channel}, </if>
+			<if test="sellDateFinal != null">`sell_date_final` = #{sellDateFinal}, </if>
+			<if test="sellPriceFinal != null">`sell_price_final` = #{sellPriceFinal}, </if>
+			<if test="paymentType != null">`payment_type` = #{paymentType}, </if>
+			<if test="paymentFirstMoney != null">`payment_first_money` = #{paymentFirstMoney}, </if>
+			<if test="paymentLoanMoney != null">`payment_loan_money` = #{paymentLoanMoney}, </if>
+			<if test="transferFee != null">`transfer_fee` = #{transferFee}, </if>
+			<if test="sellOtherFee != null">`sell_other_fee` = #{sellOtherFee}, </if>
+			<if test="rbr != null">`rbr` = #{rbr}, </if>
+			<if test="fhc != null">`fhc` = #{fhc}, </if>
+			<if test="profitInsurance != null">`profit_insurance` = #{profitInsurance}, </if>
+			<if test="profitDecorative != null">`profit_decorative` = #{profitDecorative}, </if>
+			<if test="formalitieCharge != null">`formalitie_charge` = #{formalitieCharge}, </if>
+			<if test="rebate != null">`rebate` = #{rebate}, </if>
+			<if test="other != null">`other` = #{other}, </if>
+			<if test="maori != null">`maori` = #{maori}, </if>
+			<if test="maoriRate != null">`maori_rate` = #{maoriRate}, </if>
+			<if test="directCost != null">`direct_cost` = #{directCost}, </if>
+			<if test="maori2 != null">`maori2` = #{maori2}, </if>
+			<if test="maoriRate2 != null">`maori_rate2` = #{maoriRate2}, </if>
+			<if test="otherEarnings != null">`other_earnings` = #{otherEarnings}, </if>
+			<if test="rebate2 != null">`rebate2` = #{rebate2}, </if>
+			<if test="synthesisMaori != null">`synthesis_maori` = #{synthesisMaori}, </if>
+			<if test="buyYear != null">`buy_year` = #{buyYear}, </if>
+			<if test="buyMonth != null">`buy_month` = #{buyMonth}, </if>
+			<if test="sellYear != null">`sell_year` = #{sellYear}, </if>
+			<if test="sellMonth != null">`sell_month` = #{sellMonth}, </if>
+			<if test="buyWay != null">`buy_way` = #{buyWay}, </if>
+			<if test="sellWay != null">`sell_way` = #{sellWay}, </if>
+			<if test="sellWay2 != null">`sell_way2` = #{sellWay2}, </if>
+			<if test="carAge != null">`car_age` = #{carAge}, </if>
+			<if test="carAgeLeavel != null">`car_age_leavel` = #{carAgeLeavel}, </if>
+			<if test="buyPriceLeavel != null">`buy_price_leavel` = #{buyPriceLeavel}, </if>
+			<if test="isStore != null">`is_store` = #{isStore}, </if>
+			<if test="createDate != null">`create_date` = #{createDate}, </if>
+			<if test="createDatetime != null">`create_datetime` = #{createDatetime}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from tbl_drp where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from tbl_drp where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

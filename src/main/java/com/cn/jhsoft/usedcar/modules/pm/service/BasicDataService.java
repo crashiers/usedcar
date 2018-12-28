@@ -34,4 +34,8 @@ public interface BasicDataService {
 	List<Long> queryBasicDataIdListByEname(String ename);
 
 	BasicDataEntity queryObjectByEname(String ename);
+
+	BasicDataEntity queryObjectByName(String name);
+
+	BasicDataEntity queryObjectByNameAndParentId(Map<String, Object> map);
 }

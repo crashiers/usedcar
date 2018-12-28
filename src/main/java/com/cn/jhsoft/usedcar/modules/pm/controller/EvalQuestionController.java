@@ -52,6 +52,10 @@ public class EvalQuestionController extends AbstractController {
 	@RequiresPermissions(value={"pm:evalquestion:list", "pm:evalstage:list"},logical= Logical.OR)
 	public R list(@RequestParam Map<String, Object> params){
 		//查询列表数据
+		if (params.get("sidx") == null || params.get("sidx").toString().equals("")){
+			params.put("sidx", "num");
+			params.put("order", "asc");
+		}
         Query query = new Query(params);
 
 		List<EvalQuestionEntity> evalQuestionList = evalQuestionService.queryList(query);
@@ -69,6 +73,10 @@ public class EvalQuestionController extends AbstractController {
 	@RequiresPermissions(value={"pm:evalquestion:list", "pm:evalstage:list"},logical= Logical.OR)
 	public R list2(@RequestParam Map<String, Object> params){
 		//查询列表数据
+		if (params.get("sidx") == null || params.get("sidx").toString().equals("")){
+			params.put("sidx", "num");
+			params.put("order", "asc");
+		}
 		params.put("createAdminid", getUserId());
 		Query query = new Query(params);
 
