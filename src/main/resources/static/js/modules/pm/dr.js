@@ -148,6 +148,7 @@ var vm = new Vue({
 			});
 		},
         upLoadFile: function (event) {
+            event.currentTarget.disabled = true;
             var url = "pm/dr/upload?dealerId="+vm.dealerId;
             $.ajaxFileUpload({
                 type: "POST",
@@ -155,6 +156,7 @@ var vm = new Vue({
                 fileElementId: 'file',
                 data: {'token':localStorage.getItem("token")},
                 success: function(r){
+                    event.currentTarget.disabled = false;
                 	$("#file").val("");
                     if(r.code === 0){
                         alert('已成功导入', function(index){
@@ -165,6 +167,7 @@ var vm = new Vue({
                     }
                 },
                 complete:function(r){
+                    event.currentTarget.disabled = false;
                     $("#file").val("");
                     var _r = JSON.parse(r.responseText);
                     if(_r.code === 0){
@@ -178,6 +181,7 @@ var vm = new Vue({
             });
         },
         upLoadFileAmount: function (atype) {
+            event.currentTarget.disabled = true;
             vm.dealerId = $("#selectDealerId").val() == null ? vm.dealerId : $("#selectDealerId").val();
             var url = "pm/dr/uploadamount?atype="+atype+"&dealerId="+vm.dealerId;
             $.ajaxFileUpload({
@@ -186,6 +190,7 @@ var vm = new Vue({
                 fileElementId: 'file',
                 data: {'token':localStorage.getItem("token")},
                 success: function(r){
+                    event.currentTarget.disabled = false;
                     $("#file").val("");
                     if(r.code === 0){
                         alert('已成功导入', function(index){
@@ -196,6 +201,7 @@ var vm = new Vue({
                     }
                 },
                 complete:function(r){
+                    event.currentTarget.disabled = false;
                     $("#file").val("");
                     var _r = JSON.parse(r.responseText);
                     if(_r.code === 0){
@@ -333,7 +339,7 @@ var vm = new Vue({
             $("."+tdClass).find("input").bind('keypress', function(event) {
 
                 // 是否是最后一行，或者最后一列
-                var isEndRow = $("."+tdClass).parent().index() + 1 == $("."+tdClass).parent().parent().find("tr").size();
+                var isEndRow = $("."+tdClass).parent().index() + 2 == $("."+tdClass).parent().parent().find("tr").size();
                 var isEndCol = $("."+tdClass).index() + 1 == $("."+tdClass).parent().find("td").size();
                 var nextTd = null;
 

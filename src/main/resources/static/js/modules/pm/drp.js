@@ -174,6 +174,7 @@ var vm = new Vue({
 			});
 		},
         upLoadFile: function (event) {
+            event.currentTarget.disabled = true;
             var url = "pm/drp/upload";
             $.ajaxFileUpload({
                 type: "POST",
@@ -191,6 +192,7 @@ var vm = new Vue({
                     }
                 },
                 complete:function(r){
+                    event.currentTarget.disabled = false;
                     $("#file").val("");
                     var _r = JSON.parse(r.responseText);
                     if(_r.code === 0){

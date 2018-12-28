@@ -79,11 +79,64 @@ public class DrController extends AbstractController {
 		List<DrEntity> drList = drService.queryList(query);
 		int total = drService.queryTotal(query);
 
+
+		DrEntity entityAll = new DrEntity();
+		DrEntity entityAvg = new DrEntity();
 		for (DrEntity entity : drList){
+			entityAll.setCreatedAmount(entityAll.getCreatedAmount() + entity.getCreatedAmount());
+			entityAll.setDccAmount(entityAll.getDccAmount() + entity.getDccAmount());
+			entityAll.setAllAmount(entityAll.getAllAmount() + entity.getAllAmount());
+			entityAll.setRetailAmount(entityAll.getRetailAmount() + entity.getRetailAmount());
+			entityAll.setTwoNetAmount(entityAll.getTwoNetAmount() + entity.getTwoNetAmount());
+			entityAll.setBigClientAmount(entityAll.getBigClientAmount() + entity.getBigClientAmount());
+			entityAll.setLatentAmount(entityAll.getLatentAmount() + entity.getLatentAmount());
+			entityAll.setLatentAssessAmount(entityAll.getLatentAssessAmount() + entity.getLatentAssessAmount());
+			entityAll.setLatentAssessDealAmount(entityAll.getLatentAssessDealAmount() + entity.getLatentAssessDealAmount());
+
+			entityAll.setLatentRate(entityAll.getLatentRate() + entity.getLatentRate());
+			entityAll.setLatentAssessRate(entityAll.getLatentAssessRate() + entity.getLatentAssessRate());
+			entityAll.setLatentAssessDealRate(entityAll.getLatentAssessDealRate() + entity.getLatentAssessDealRate());
+			entityAll.setGeneralizedRate(entityAll.getGeneralizedRate() + entity.getGeneralizedRate());
+			entityAll.setNarrowlyRate(entityAll.getNarrowlyRate() + entity.getNarrowlyRate());
+
+			entityAll.setSellCreatedAmount(entityAll.getSellCreatedAmount() + entity.getSellCreatedAmount());
+			entityAll.setSellDealAmount(entityAll.getSellDealAmount() + entity.getSellDealAmount());
+			entityAll.setSellDealRate(entityAll.getSellDealRate() + entity.getSellDealRate());
 
 		}
-		DrEntity entityAll = new DrEntity();
 		entityAll.setYearMonth("合计");
+		if (drList.size() > 0) {
+			entityAvg.setYearMonth("平均");
+			entityAvg.setCreatedAmount(entityAll.getCreatedAmount() / drList.size());
+			entityAvg.setDccAmount(entityAll.getDccAmount() / drList.size());
+			entityAvg.setAllAmount(entityAll.getAllAmount() / drList.size());
+			entityAvg.setRetailAmount(entityAll.getRetailAmount() / drList.size());
+			entityAvg.setTwoNetAmount(entityAll.getTwoNetAmount() / drList.size());
+			entityAvg.setBigClientAmount(entityAll.getBigClientAmount() / drList.size());
+			entityAvg.setLatentAmount(entityAll.getLatentAmount() / drList.size());
+			entityAvg.setLatentAssessAmount(entityAll.getLatentAssessAmount() / drList.size());
+			entityAvg.setLatentAssessDealAmount(entityAll.getLatentAssessDealAmount() / drList.size());
+
+			entityAvg.setLatentRate((float) ((Math.round((entityAll.getLatentRate() / drList.size())*100))/100));
+			entityAvg.setLatentAssessRate((float) ((Math.round((entityAll.getLatentAssessRate() / drList.size())*100))/100));
+			entityAvg.setLatentAssessDealRate((float) ((Math.round((entityAll.getLatentAssessDealRate() / drList.size())*100))/100));
+			entityAvg.setGeneralizedRate((float) ((Math.round((entityAll.getGeneralizedRate() / drList.size())*100))/100));
+			entityAvg.setNarrowlyRate((float) ((Math.round((entityAll.getNarrowlyRate() / drList.size())*100))/100));
+
+			entityAvg.setSellCreatedAmount(entityAll.getSellCreatedAmount() / drList.size());
+			entityAvg.setSellDealAmount(entityAll.getSellDealAmount() / drList.size());
+			entityAvg.setSellDealRate((float) ((Math.round((entityAll.getSellDealRate() / drList.size())*100))/100));
+			drList.add(entityAvg);
+
+
+
+			entityAll.setLatentRate(entityAvg.getLatentRate());
+			entityAll.setLatentAssessRate(entityAvg.getLatentAssessRate());
+			entityAll.setLatentAssessDealRate(entityAvg.getLatentAssessDealRate());
+			entityAll.setGeneralizedRate(entityAvg.getGeneralizedRate());
+			entityAll.setNarrowlyRate(entityAvg.getNarrowlyRate());
+			entityAll.setSellDealRate(entityAvg.getSellDealRate());
+		}
 		drList.add(entityAll);
 		
 		PageUtils pageUtil = new PageUtils(drList, total, query.getLimit(), query.getPage());
@@ -314,6 +367,10 @@ public class DrController extends AbstractController {
 		Map<String, Object> map = new HashMap<>();
 		map.put("parentId", id);
 		List<BasicDataEntity> basicDataList = basicDataService.queryList(map);
+		BasicDataEntity allEntity = new BasicDataEntity();
+		allEntity.setName("合计");
+		allEntity.setId(0L);
+		basicDataList.add(allEntity);
 
 		// 上方年月
 		map.put("dealerId", dealerId);
@@ -344,6 +401,17 @@ public class DrController extends AbstractController {
 			}
 			_lists.add(_listDra);
 		}
+
+		// 加累计
+		List<DraEntity> _listDraAll = new LinkedList<>();
+		for (DrEntity dr : drDataList){
+			DraEntity draEntityAll = new DraEntity();
+			draEntityAll.setAmount(100);
+			draEntityAll.setArctic("0");
+			_listDraAll.add(draEntityAll);
+		}
+		_lists.add(_listDraAll);
+
 
 		return R.ok().put("smallBrandLists", basicDataList).put("yearMonthLists", drDataList).put("amountDataLists", _lists);
 	}

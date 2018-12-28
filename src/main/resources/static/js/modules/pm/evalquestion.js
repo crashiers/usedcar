@@ -112,14 +112,15 @@ var vm = new Vue({
 		},
         upLoadFile: function (event) {
             var url = "pm/evalquestion/upload";
-
-
+            event.currentTarget.disabled = true;
             $.ajaxFileUpload({
                 type: "POST",
                 url: baseURL + url,
                 fileElementId: 'file',
                 data: {'token':localStorage.getItem("token")},
                 success: function(r){
+                    event.currentTarget.disabled = false;
+                    $("#file").val("");
                     if(r.code === 0){
                         alert('已成功导入', function(index){
                             vm.reload();
@@ -129,6 +130,8 @@ var vm = new Vue({
                     }
                 },
                 complete:function(r){
+                    event.currentTarget.disabled = false;
+                    $("#file").val("");
                 	var _r = JSON.parse(r.responseText);
                     if(_r.code === 0){
                         alert('已成功导入', function(index){
