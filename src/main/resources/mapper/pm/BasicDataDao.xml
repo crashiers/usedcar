@@ -116,11 +116,15 @@
 	</select>
 
 	<select id="queryBasicDataIdListByEname" resultType="long">
-		select id from tbl_basic_data where ename = #{value}
+		select id from tbl_basic_data where ename = #{value} order by `order_num` asc,id asc
 	</select>
 
 	<select id="queryObjectByEname" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.BasicDataEntity">
 		select * from tbl_basic_data where ename =  #{value}
+	</select>
+
+	<select id="queryChildListByEname" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.BasicDataEntity">
+		select * from tbl_basic_data where parent_id = (select id from tbl_basic_data where ename=#{value}) order by `order_num` asc,id asc
 	</select>
 
 	<select id="queryObjectByName" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.BasicDataEntity">

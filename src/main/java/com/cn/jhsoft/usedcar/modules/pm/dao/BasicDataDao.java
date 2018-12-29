@@ -33,4 +33,6 @@ public interface BasicDataDao extends BaseDao<BasicDataEntity> {
     BasicDataEntity queryObjectByName(String name);
 
     BasicDataEntity queryObjectByNameAndParentId(Map<String, Object> map);
+
+    List<BasicDataEntity> queryChildListByEname(String ename);
 }

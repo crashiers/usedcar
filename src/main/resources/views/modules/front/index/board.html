@@ -23,11 +23,11 @@
                     </div>
 
                     <!--每个品牌的各车型数据-->
-                    <div class="met-editor lazyload clearfix" style="font-size:12px;">
+                    <div class="met-editor lazyload clearfix info" style="font-size:12px;padding-top:40px" th:each="lists, listsStat: ${boardLists}">
                         <div class="col-md-4 oneTable" style="padding-left: 0px;">
                             <table>
                                 <tr class="oneTableHeader">
-                                    <td rowspan="2" style="padding-top: 30px;">车型</td>
+                                    <td rowspan="2" style="padding-top: 30px;" th:text="${lists.key}"></td>
                                     <td colspan="2">新车销售车型比例</td>
                                     <td colspan="2">置换数据</td>
                                 </tr>
@@ -37,7 +37,7 @@
                                     <td>置换台次</td>
                                     <td>置换率</td>
                                 </tr>
-                                <tr th:each="data : ${boardLists}">
+                                <tr th:each="data : ${lists.value}">
                                     <td th:text="${data.title}"></td>
                                     <td th:text="${data.draAmount1}"></td>
                                     <td th:text="${data.draAmountBi1} + '%'"></td>
@@ -48,7 +48,7 @@
                         </div>
 
                         <!--饼状图-->
-                        <div class="col-md-8" id="div_bing1" style="height:450px;">
+                        <div class="col-md-8 divBing" th:id="'div_bing' + ${listsStat.index}" th:attr="brand-name=${lists.key}" style="height:450px;">
                         </div>
 
                     </div>
@@ -84,7 +84,13 @@
             contentType: "application/json",
             success: function(r){
                 if (r.code === 0){
-                    bing('div_bing1', '', r.thisData.titles, r.thisData.datas, 1, 2);
+                    //bing('div_bing1', '', r.thisData.titles, r.thisData.datas, 1, 2);
+
+                    $(".divBing").each(function(index,element){
+                        var brandName = $(this).attr("brand-name");
+                        
+                        bing($(this).attr("id"), '', r.thisData[brandName].titles, r.thisData[brandName].datas, 1, 2);
+                    });
                 }
 
             }

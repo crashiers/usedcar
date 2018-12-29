@@ -154,6 +154,7 @@ var vm = new Vue({
         upLoadFile: function (event) {
             var buttonObj = event.currentTarget;
             buttonObj.disabled = true;
+            vm.dealerId = $("#selectDealerId").val() == null ? vm.dealerId : $("#selectDealerId").val();
             var url = "pm/dr/upload?dealerId="+vm.dealerId;
             $.ajaxFileUpload({
                 type: "POST",
@@ -514,3 +515,9 @@ function gotoBoard(obj) {
     $(obj).attr("href", "/board?d="+vm.dealerId+"&b="+vm.brandId+"&token="+localStorage.getItem("token"));
     return true;
 }
+function gotoAllBoard(obj) {
+    vm.dealerId = $("#selectDealerId").val() == null ? vm.dealerId : $("#selectDealerId").val();
+    $(obj).attr("href", "/board?d="+vm.dealerId+"&token="+localStorage.getItem("token"));
+    return true;
+}
+

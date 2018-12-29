@@ -371,7 +371,7 @@ public class IndexController extends AbstractController {
 
         Map<String, Object> params = new HashMap<>();
         params.put("d", request.getParameter("d"));
-        params.put("b", request.getParameter("b"));
+        params.put("b", request.getParameter("b") == null || request.getParameter("b").toString().equals("") ? "" : request.getParameter("b").toString());
         params.put("token", request.getParameter("token"));
         model.addAttribute("params", params);
 
@@ -381,82 +381,100 @@ public class IndexController extends AbstractController {
             return "modules/front/index/board";
         }
 
-        // 取出车型
-        Map<String, Object> map = new HashMap<>();
-        map.put("parentId", params.get("b"));
-        List<BasicDataEntity> basicDataList = basicDataService.queryList(map);
-
-        // 取出销售和置换台次
-        // 总数
-
-        // 新车
-        map.put("atype", 1);
-        map.put("brand", params.get("b"));
-        map.put("dealerId", params.get("d"));
-        List<DraEntity> draLists1 = draService.queryListGroupArctic(map);
-        Map<String, Integer> draAmounts1 = new HashMap<>();
-        for (DraEntity draEntity : draLists1){
-            draAmounts1.put(draEntity.getArctic(), draEntity.getAmount());
+        List<BasicDataEntity> brandLists = new LinkedList<>();
+        if (!"".equals(params.get("b").toString())){
+            BasicDataEntity brandEntity = basicDataService.queryObject(Long.valueOf(params.get("b").toString()));
+            if (brandEntity != null){
+                brandLists.add(brandEntity);
+            }
+        }
+        if (brandLists.size() == 0){
+            // 取所有
+            brandLists = basicDataService.queryChildListByEname("brand");
         }
 
-        // 置换
-        map.put("atype", 2);
-        List<DraEntity> draLists2 = draService.queryListGroupArctic(map);
-        Map<String, Integer> draAmounts2 = new HashMap<>();
-        for (DraEntity draEntity : draLists2){
-            draAmounts2.put(draEntity.getArctic(), draEntity.getAmount());
-        }
+        Map<String, List<Map<String, Object>>> allListsMap = new LinkedHashMap<>();
+        for (BasicDataEntity brandEntity:brandLists){
 
-        List<Map<String, Object>> lists = new LinkedList<>();
-        Map<String, Object> _map;
-        int d1 = 0;
-        float d2 = 0;
-        int d3 = 0;
-        float d4 = 0;
-        DecimalFormat df = new DecimalFormat("#.#");//格式化小数
+            // 取出车型
+            Map<String, Object> map = new HashMap<>();
+            map.put("parentId", brandEntity.getId());
+            List<BasicDataEntity> basicDataList = basicDataService.queryList(map);
 
-        for (BasicDataEntity bdEntity : basicDataList){
+            // 取出销售和置换台次
+
+            // 新车
+            map.put("atype", 1);
+            map.put("brand", brandEntity.getId());
+            map.put("dealerId", params.get("d"));
+            List<DraEntity> draLists1 = draService.queryListGroupArctic(map);
+            Map<String, Integer> draAmounts1 = new HashMap<>();
+            for (DraEntity draEntity : draLists1){
+                draAmounts1.put(draEntity.getArctic(), draEntity.getAmount());
+            }
+
+            // 置换
+            map.put("atype", 2);
+            List<DraEntity> draLists2 = draService.queryListGroupArctic(map);
+            Map<String, Integer> draAmounts2 = new HashMap<>();
+            for (DraEntity draEntity : draLists2){
+                draAmounts2.put(draEntity.getArctic(), draEntity.getAmount());
+            }
+
+            List<Map<String, Object>> lists = new LinkedList<>();
+            Map<String, Object> _map;
+            int d1 = 0;
+            float d2 = 0;
+            int d3 = 0;
+            float d4 = 0;
+            DecimalFormat df = new DecimalFormat("#.#");//格式化小数
+
+            for (BasicDataEntity bdEntity : basicDataList){
+                _map = new HashMap<>();
+                _map.put("title", bdEntity.getName());
+                _map.put("draAmount1", draAmounts1.get(bdEntity.getId()+"") == null ? "0" : draAmounts1.get(bdEntity.getId()+""));
+                _map.put("draAmount2", draAmounts2.get(bdEntity.getId()+"") == null ? "0" : draAmounts2.get(bdEntity.getId()+""));
+                lists.add(_map);
+                d1 += Integer.valueOf(_map.get("draAmount1").toString());
+                d3 += Integer.valueOf(_map.get("draAmount2").toString());
+            }
+
+            for (Map<String, Object> m : lists){
+                m.put("draAmountBi1", 0);
+                if (d1 != 0){
+                    float _bi = Float.valueOf(m.get("draAmount1").toString()) / d1;
+                    d2 += _bi;
+                    m.put("draAmountBi1", df.format(_bi*100));
+                }
+
+                m.put("draAmountBi2", 0);
+                if (Integer.valueOf(m.get("draAmount1").toString()) != 0){
+                    float _bi = Float.valueOf(m.get("draAmount2").toString()) / Integer.valueOf(m.get("draAmount1").toString());
+                    m.put("draAmountBi2", df.format(_bi*100));
+                }
+            }
+            if (d1 > 0) {
+                d4 = ((float)d3 / d1) * 100;
+            }
+            if (d2 > 1){
+                d2 = 1;
+            }
+
+            // 添加总数
             _map = new HashMap<>();
-            _map.put("title", bdEntity.getName());
-            _map.put("draAmount1", draAmounts1.get(bdEntity.getId()+"") == null ? "0" : draAmounts1.get(bdEntity.getId()+""));
-            _map.put("draAmount2", draAmounts2.get(bdEntity.getId()+"") == null ? "0" : draAmounts2.get(bdEntity.getId()+""));
+            _map.put("title", "总计");
+            _map.put("draAmount1", d1);
+            _map.put("draAmountBi1", df.format(d2*100));
+            _map.put("draAmount2", d3);
+            _map.put("draAmountBi2", df.format(d4));
             lists.add(_map);
-            d1 += Integer.valueOf(_map.get("draAmount1").toString());
-            d3 += Integer.valueOf(_map.get("draAmount2").toString());
+
+            allListsMap.put(brandEntity.getName(), lists);
         }
 
-        for (Map<String, Object> m : lists){
-            m.put("draAmountBi1", 0);
-            if (d1 != 0){
-                float _bi = Float.valueOf(m.get("draAmount1").toString()) / d1;
-                d2 += _bi;
-                m.put("draAmountBi1", df.format(_bi*100));
-            }
-
-            m.put("draAmountBi2", 0);
-            if (Integer.valueOf(m.get("draAmount1").toString()) != 0){
-                float _bi = Float.valueOf(m.get("draAmount2").toString()) / Integer.valueOf(m.get("draAmount1").toString());
-                m.put("draAmountBi2", df.format(_bi*100));
-            }
-        }
-        if (d1 > 0) {
-            d4 = ((float)d3 / d1) * 100;
-        }
-        if (d2 > 1){
-            d2 = 1;
-        }
-
-        // 添加总数
-        _map = new HashMap<>();
-        _map.put("title", "总计");
-        _map.put("draAmount1", d1);
-        _map.put("draAmountBi1", df.format(d2*100));
-        _map.put("draAmount2", d3);
-        _map.put("draAmountBi2", df.format(d4));
-        lists.add(_map);
 
         model.addAttribute("createDatetime", DateUtils.getTodayDateYMDHMS());
-        model.addAttribute("boardLists", lists);
+        model.addAttribute("boardLists", allListsMap);
         return "modules/front/index/board";
 
     }
@@ -475,47 +493,64 @@ public class IndexController extends AbstractController {
         if (!subject.isPermitted("pm:dr:list")){
             return R.error();
         }
-        DecimalFormat df = new DecimalFormat("#.#");//格式化小数
+        //DecimalFormat df = new DecimalFormat("#.#");//格式化小数
 
-        // 取出车型
-        Map<String, Object> map = new HashMap<>();
-        map.put("parentId", params.get("b"));
-        List<BasicDataEntity> basicDataList = basicDataService.queryList(map);
-
-        // 新车
-        map.put("atype", 1);
-        map.put("brand", params.get("b"));
-        map.put("dealerId", params.get("d"));
-        List<DraEntity> draLists1 = draService.queryListGroupArctic(map);
-        Map<String, Integer> draAmounts = new HashMap<>();
-        int allAmount = 0;
-        for (DraEntity draEntity : draLists1){
-            draAmounts.put(draEntity.getArctic(), draEntity.getAmount());
-            allAmount += draEntity.getAmount();
-        }
-
-        List<String> titles = new LinkedList<>();
-        List<Map<String, Object>> datas = new LinkedList<>();
-        for (BasicDataEntity entity : basicDataList){
-            Map<String, Object> m = new LinkedHashMap<>();
-            if (draAmounts.get(entity.getId()+"") == null){
-                m.put("value", 0);
-            }else {
-                //m.put("value", df.format(((float) draAmounts.get(entity.getId()+"") / allAmount) * 100));
-                m.put("value", draAmounts.get(entity.getId()+""));
+        List<BasicDataEntity> brandLists = new LinkedList<>();
+        if (params.get("b") != null && !"".equals(params.get("b").toString())){
+            BasicDataEntity brandEntity = basicDataService.queryObject(Long.valueOf(params.get("b").toString()));
+            if (brandEntity != null){
+                brandLists.add(brandEntity);
             }
-            m.put("name", entity.getName());
-            datas.add(m);
-
-            titles.add(entity.getName());
+        }
+        if (brandLists.size() == 0){
+            // 取所有
+            brandLists = basicDataService.queryChildListByEname("brand");
         }
 
+        Map<String, Map> resultMaps = new LinkedHashMap<>();
+        for (BasicDataEntity brandEntity:brandLists) {
 
-        Map resultMap = new HashMap();
-        resultMap.put("titles", titles);
-        resultMap.put("datas", datas);
+            // 取出车型
+            Map<String, Object> map = new HashMap<>();
+            map.put("parentId", brandEntity.getId());
+            List<BasicDataEntity> basicDataList = basicDataService.queryList(map);
 
-        return R.ok().put("thisData", resultMap);
+            // 新车
+            map.put("atype", 1);
+            map.put("brand", brandEntity.getId());
+            map.put("dealerId", params.get("d"));
+            List<DraEntity> draLists1 = draService.queryListGroupArctic(map);
+            Map<String, Integer> draAmounts = new HashMap<>();
+            int allAmount = 0;
+            for (DraEntity draEntity : draLists1) {
+                draAmounts.put(draEntity.getArctic(), draEntity.getAmount());
+                allAmount += draEntity.getAmount();
+            }
+
+            List<String> titles = new LinkedList<>();
+            List<Map<String, Object>> datas = new LinkedList<>();
+            for (BasicDataEntity entity : basicDataList) {
+                Map<String, Object> m = new LinkedHashMap<>();
+                if (draAmounts.get(entity.getId() + "") == null) {
+                    m.put("value", 0);
+                } else {
+                    //m.put("value", df.format(((float) draAmounts.get(entity.getId()+"") / allAmount) * 100));
+                    m.put("value", draAmounts.get(entity.getId() + ""));
+                }
+                m.put("name", entity.getName());
+                datas.add(m);
+
+                titles.add(entity.getName());
+            }
+
+            Map resultMap = new HashMap();
+            resultMap.put("titles", titles);
+            resultMap.put("datas", datas);
+
+            resultMaps.put(brandEntity.getName(), resultMap);
+        }
+
+        return R.ok().put("thisData", resultMaps);
     }
 
 
