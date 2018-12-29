@@ -4,6 +4,7 @@ import com.cn.jhsoft.usedcar.modules.pm.entity.DraEntity;
 import com.cn.jhsoft.usedcar.modules.sys.dao.BaseDao;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,4 +18,8 @@ import java.util.Map;
 public interface DraDao extends BaseDao<DraEntity> {
 
     DraEntity queryObjectByArcticAndYearMonthAndAtypeAndDealerId(Map<String, Object> map);
+
+    List<DraEntity> queryListGroupYearMonth(Map<String, Object> map);
+
+    List<DraEntity> queryListGroupArctic(Map<String, Object> map);
 }

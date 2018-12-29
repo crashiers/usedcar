@@ -1,3 +1,8 @@
+// 颜色数组
+var colors = ['#ab78ba', '#08a9f2', '#72b201', '#f8a761', '#8fed7c', '#80ebbf', '#8085ea', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#d9534f'];
+//var colors = ['#66b7f0', '#66d9f1', '#92ebe1', '#80ebbf', '#76df94', '#9fee94', '#dbf694', '#f9e351', '#749f83', '#ca8622', '#bda29a', '#434347'];
+
+
 // 客流量报表展示
 function clientFlowCharts(divId, chartsTitle, thisTitles, thisDatas, thisMax) {
     // 基于准备好的dom，初始化echarts实例
@@ -323,6 +328,84 @@ function getPointHour(divId, chartsTitle, thisTitles, thisDatas, thisColor) {
 
 }
 
+
+
+
+// 饼状图
+function bing(divId, chartsTitle, thisTitles, thisDatas, isAllBing, isShowLabelLine) {
+
+
+    // 是否是全饼(2)，还有半圈的饼(1)
+    isAllBing = isAllBing || 1;
+    // 是否显示 明文标签提示，显示(2)不显示(1)
+    isShowLabelLine = isShowLabelLine || 1;
+
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById(divId));
+
+    option = {
+        tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b}: {c} ({d}%)"
+        },
+        legend: {
+            orient: 'vertical',
+            x: 'right',
+            type: 'scroll',
+            right: 10,
+            top: 50,
+            bottom: 30,
+            data: thisTitles
+        },
+        color: colors,
+        series: [
+            {
+                name:chartsTitle,
+                type:'pie',
+                radius: ['50%', '80%'],
+                center: ['43%', '53%'],
+                avoidLabelOverlap: false,
+                data:thisDatas
+            }
+        ]
+    };
+
+    // 全饼
+    if(isAllBing == 2){
+        option.series[0].radius = '85%';
+    }
+    // 不显示 明文标签
+    if (isShowLabelLine == 1){
+        option.series[0].label = {
+            normal: {
+                show: false,
+                position: 'center'
+            },
+            emphasis: {
+                show: true,
+                textStyle: {
+                    fontSize: '15',
+                    fontWeight: 'bold'
+                }
+            }
+        };
+        option.series[0].labelLine = {
+            normal: {
+                show: false
+            }
+        };
+    }
+
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.clear();
+    myChart.setOption(option);
+
+}
+
+
+
+
 // 雷达图
 function getRadar(divId, indicatorArr, dataArr) {
     indicatorArr = indicatorArr || [];
@@ -459,3 +542,5 @@ function getRadar(divId, indicatorArr, dataArr) {
     myChart.setOption(option);
 
 }
+
+

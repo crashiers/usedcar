@@ -56,6 +56,17 @@
             <include refid="queryList_where"></include>
         </where>
 	</select>
+
+
+	<select id="queryListGroupYearMonth" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.DraEntity">
+		select `year_month`,sum(amount) as amount from tbl_dra where dealer_id=#{dealerId} and brand=#{brand} and atype=#{atype} group by `year_month`;
+	</select>
+
+
+	<select id="queryListGroupArctic" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.DraEntity">
+		select arctic,sum(amount) as amount from tbl_dra where dealer_id=#{dealerId} and brand=#{brand} and atype=#{atype} group by arctic;
+	</select>
+
 	 
 	<insert id="save" parameterType="com.cn.jhsoft.usedcar.modules.pm.entity.DraEntity" useGeneratedKeys="true" keyProperty="id">
 		insert into tbl_dra

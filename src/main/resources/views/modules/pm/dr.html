@@ -47,6 +47,7 @@
 			<a v-if="hasPermission('pm:dr:save')" class="btn btn-primary" @click="upload"><i class="fa fa-arrow-circle-right"></i>&nbsp;导入</a>
 			<a v-if="hasPermission('pm:dr:update')" class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
 			<a v-if="hasPermission('pm:dr:delete')" class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			<a onclick="return gotoBoard(this)" target="_blank" href="/">业务看板</a>
 		</div>
 	    <table id="jqGrid"></table>
 	    <div id="jqGridPager"></div>
@@ -210,8 +211,14 @@
 								</tr>
 								<tr v-for="(val, indexRow) in smallBrandLists">
 									<td>{{val.name}}</td>
-									<td v-for="(data, key, indexCol) in amountDataLists1[indexRow]" v-bind:class="data.yearMonth + '_' + data.arctic + '_' + data.atype" @click="flag && indexRow!==smallBrandLists.length-1 && updateAmount(data)" v-bind:yearMonth="data.yearMonth" v-bind:arctic="data.arctic" v-bind:amount="data.amount" v-bind:atype="data.atype" v-bind:dealerId="data.dealerId">
+									<td v-for="(data, key, indexCol) in amountDataLists1[indexRow]" v-bind:class="data.yearMonth + '_' + data.arctic + '_' + data.atype" @click="flag && updateAmount(data)" v-bind:yearMonth="data.yearMonth" v-bind:arctic="data.arctic" v-bind:amount="data.amount" v-bind:atype="data.atype" v-bind:dealerId="data.dealerId">
 									{{data.amount}}
+									</td>
+								</tr>
+								<tr>
+									<td>合计</td>
+									<td v-for="(val, colIndex) in allAmountDataLists1">
+										{{val.allAmount}}
 									</td>
 								</tr>
 							</table>
@@ -247,8 +254,14 @@
 								</tr>
 								<tr v-for="(val, indexRow) in smallBrandLists">
 									<td>{{val.name}}</td>
-									<td v-for="(data, key, indexCol) in amountDataLists2[indexRow]" v-bind:class="data.yearMonth + '_' + data.arctic + '_' + data.atype" @click="flag && indexRow!==smallBrandLists.length-1 && updateAmount(data)" v-bind:yearMonth="data.yearMonth" v-bind:arctic="data.arctic" v-bind:amount="data.amount" v-bind:atype="data.atype" v-bind:dealerId="data.dealerId">
+									<td v-for="(data, key, indexCol) in amountDataLists2[indexRow]" v-bind:class="data.yearMonth + '_' + data.arctic + '_' + data.atype" @click="flag && updateAmount(data)" v-bind:yearMonth="data.yearMonth" v-bind:arctic="data.arctic" v-bind:amount="data.amount" v-bind:atype="data.atype" v-bind:dealerId="data.dealerId">
 										{{data.amount}}
+									</td>
+								</tr>
+								<tr>
+									<td>合计</td>
+									<td v-for="(val, colIndex) in allAmountDataLists2">
+										{{val.allAmount}}
 									</td>
 								</tr>
 							</table>
@@ -266,6 +279,9 @@
 
 
 </div>
+<style>
+	.rrappApprove .table td { padding: 0px; line-height: 40px; height:40px; }
+</style>
 
 <script src="../../js/modules/pm/dr.js"></script>
 </body>

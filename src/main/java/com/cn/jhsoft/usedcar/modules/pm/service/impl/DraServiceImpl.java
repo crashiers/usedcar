@@ -57,4 +57,14 @@ public class DraServiceImpl implements DraService {
 		return draDao.queryObjectByArcticAndYearMonthAndAtypeAndDealerId(map);
 	}
 
+	@Override
+	public List<DraEntity> queryListGroupYearMonth(Map<String, Object> map) {
+		return draDao.queryListGroupYearMonth(map);
+	}
+
+	@Override
+	public List<DraEntity> queryListGroupArctic(Map<String, Object> map) {
+		return draDao.queryListGroupArctic(map);
+	}
+
 }

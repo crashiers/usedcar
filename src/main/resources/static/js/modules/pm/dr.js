@@ -16,24 +16,24 @@ $(function () {
 			{ label: '潜客评估量', name: 'latentAssessAmount', index: 'latent_assess_amount', width: 2*10+20 },
 			{ label: '评估成交量', name: 'latentAssessDealAmount', index: 'latent_assess_deal_amount', width: 2*10+20 },
 			{ label: '置换潜客率', name: 'latentRate', index: 'latent_rate', width: 5*10+20, formatter: function(value, options, row){
-                return value + "%";
+                return value >= 0 ? value + "%" : '';
             } },
 			{ label: '潜客评估率', name: 'latentAssessRate', index: 'latent_assess_rate', width: 5*10+20 , formatter: function(value, options, row){
-                return value + "%";
+                return value >= 0 ? value + "%" : '';
             } },
 			{ label: '评估成交率', name: 'latentAssessDealRate', index: 'latent_assess_deal_rate', width: 5*10+20, formatter: function(value, options, row){
-                return value + "%";
+                return value >= 0 ? value + "%" : '';
             }  },
 			{ label: '广义置换率', name: 'generalizedRate', index: 'generalized_rate', width: 5*10+20, formatter: function(value, options, row){
-                return value + "%";
+                return value >= 0 ? value + "%" : '';
             }  },
 			{ label: '狭义置换率', name: 'narrowlyRate', index: 'narrowly_rate', width: 5*10+20, formatter: function(value, options, row){
-                return value + "%";
+                return value >= 0 ? value + "%" : '';
             }  },
 			{ label: '零售建卡量', name: 'sellCreatedAmount', index: 'sell_created_amount', width: 4*10+20 },
 			{ label: '零售成交量', name: 'sellDealAmount', index: 'sell_deal_amount', width: 4*10+20 },
 			{ label: '转化率', name: 'sellDealRate', index: 'sell_deal_rate', width: 3*10+20, formatter: function(value, options, row){
-                return value + "%";
+                return value >= 0 ? value + "%" : '';
             }  },
 			{ label: '添加日期', name: 'createDate', index: 'create_date', width: 4*10+20, hidden:true }
         ],
@@ -87,8 +87,12 @@ var vm = new Vue({
         yearMonthLists: null,
         amountDataLists1: [],
         amountDataLists2: [],
+        allAmountDataLists1: [],
+        allAmountDataLists2: [],
         amountDatas1: {},
-        amountDatas2: {}
+        amountDatas2: {},
+        amountDatas1Maps: {},
+        amountDatas2Maps: {}
 	},
 	methods: {
 		query: function () {
@@ -148,7 +152,8 @@ var vm = new Vue({
 			});
 		},
         upLoadFile: function (event) {
-            event.currentTarget.disabled = true;
+            var buttonObj = event.currentTarget;
+            buttonObj.disabled = true;
             var url = "pm/dr/upload?dealerId="+vm.dealerId;
             $.ajaxFileUpload({
                 type: "POST",
@@ -156,7 +161,7 @@ var vm = new Vue({
                 fileElementId: 'file',
                 data: {'token':localStorage.getItem("token")},
                 success: function(r){
-                    event.currentTarget.disabled = false;
+                    buttonObj.disabled = false;
                 	$("#file").val("");
                     if(r.code === 0){
                         alert('已成功导入', function(index){
@@ -167,7 +172,7 @@ var vm = new Vue({
                     }
                 },
                 complete:function(r){
-                    event.currentTarget.disabled = false;
+                    buttonObj.disabled = false;
                     $("#file").val("");
                     var _r = JSON.parse(r.responseText);
                     if(_r.code === 0){
@@ -181,7 +186,8 @@ var vm = new Vue({
             });
         },
         upLoadFileAmount: function (atype) {
-            event.currentTarget.disabled = true;
+            var buttonObj = event.currentTarget;
+            buttonObj.disabled = true;
             vm.dealerId = $("#selectDealerId").val() == null ? vm.dealerId : $("#selectDealerId").val();
             var url = "pm/dr/uploadamount?atype="+atype+"&dealerId="+vm.dealerId;
             $.ajaxFileUpload({
@@ -190,7 +196,7 @@ var vm = new Vue({
                 fileElementId: 'file',
                 data: {'token':localStorage.getItem("token")},
                 success: function(r){
-                    event.currentTarget.disabled = false;
+                    buttonObj.disabled = false;
                     $("#file").val("");
                     if(r.code === 0){
                         alert('已成功导入', function(index){
@@ -201,7 +207,7 @@ var vm = new Vue({
                     }
                 },
                 complete:function(r){
-                    event.currentTarget.disabled = false;
+                    buttonObj.disabled = false;
                     $("#file").val("");
                     var _r = JSON.parse(r.responseText);
                     if(_r.code === 0){
@@ -309,8 +315,27 @@ var vm = new Vue({
                 vm.yearMonthLists = r.yearMonthLists;
                 if (atype == 1){
                     vm.amountDataLists1 = r.amountDataLists;
+                    // 计算总计
+                    vm.allAmountDataLists1 = [];
+                    vm.calSumAmount(1);
                 }else{
                     vm.amountDataLists2 = r.amountDataLists;
+                    // 计算总计
+                    vm.allAmountDataLists2 = [];
+                    vm.calSumAmount(2);
+                }
+            });
+        },
+
+        // 数量 汇总
+        calSumAmount: function (atype) {
+            vm.brandId = $("#selectBrandId").val() == null ? vm.brandId : $("#selectBrandId").val();
+            vm.dealerId = $("#selectDealerId").val() == null ? vm.dealerId : $("#selectDealerId").val();
+            $.get(baseURL + "pm/dr/getsmallcateall/"+vm.brandId+"/"+atype+"/"+vm.dealerId, function(r){
+                if (atype == 1){
+                    vm.allAmountDataLists1 = r.allAmountLists;
+                }else{
+                    vm.allAmountDataLists2 = r.allAmountLists;
                 }
             });
         },
@@ -318,13 +343,13 @@ var vm = new Vue({
         // 修改数量
         updateAmount: function (dataObj) {
 		    var amount = '';
-		    if (dataObj.hasOwnProperty("amount")){
-		        amount = dataObj.amount;
-            }
             vm.flag = false;
 		    var tdClass = dataObj.yearMonth+"_"+dataObj.arctic+"_"+dataObj.atype;
-            if ($("."+tdClass).html() != ""){
-                amount = $("."+tdClass).html();
+            if (typeof($("."+tdClass).attr("amount")) != "undefined"){
+                amount = $.trim($("."+tdClass).attr("amount"));
+            }
+            if ($.trim($("."+tdClass).html()) != ""){
+                amount = $.trim($("."+tdClass).html());
             }
 		    if (dataObj.atype == '1'){
                 vm.amountDatas1[tdClass] = Object.assign({}, dataObj);
@@ -333,7 +358,9 @@ var vm = new Vue({
             }
 
             $("."+tdClass).html('<input type="text" value="'+amount+'" onkeyup="saveAmount(this)" onblur="inputToText(this)"/>');
-            $("."+tdClass).find("input").focus();
+            //$("."+tdClass).find("input").focus();
+            var t = $("."+tdClass).find("input").val();
+            $("."+tdClass).find("input").val("").focus().val(t);
 
             // tab键 进入下一个单元格编辑
             $("."+tdClass).find("input").bind('keypress', function(event) {
@@ -392,27 +419,73 @@ vm.getBrandListData();
 
 // 保存数量
 function saveAmount(inputObj) {
-    var oldValue = $(inputObj).val();
+    var oldValue = $.trim($(inputObj).val());
     $(inputObj).val($(inputObj).val().replace(/\D/g,''));
-    var newValue = $(inputObj).val();
+    var newValue = $.trim($(inputObj).val());
     var dataObj;
+    var atype = 1;
+    var tdClass = $(inputObj).parent().attr("class");
     if ($(inputObj).parent().attr("atype") == '1'){
-        dataObj = vm.amountDatas1[$(inputObj).parent().attr("class")];
+        dataObj = vm.amountDatas1[tdClass];
     }else{
-        dataObj = vm.amountDatas2[$(inputObj).parent().attr("class")];
+        dataObj = vm.amountDatas2[tdClass];
+        atype = 2;
     }
 
     // 经过处理了...所以是不合格的数字，不需要更新库
-    if (oldValue != newValue || newValue == ""){
+    if (oldValue != newValue){
         return;
     }
 
-    // 如果与原来的数字没有变化则不用提交
-    if (typeof($(inputObj).parent().attr("amount")) != "undefined"){
-        if ($(inputObj).parent().attr("amount") == newValue){
+    if (atype == 1) {
+        // 如果上一次输入的数，与本次输入的数一致，则返回
+        if (vm.amountDatas1Maps[tdClass] == newValue) {
             return;
         }
+
+        if (newValue == ""){
+            // 如果上次不为空，本次为空，则本次设为0
+            if (typeof(vm.amountDatas1Maps[tdClass]) == "undefined" ||  vm.amountDatas1Maps[tdClass] == "") {
+                newValue = 0;
+            }else if (vm.amountDatas1Maps[tdClass] != newValue){
+                newValue = 0;
+            }
+
+            // 有 amount 属性，代表是非空的状态
+            if (typeof($(inputObj).parent().attr("amount")) != "undefined"){
+                newValue = 0;
+            }
+        }
+        vm.amountDatas1Maps[tdClass] = newValue;
+
+    }else{
+        // 如果上一次输入的数，与本次输入的数一致，则返回
+        if (vm.amountDatas2Maps[tdClass] == newValue) {
+            return;
+        }
+
+        if (newValue == ""){
+            // 如果上次不为空，本次为空，则本次设为0
+            if (typeof(vm.amountDatas2Maps[tdClass]) == "undefined" ||  vm.amountDatas2Maps[tdClass] == "") {
+                newValue = 0;
+            }else if (vm.amountDatas2Maps[tdClass] != newValue){
+                newValue = 0;
+            }
+
+            // 有 amount 属性，代表是非空的状态
+            if (typeof($(inputObj).parent().attr("amount")) != "undefined"){
+                newValue = 0;
+            }
+        }
+        vm.amountDatas2Maps[tdClass] = newValue;
     }
+
+    if (atype == 1){
+        vm.amountDatas1Maps[tdClass] = newValue;
+    }else{
+        vm.amountDatas2Maps[tdClass] = newValue;
+    }
+    $(inputObj).parent().attr("amount", newValue);
 
     var url = "pm/dr/savedra";
     dataObj.amount = newValue;
@@ -423,6 +496,7 @@ function saveAmount(inputObj) {
         data: JSON.stringify(dataObj),
         success: function(r){
             //vm.amountDatas1[$(inputObj).parent().attr("class")].id = r.id;
+            vm.calSumAmount(atype);
         }
     });
 }
@@ -431,4 +505,12 @@ function saveAmount(inputObj) {
 function inputToText(inputObj){
     $(inputObj).parent().html($(inputObj).val());
     vm.flag = true;
+}
+
+// 查看业务看板
+function gotoBoard(obj) {
+    vm.dealerId = $("#selectDealerId").val() == null ? vm.dealerId : $("#selectDealerId").val();
+    vm.brandId = $("#selectBrandId").val() == null ? vm.brandId : $("#selectBrandId").val();
+    $(obj).attr("href", "/board?d="+vm.dealerId+"&b="+vm.brandId+"&token="+localStorage.getItem("token"));
+    return true;
 }

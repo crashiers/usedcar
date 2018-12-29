@@ -29,4 +29,8 @@ public interface DraService {
 	void deleteBatch(Long[] ids);
 
 	DraEntity queryObjectByArcticAndYearMonthAndAtypeAndDealerId(Map<String, Object> map);
+
+	List<DraEntity> queryListGroupYearMonth(Map<String, Object> map);
+
+	List<DraEntity> queryListGroupArctic(Map<String, Object> map);
 }

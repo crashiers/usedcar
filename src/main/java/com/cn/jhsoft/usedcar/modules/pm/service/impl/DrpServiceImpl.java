@@ -51,5 +51,10 @@ public class DrpServiceImpl implements DrpService {
 	public void deleteBatch(Long[] ids){
 		drpDao.deleteBatch(ids);
 	}
-	
+
+	@Override
+	public void deleteAll() {
+		drpDao.deleteAll();
+	}
+
 }

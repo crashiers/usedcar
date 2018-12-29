@@ -95,7 +95,7 @@
 
     <sql id="queryList_where">
         <if test="name != null and name.trim() != ''">
-            and `title` like concat('%',#{name},'%')
+            and `rkdh` like concat('%',#{name},'%')
         </if>
     </sql>
 
@@ -392,6 +392,10 @@
 		<foreach item="id" collection="array" open="(" separator="," close=")">
 			#{id}
 		</foreach>
+	</delete>
+
+	<delete id="deleteAll">
+		delete from tbl_drp
 	</delete>
 
 </mapper>

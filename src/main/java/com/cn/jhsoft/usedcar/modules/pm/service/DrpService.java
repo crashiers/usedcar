@@ -27,4 +27,6 @@ public interface DrpService {
 	void delete(Long id);
 	
 	void deleteBatch(Long[] ids);
+
+	void deleteAll();
 }

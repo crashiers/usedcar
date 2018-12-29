@@ -128,14 +128,12 @@ public class DrController extends AbstractController {
 			entityAvg.setSellDealRate((float) ((Math.round((entityAll.getSellDealRate() / drList.size())*100))/100));
 			drList.add(entityAvg);
 
-
-
-			entityAll.setLatentRate(entityAvg.getLatentRate());
-			entityAll.setLatentAssessRate(entityAvg.getLatentAssessRate());
-			entityAll.setLatentAssessDealRate(entityAvg.getLatentAssessDealRate());
-			entityAll.setGeneralizedRate(entityAvg.getGeneralizedRate());
-			entityAll.setNarrowlyRate(entityAvg.getNarrowlyRate());
-			entityAll.setSellDealRate(entityAvg.getSellDealRate());
+			entityAll.setLatentRate(-1f);
+			entityAll.setLatentAssessRate(-1f);
+			entityAll.setLatentAssessDealRate(-1f);
+			entityAll.setGeneralizedRate(-1f);
+			entityAll.setNarrowlyRate(-1f);
+			entityAll.setSellDealRate(-1f);
 		}
 		drList.add(entityAll);
 		
@@ -367,10 +365,6 @@ public class DrController extends AbstractController {
 		Map<String, Object> map = new HashMap<>();
 		map.put("parentId", id);
 		List<BasicDataEntity> basicDataList = basicDataService.queryList(map);
-		BasicDataEntity allEntity = new BasicDataEntity();
-		allEntity.setName("合计");
-		allEntity.setId(0L);
-		basicDataList.add(allEntity);
 
 		// 上方年月
 		map.put("dealerId", dealerId);
@@ -402,18 +396,47 @@ public class DrController extends AbstractController {
 			_lists.add(_listDra);
 		}
 
-		// 加累计
-		List<DraEntity> _listDraAll = new LinkedList<>();
-		for (DrEntity dr : drDataList){
-			DraEntity draEntityAll = new DraEntity();
-			draEntityAll.setAmount(100);
-			draEntityAll.setArctic("0");
-			_listDraAll.add(draEntityAll);
-		}
-		_lists.add(_listDraAll);
-
 
 		return R.ok().put("smallBrandLists", basicDataList).put("yearMonthLists", drDataList).put("amountDataLists", _lists);
+	}
+
+
+	/**
+	 * 每月各款新车的零售量 合计
+	 */
+	@RequestMapping("/getsmallcateall/{id}/{atype}/{dealerId}")
+	@AuthIgnore
+	public R getSmallCateAll(@PathVariable("id") String id,
+						  @PathVariable("atype") String atype,
+						  @PathVariable("dealerId") String dealerId){
+
+		// 左侧子品牌/车型
+		Map<String, Object> map = new HashMap<>();
+
+		// 上方年月
+		map.put("dealerId", dealerId);
+		map.put("sidx", "year_month");
+		map.put("order", "asc");
+		List<DrEntity> drDataList = drService.queryList(map);
+
+		// 总数
+		map.put("atype", atype);
+		map.put("brand", id);
+		List<DraEntity> draLists = draService.queryListGroupYearMonth(map);
+		Map<String, Integer> yearMonths = new HashMap<>();
+		for (DraEntity draEntity : draLists){
+			yearMonths.put(draEntity.getYearMonth(), draEntity.getAmount());
+		}
+
+		for (DrEntity drEntity : drDataList){
+			drEntity.setAllAmount(0);
+			if (yearMonths.get(drEntity.getYearMonth()) != null){
+				drEntity.setAllAmount(yearMonths.get(drEntity.getYearMonth()));
+			}
+		}
+
+
+		return R.ok().put("allAmountLists", drDataList);
 	}
 
 	/**

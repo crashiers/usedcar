@@ -87,9 +87,10 @@ $(function () {
 			{ label: '添加时间', name: 'createDatetime', index: 'create_datetime', width: 4*10+20 }
         ],
 		viewrecords: true,
-        height: 385,
-        rowNum: 10,
-		rowList : [10,30,50],
+        height: 'auto',
+        //height: 385,
+        rowNum: 100,
+		rowList : [10,30,50,100],
         rownumbers: true,
         rownumWidth: 25, 
         autowidth:true,
@@ -174,7 +175,8 @@ var vm = new Vue({
 			});
 		},
         upLoadFile: function (event) {
-            event.currentTarget.disabled = true;
+            var buttonObj = event.currentTarget;
+            buttonObj.disabled = true;
             var url = "pm/drp/upload";
             $.ajaxFileUpload({
                 type: "POST",
@@ -182,6 +184,7 @@ var vm = new Vue({
                 fileElementId: 'file',
                 data: {'token':localStorage.getItem("token")},
                 success: function(r){
+                    buttonObj.disabled = false;
                     $("#file").val("");
                     if(r.code === 0){
                         alert('已成功导入', function(index){
@@ -192,7 +195,7 @@ var vm = new Vue({
                     }
                 },
                 complete:function(r){
-                    event.currentTarget.disabled = false;
+                    buttonObj.disabled = false;
                     $("#file").val("");
                     var _r = JSON.parse(r.responseText);
                     if(_r.code === 0){
