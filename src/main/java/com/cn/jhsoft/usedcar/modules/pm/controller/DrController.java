@@ -185,6 +185,7 @@ public class DrController extends AbstractController {
 	@RequiresPermissions("pm:dr:save")
 	public R save(@RequestParam("file") MultipartFile file, HttpServletRequest request){
 		String dealerId = request.getParameter("dealerId").toString();
+		System.out.println(dealerId);
 		try {
 			// startRowNum是从0开始，1代表忽略第0行。
 			List<String[]> lists = ExcelPOIUtils.readExcel(file, 2);
