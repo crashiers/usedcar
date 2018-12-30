@@ -277,7 +277,9 @@ var vm = new Vue({
                     vm.dealerId = vm.dealerLists[0].id;
                     vm.reload();
                 }else{
-                    alert("请先添加经销商。");
+                    layer.alert('请先添加经销商，再操作置换零售业务！', function(){
+                        parent.location = "/default.html#modules/pm/dealer.html";
+                    });
                 }
 
             });
