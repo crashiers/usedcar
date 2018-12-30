@@ -285,7 +285,7 @@ var vm = new Vue({
 
         // 品牌下拉列表
         getBrandListData: function () {
-            $.get(baseURL + "pm/basicdata/list2/brand", function(lists){
+            $.get(baseURL + "pm/basicdata/list3/brand", function(lists){
                 vm.brandLists = lists.length == 0 ? null : lists;
                 //vm.reload();
                 vm.brandId = vm.brandLists[0].id;

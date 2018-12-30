@@ -155,6 +155,16 @@ public class BasicDataController extends AbstractController {
 		return basicDataCusList;
 	}
 
+
+	/**
+	 * 根据标识得到儿子
+	 */
+	@RequestMapping("/list3/{ename}")
+	@AuthIgnore
+	public List<BasicDataEntity> list3(@PathVariable("ename") String ename){
+		return basicDataService.queryChildListByEname(ename);
+	}
+
 	/**
 	 * 选择基础数据(添加、修改菜单)
 	 */

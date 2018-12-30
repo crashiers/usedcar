@@ -4,7 +4,7 @@ $(function () {
         datatype: "json",
         colModel: [			
 			{ label: 'id', name: 'id', index: 'id', width: 35, key: true, hidden: true },
-			{ label: '经销商ID', name: 'dealerId', index: 'dealer_id', width: 5*10+20 }, 			
+			{ label: '经销商ID', name: 'dealerId', index: 'dealer_id', width: 5*10+20, hidden: true },
 			{ label: '序号', name: 'num', index: 'num', width: 2*10+20 }, 			
 			{ label: '入库号', name: 'rkdh', index: 'rkdh', width: 3*10+20 }, 			
 			{ label: '品牌', name: 'brand', index: 'brand', width: 2*10+20 }, 			
@@ -17,8 +17,8 @@ $(function () {
 			{ label: '变速箱', name: 'gearbox', index: 'gearbox', width: 3*10+20 }, 			
 			{ label: '车架号', name: 'vin', index: 'vin', width: 3*10+20 }, 			
 			{ label: '车况简述', name: 'remark', index: 'remark', width: 4*10+20 }, 			
-			{ label: '收购类型:置换收购,直客收购,渠道收购,车辆寄售,内部转入', name: 'buyType', index: 'buy_type', width: 29*10+20 }, 			
-			{ label: '收购客户来源:基盘客户挖掘,内部全员营销,网络营销,自媒体营销,活动营销,展厅展场营销,转介绍,其他', name: 'buyClientRef', index: 'buy_client_ref', width: 50*10+20 }, 			
+			{ label: '收购类型', name: 'buyType', index: 'buy_type', width: 2*10+20 },
+			{ label: '收购客户来源', name: 'buyClientRef', index: 'buy_client_ref', width: 4*10+20 },
 			{ label: '收购单位', name: 'buyCompany', index: 'buy_company', width: 4*10+20 }, 			
 			{ label: '推荐人', name: 'buyReferrer', index: 'buy_referrer', width: 3*10+20 }, 			
 			{ label: '推荐人职务', name: 'buyReferrerDuty', index: 'buy_referrer_duty', width: 5*10+20 }, 			
@@ -30,7 +30,7 @@ $(function () {
 			{ label: '收购价格', name: 'buyPrice', index: 'buy_price', width: 4*10+20 }, 			
 			{ label: '过户费用', name: 'buyTransferFee', index: 'buy_transfer_fee', width: 4*10+20 }, 			
 			{ label: '其他收购成本', name: 'buyOtherFee', index: 'buy_other_fee', width: 6*10+20 }, 			
-			{ label: '预期库存风险期（盈亏平衡点）', name: 'bep', index: 'bep', width: 14*10+20 }, 			
+			{ label: '预期库存风险期', name: 'bep', index: 'bep', width: 4*10+20 },
 			{ label: '库位号', name: 'slNum', index: 'sl_num', width: 3*10+20 }, 			
 			{ label: '上架销售时间', name: 'sellDate', index: 'sell_date', width: 6*10+20 }, 			
 			{ label: '是否认证', name: 'isAuth', index: 'is_auth', width: 4*10+20 }, 			
@@ -42,14 +42,14 @@ $(function () {
 			{ label: '是否超期', name: 'isExceed', index: 'is_exceed', width: 4*10+20 }, 			
 			{ label: '批售起竞价/零售底价', name: 'minPrice', index: 'min_price', width: 10*10+20 }, 			
 			{ label: '批售保留价/零售定价', name: 'sellPrice', index: 'sell_price', width: 10*10+20 }, 			
-			{ label: '销售类型:内部转出,外部批售,零售,认证零售', name: 'sellType', index: 'sell_type', width: 22*10+20 }, 			
-			{ label: '销售客户来源:内部全员营销,网络营销,自媒体营销,活动营销,展厅展场营销,转介绍,其他', name: 'sellClientRef', index: 'sell_client_ref', width: 43*10+20 }, 			
+			{ label: '销售类型', name: 'sellType', index: 'sell_type', width: 4*10+20 },
+			{ label: '销售客户来源', name: 'sellClientRef', index: 'sell_client_ref', width: 4*10+20 },
 			{ label: '推荐人', name: 'sellReferrer', index: 'sell_referrer', width: 3*10+20 }, 			
 			{ label: '推荐人职务', name: 'sellReferrerDuty', index: 'sell_referrer_duty', width: 5*10+20 }, 			
 			{ label: '销售人', name: 'seller', index: 'seller', width: 3*10+20 }, 			
 			{ label: '新车主名称', name: 'newCarOwner', index: 'new_car_owner', width: 5*10+20 }, 			
 			{ label: '联系电话', name: 'newPhone', index: 'new_phone', width: 4*10+20 }, 			
-			{ label: '批售渠道名称（零售不需要填写）', name: 'channel', index: 'channel', width: 15*10+20 }, 			
+			{ label: '批售渠道名称', name: 'channel', index: 'channel', width: 15*10+20 },
 			{ label: '销售日期', name: 'sellDateFinal', index: 'sell_date_final', width: 4*10+20 }, 			
 			{ label: '销售价格', name: 'sellPriceFinal', index: 'sell_price_final', width: 4*10+20 }, 			
 			{ label: '付款方式', name: 'paymentType', index: 'payment_type', width: 4*10+20 }, 			
@@ -76,24 +76,25 @@ $(function () {
 			{ label: '收购月', name: 'buyMonth', index: 'buy_month', width: 3*10+20 }, 			
 			{ label: '销售年', name: 'sellYear', index: 'sell_year', width: 3*10+20 }, 			
 			{ label: '销售月', name: 'sellMonth', index: 'sell_month', width: 3*10+20 }, 			
-			{ label: '收购方式(采购来源=1)', name: 'buyWay', index: 'buy_way', width: 12*10+20 }, 			
-			{ label: '销售方式(零售=0，认证零售=1)', name: 'sellWay', index: 'sell_way', width: 17*10+20 }, 			
+			{ label: '收购方式', name: 'buyWay', index: 'buy_way', width: 5*10+20 },
+			{ label: '销售方式', name: 'sellWay', index: 'sell_way', width: 5*10+20 },
 			{ label: '销售方式2', name: 'sellWay2', index: 'sell_way2', width: 5*10+20 }, 			
 			{ label: '车龄', name: 'carAge', index: 'car_age', width: 2*10+20 }, 			
 			{ label: '车龄阶梯', name: 'carAgeLeavel', index: 'car_age_leavel', width: 4*10+20 }, 			
 			{ label: '收车价格阶梯', name: 'buyPriceLeavel', index: 'buy_price_leavel', width: 6*10+20 },
 			{ label: '是否库存', name: 'isStore', index: 'is_store', width: 4*10+20 }, 			
-			{ label: '添加日期', name: 'createDate', index: 'create_date', width: 4*10+20 }, 			
-			{ label: '添加时间', name: 'createDatetime', index: 'create_datetime', width: 4*10+20 }
+			{ label: '添加日期', name: 'createDate', index: 'create_date', width: 8*10+20 },
+			{ label: '添加时间', name: 'createDatetime', index: 'create_datetime', width: 4*10+20, hidden:true }
         ],
 		viewrecords: true,
         height: 'auto',
         //height: 385,
         rowNum: 100,
 		rowList : [10,30,50,100],
-        rownumbers: true,
+        rownumbers: false,
         rownumWidth: 25, 
-        autowidth:true,
+        //autowidth:true,
+		width:10000,
         multiselect: true,
         pager: "#jqGridPager",
         jsonReader : {
@@ -107,9 +108,13 @@ $(function () {
             rows:"limit", 
             order: "order"
         },
+        recordpos: 'left',
+        pagerpos: 'left',
         gridComplete:function(){
-        	//隐藏grid底部滚动条
-        	$("#jqGrid").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" }); 
+            //隐藏grid底部滚动条
+            $("#jqGrid").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" });
+            // 显示整个jqGrid的滚动条
+        	$("#jqGrid").closest("#gbox_jqGrid").css({ "overflow-x" : "scroll",  "width" : (window.screen.width - 215) +"px"});
         }
     });
 });

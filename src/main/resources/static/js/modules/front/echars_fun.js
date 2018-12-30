@@ -364,7 +364,7 @@ function bing(divId, chartsTitle, thisTitles, thisDatas, isAllBing, isShowLabelL
                 type:'pie',
                 radius: ['50%', '80%'],
                 center: ['43%', '53%'],
-                avoidLabelOverlap: false,
+                avoidLabelOverlap: true,   //是否启用防止标签重叠策略
                 data:thisDatas
             }
         ]
