@@ -154,10 +154,7 @@ var vm = new Vue({
         upLoadFile: function (event) {
             var buttonObj = event.currentTarget;
             buttonObj.disabled = true;
-            console.log(vm.dealerId);
             vm.dealerId = $("#selectDealerId").val() == null ? vm.dealerId : $("#selectDealerId").val();
-            console.log($("#selectDealerId").val());
-            console.log(vm.dealerId);
             var url = "pm/dr/upload?dealerId="+vm.dealerId;
             $.ajaxFileUpload({
                 type: "POST",
