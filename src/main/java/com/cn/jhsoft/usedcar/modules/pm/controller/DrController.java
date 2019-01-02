@@ -104,6 +104,7 @@ public class DrController extends AbstractController {
 
 		}
 		entityAll.setYearMonth("合计");
+		entityAll.setId(-1L);
 		if (drList.size() > 0) {
 			entityAvg.setYearMonth("平均");
 			entityAvg.setCreatedAmount(entityAll.getCreatedAmount() / drList.size());
@@ -134,7 +135,6 @@ public class DrController extends AbstractController {
 			entityAll.setGeneralizedRate(-1f);
 			entityAll.setNarrowlyRate(-1f);
 			entityAll.setSellDealRate(-1f);
-			entityAll.setId(-1L);
 		}
 		drList.add(entityAll);
 		
