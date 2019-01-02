@@ -37,18 +37,18 @@
 			<div class="form-group col-sm-1" style="padding:5px 0px 0px 0px; text-align:right;">
 				选择品牌：
 			</div>
-			<div class="form-group col-sm-1" style="padding-left: 0px;">
+			<div class="form-group col-sm-2" style="padding-left: 0px;width: 15%;">
 				<select class="form-control" id="selectBrandId" @change="getAmountAllLists">
 					<option v-for="data in brandLists" v-bind:value="data.id">{{data.name}}</option>
 				</select>
 			</div>
             <a class="btn btn-default" @click="query" style="display: none;">查询</a>
-			<a v-if="hasPermission('pm:dr:save')" class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
-			<a v-if="hasPermission('pm:dr:save')" class="btn btn-primary" @click="upload"><i class="fa fa-arrow-circle-right"></i>&nbsp;导入</a>
-			<a v-if="hasPermission('pm:dr:update')" class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
-			<a v-if="hasPermission('pm:dr:delete')" class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
-			<a class="btn btn-danger" onclick="return gotoBoard(this)" target="_blank" href="/">本品牌业务看板</a>
-			<a class="btn btn-warning" onclick="return gotoAllBoard(this)" target="_blank" href="/">所有品牌</a>
+			<a v-if="hasPermission('pm:dr:save')" class="btn btn-primary" @click="add" style="margin-right: 0px;padding: 6px 10px;"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			<a v-if="hasPermission('pm:dr:save')" class="btn btn-primary" @click="upload" style="margin-right: 0px;padding: 6px 10px;"><i class="fa fa-arrow-circle-right"></i>&nbsp;导入</a>
+			<a v-if="hasPermission('pm:dr:update')" class="btn btn-primary" @click="update" style="margin-right: 0px;padding: 6px 10px;"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+			<a v-if="hasPermission('pm:dr:delete')" class="btn btn-primary" @click="del" style="margin-right: 0px;padding: 6px 10px;"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			<a class="btn btn-danger" onclick="return gotoBoard(this)" target="_blank" href="/" style="margin-right: 0px;padding: 6px 10px;">本品牌业务看板</a>
+			<a class="btn btn-warning" onclick="return gotoAllBoard(this)" target="_blank" href="/" style="margin-right: 0px;padding: 6px 10px;">所有品牌</a>
 		</div>
 	    <table id="jqGrid"></table>
 	    <div id="jqGridPager"></div>
