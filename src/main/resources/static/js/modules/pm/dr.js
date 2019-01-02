@@ -223,6 +223,11 @@ var vm = new Vue({
         },
 		del: function (event) {
 			var ids = getSelectedRows();
+			if (ids.length == 1 && ids[0] < 1){
+                alert("平均和合计行不允许删除！");
+			    return;
+            }
+
 			if(ids == null){
 				return ;
 			}

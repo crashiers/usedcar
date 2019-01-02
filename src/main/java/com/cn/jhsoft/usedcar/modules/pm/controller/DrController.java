@@ -39,7 +39,6 @@ import com.cn.jhsoft.usedcar.common.validator.group.AddGroup;
 import com.cn.jhsoft.usedcar.common.validator.group.UpdateGroup;
 import com.cn.jhsoft.usedcar.modules.sys.controller.AbstractController;
 import com.cn.jhsoft.usedcar.common.utils.DateUtils;
-import com.cn.jhsoft.usedcar.common.utils.IPUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -126,6 +125,7 @@ public class DrController extends AbstractController {
 			entityAvg.setSellCreatedAmount(entityAll.getSellCreatedAmount() / drList.size());
 			entityAvg.setSellDealAmount(entityAll.getSellDealAmount() / drList.size());
 			entityAvg.setSellDealRate((float) ((Math.round((entityAll.getSellDealRate() / drList.size())*100))/100));
+			entityAvg.setId(-2L);
 			drList.add(entityAvg);
 
 			entityAll.setLatentRate(-1f);
@@ -134,6 +134,7 @@ public class DrController extends AbstractController {
 			entityAll.setGeneralizedRate(-1f);
 			entityAll.setNarrowlyRate(-1f);
 			entityAll.setSellDealRate(-1f);
+			entityAll.setId(-1L);
 		}
 		drList.add(entityAll);
 		
@@ -364,6 +365,10 @@ public class DrController extends AbstractController {
 		// 左侧子品牌/车型
 		Map<String, Object> map = new HashMap<>();
 		map.put("parentId", id);
+		if (id.equals("") || id.equals("0") || id == null){
+			List<BasicDataEntity> _list = basicDataService.queryChildListByEname("brand");
+			map.put("parentId", _list.get(0).getId());
+		}
 		List<BasicDataEntity> basicDataList = basicDataService.queryList(map);
 
 		// 上方年月
