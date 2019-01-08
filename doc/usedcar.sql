@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS `tbl_eval_question` (
 DROP TABLE IF EXISTS `tbl_eval_stage`;
 CREATE TABLE IF NOT EXISTS `tbl_eval_stage` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `dealer_id` bigint DEFAULT 0 COMMENT '经销商ID',
   `stage_num` varchar(32) COMMENT '批次编号',
   `score1` float DEFAULT 0 COMMENT '业务规划',
   `score2` float DEFAULT 0 COMMENT '业务运营',
@@ -46,7 +47,6 @@ CREATE TABLE IF NOT EXISTS `tbl_eval_stage` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='评测批次';
 
-
 -- 评测结果
 DROP TABLE IF EXISTS `tbl_eval_result`;
 CREATE TABLE IF NOT EXISTS `tbl_eval_result` (
@@ -54,6 +54,8 @@ CREATE TABLE IF NOT EXISTS `tbl_eval_result` (
   `question_num` int COMMENT '题目序号',
   `stage_id` bigint COMMENT '答题批次ID',
   `stage_num` varchar(32) COMMENT '答题批次编号',
+  `dealer_id` bigint DEFAULT 0 COMMENT '经销商ID',
+  `dealer_name` varchar(512) COMMENT '经销商名称',
   `answer` varchar(32) COMMENT '答案',
   `full_score` int DEFAULT 0 COMMENT '满分',
   `answer_score` FLOAT DEFAULT 0 COMMENT '答案对应的分值比例',
@@ -82,6 +84,7 @@ CREATE TABLE IF NOT EXISTS `tbl_dealer` (
   `basement_client_sum` bigint COMMENT '基盘客户量',
   `create_date` varchar(16) COMMENT '添加日期',
   `create_datetime` varchar(32) COMMENT '添加时间',
+  `create_adminid` bigint DEFAULT 0 COMMENT '添加人ID',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='经销商';
 
@@ -112,6 +115,7 @@ CREATE TABLE IF NOT EXISTS `tbl_dr` (
   `sell_deal_rate` float COMMENT '零售成交转化率',
   `create_date` varchar(16) COMMENT '添加日期',
   `create_datetime` varchar(32) COMMENT '添加时间',
+  `create_adminid` bigint DEFAULT 0 COMMENT '添加人ID',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='置换零售业务';
 
@@ -130,6 +134,7 @@ CREATE TABLE IF NOT EXISTS `tbl_dra` (
   `amount` int COMMENT '数量',
   `create_date` varchar(16) COMMENT '添加日期',
   `create_datetime` varchar(32) COMMENT '添加时间',
+  `create_adminid` bigint DEFAULT 0 COMMENT '添加人ID',
   PRIMARY KEY (`id`),
   UNIQUE INDEX `Index2` (`year_month`, `atype`, `arctic`, `dealer_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='置换零售量';
@@ -220,6 +225,7 @@ CREATE TABLE IF NOT EXISTS `tbl_drp` (
   `is_store` varchar(32) COMMENT '是否库存',
   `create_date` varchar(16) COMMENT '添加日期',
   `create_datetime` varchar(32) COMMENT '添加时间',
+  `create_adminid` bigint DEFAULT 0 COMMENT '添加人ID',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8 COMMENT='进销存';
 
@@ -290,7 +296,7 @@ INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `or
 INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @parentId, '删除', null, 'pm:evalquestion:delete', '2', null, '6';
 
 -- 评测系统
-INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) VALUES ('1', '评测系统', 'modules/pm/evalstage.html', NULL, '1', 'fa fa-bullhorn', '12');
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) VALUES ('1', '评测系统', 'modules/pm/evalstage.html', NULL, '1', 'fa fa-bullhorn', '13');
 set @evalRootId = @@identity;
 INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @evalRootId, '使用', null, 'pm:evalstage:list,pm:evalstage:info,pm:evalstage:used,pm:evalresult:list,pm:evalresult:info', '2', null, '6';
 set @evalUse = @@identity;
@@ -304,12 +310,13 @@ insert into sys_role_menu (role_id, menu_id) values(1,@evalUse);
 
 
 -- 经销商菜单SQL
-INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) VALUES ('1', '经销商', 'modules/pm/dealer.html', NULL, '1', 'fa fa-briefcase', '13');
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) VALUES ('1', '经销商', 'modules/pm/dealer.html', NULL, '1', 'fa fa-briefcase', '12');
 set @parentId = @@identity;
 INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @parentId, '查看', null, 'pm:dealer:list,pm:dealer:info', '2', null, '6';
 INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @parentId, '新增', null, 'pm:dealer:save', '2', null, '6';
 INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @parentId, '修改', null, 'pm:dealer:update', '2', null, '6';
 INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @parentId, '删除', null, 'pm:dealer:delete', '2', null, '6';
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @parentId, '管理', null, 'pm:dealer:manager', '2', null, '6';
 
 -- 置换零售业务菜单SQL
 INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) VALUES ('1', '置换零售业务', 'modules/pm/dr.html', NULL, '1', 'fa fa-sellsy', '14');
@@ -318,6 +325,7 @@ INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `or
 INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @parentId, '新增', null, 'pm:dr:save', '2', null, '6';
 INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @parentId, '修改', null, 'pm:dr:update', '2', null, '6';
 INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @parentId, '删除', null, 'pm:dr:delete', '2', null, '6';
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @parentId, '管理', null, 'pm:dr:manager', '2', null, '6';
 
 -- 进销存菜单SQL
 INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) VALUES ('1', '进销存', 'modules/pm/drp.html', NULL, '1', 'fa fa-laptop', '15');
@@ -326,6 +334,8 @@ INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `or
 INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @parentId, '新增', null, 'pm:drp:save', '2', null, '6';
 INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @parentId, '修改', null, 'pm:drp:update', '2', null, '6';
 INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @parentId, '删除', null, 'pm:drp:delete', '2', null, '6';
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @parentId, '管理', null, 'pm:drp:manager', '2', null, '6';
+
 
 
 
@@ -611,6 +621,5 @@ insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'B90
 insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'X40';
 insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', 'X80';
 insert into tbl_basic_data (parent_id, ename, `name`) select @child_id, '', '本品牌其他车型';
-
 
 

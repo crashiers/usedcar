@@ -140,6 +140,11 @@ public class DrEntity implements Serializable {
      */
 	private String createDatetime;
 
+	/**
+	 * 添加人ID
+	 */
+	private Long createAdminid;
+
 
 	/**
 	 * 设置：编号
@@ -499,6 +504,21 @@ public class DrEntity implements Serializable {
 	 */
 	public String getCreateDatetime() {
 		return createDatetime;
+	}
+
+	/**
+	 * 设置：添加人ID
+	 */
+	public void setCreateAdminid(Long createAdminid) {
+		this.createAdminid = createAdminid;
+	}
+
+
+	/**
+	 * 获取：添加人ID
+	 */
+	public Long getCreateAdminid() {
+		return createAdminid;
 	}
 
 }

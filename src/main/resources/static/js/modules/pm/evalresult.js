@@ -1,6 +1,16 @@
+
+// 获取url参数，以便是否要加返回按钮
+var url = location.search; //获取url中"?"符后的字串
+var thisDealerId = "";
+if (url.indexOf("?") != -1) {    //判断?后面是否有参数
+    var str = url.substr(1); //从第一个字符开始 因为第0个是?号 获取所有除问号的所有符串 这里会获得类似“id=1”这样的字符串
+    var strNum = str.split("=");   //用等号进行分隔 （因为知道只有一个参数 所以直接用等号进分隔 如果有多个参数 要用&号分隔 再用等号进行分隔）
+    thisDealerId = strNum[1];          //直接弹出第一个参数 （如果有多个参数 还要进行循环的）
+}
+
 $(function () {
     $("#jqGrid").jqGrid({
-        url: baseURL + 'pm/evalquestion/list2?sidx=num&order=asc',
+        url: baseURL + 'pm/evalquestion/list2?sidx=num&order=asc&dealerId='+thisDealerId,
         datatype: "json",
         colModel: [			
 			{ label: 'id', name: 'id', index: 'id', width: 45, key: true, hidden: true },
@@ -66,6 +76,8 @@ $(function () {
     });
 });
 
+
+
 var vm = new Vue({
 	el:'#rrapp',
 	data:{
@@ -78,6 +90,8 @@ var vm = new Vue({
 		showList: true,
 		title: null,
 		evalResult: {},
+        dealerId: thisDealerId,
+        dealerInfo: {},
         menu:{
             oneDatas: null,
             twoDatas: null,
@@ -105,7 +119,7 @@ var vm = new Vue({
 		},
 		saveOrUpdate: function (event) {
             var url = "pm/evalresult/update";
-            var data = "";
+            var data = "dealerId="+thisDealerId;
 			$.ajax({
 				type: "POST",
 			    url: baseURL + url,
@@ -125,7 +139,7 @@ var vm = new Vue({
 		},
         autoEval: function (event) {
             var url = "pm/evalresult/auto";
-            var data = "";
+            var data = "dealerId="+thisDealerId;
             $.ajax({
                 type: "POST",
                 url: baseURL + url,
@@ -175,7 +189,7 @@ var vm = new Vue({
 			vm.showList = true;
 			var page = $("#jqGrid").jqGrid('getGridParam','page');
 			$("#jqGrid").jqGrid('setGridParam',{
-                postData:{'name': vm.q.name, 'type1':vm.q.type1, 'type2':vm.q.type2, 'type3':vm.q.type3, 'sid':'num', 'order':'asc'},
+                postData:{'name': vm.q.name, 'type1':vm.q.type1, 'type2':vm.q.type2, 'type3':vm.q.type3, 'dealerId':vm.dealerId, 'sid':'num', 'order':'asc'},
                 page:page
             }).trigger("reloadGrid");
 		},
@@ -185,7 +199,7 @@ var vm = new Vue({
 
         // 下面的所有方法 是用来实现菜单栏目的
         getMenuData: function () {
-            $.get(baseURL + "pm/basicdata/list2/board", function(lists){
+            $.get(baseURL + "pm/basicdata/list2/board/"+thisDealerId, function(lists){
                 vm.menu.oneDatas = lists.length == 0 ? null : lists;
                 vm.reload();
             });
@@ -193,7 +207,7 @@ var vm = new Vue({
 
         // 下面的所有方法 是用来实现菜单栏目的
         getMenuData2: function () {
-            $.get(baseURL + "pm/basicdata/list2/board", function(lists){
+            $.get(baseURL + "pm/basicdata/list2/board/"+thisDealerId, function(lists){
                 vm.menu.oneDatas = lists.length == 0 ? null : lists;
             });
         },
@@ -235,7 +249,7 @@ var vm = new Vue({
                 return;
             }
 
-            $.get(baseURL + "pm/basicdata/list2/getchild/"+parentId+"/leavel/"+leavel, function(lists){
+            $.get(baseURL + "pm/basicdata/list2/getchild/"+parentId+"/leavel/"+leavel+"/"+thisDealerId, function(lists){
                 if (leavel == 2){
                     vm.menu.twoDatas = lists.length == 0 ? null : lists;
                     vm.q.type1 = parentId;
@@ -255,7 +269,7 @@ var vm = new Vue({
 
         // 获取二级三级栏目 数据
         getChildMenuData2: function (parentId, leavel) {
-            $.get(baseURL + "pm/basicdata/list2/getchild/"+parentId+"/leavel/"+leavel, function(lists){
+            $.get(baseURL + "pm/basicdata/list2/getchild/"+parentId+"/leavel/"+leavel+"/"+thisDealerId, function(lists){
                 if (leavel == 2){
                     vm.menu.twoDatas = lists.length == 0 ? null : lists;
                 }
@@ -284,6 +298,13 @@ var vm = new Vue({
             $.get(baseURL + "pm/basicdata/info/"+id, function(r){
                 vm.html.title = r.basicData.name;
             });
+        },
+
+        // 经销商信息
+        getDealerInfo: function () {
+            $.get(baseURL + "pm/dealer/info/"+thisDealerId, function(r){
+                vm.dealerInfo = r.dealer;
+            });
         }
 	}
 });
@@ -291,6 +312,8 @@ var vm = new Vue({
 
 // 获取栏目数据
 vm.getMenuData();
+// 获取经销商数据
+vm.getDealerInfo();
 
 
 // 单选框点击事件
@@ -298,7 +321,7 @@ function clickRadio(obj) {
 
 	var rn = $(obj).attr("rn");
 	var an = $(obj).val();
-    var data = "rn="+rn+"&an="+an;
+    var data = "rn="+rn+"&an="+an+"&dealerId="+thisDealerId;
 
     var url = "pm/evalresult/save";
     $.ajax({

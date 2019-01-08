@@ -87,6 +87,7 @@
         <result property="isStore" column="is_store"/>
         <result property="createDate" column="create_date"/>
         <result property="createDatetime" column="create_datetime"/>
+		<result property="createAdminid" column="create_adminid"/>
     </resultMap>
 
 	<select id="queryObject" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.DrpEntity">
@@ -207,7 +208,8 @@
 			`buy_price_leavel`, 
 			`is_store`, 
 			`create_date`, 
-			`create_datetime`
+			`create_datetime`,
+			`create_adminid`
 		)
 		values
 		(
@@ -291,7 +293,8 @@
 			#{buyPriceLeavel}, 
 			#{isStore}, 
 			#{createDate}, 
-			#{createDatetime}
+			#{createDatetime},
+			#{createAdminid}
 		)
 	</insert>
 	 
@@ -379,6 +382,7 @@
 			<if test="isStore != null">`is_store` = #{isStore}, </if>
 			<if test="createDate != null">`create_date` = #{createDate}, </if>
 			<if test="createDatetime != null">`create_datetime` = #{createDatetime}</if>
+			<if test="createAdminid != null">`create_adminid` = #{createAdminid}</if>
 		</set>
 		where id = #{id}
 	</update>

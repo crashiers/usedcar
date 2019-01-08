@@ -35,6 +35,11 @@ public class EvalResultEntity implements Serializable {
      */
 	private String stageNum;
 
+	/**
+	 * 经销商ID
+	 */
+	private Long dealerId;
+
     /**
      * 答案
      */
@@ -140,6 +145,21 @@ public class EvalResultEntity implements Serializable {
 	 */
 	public String getStageNum() {
 		return stageNum;
+	}
+
+	/**
+	 * 设置：经销商ID
+	 */
+	public void setDealerId(Long dealerId) {
+		this.dealerId = dealerId == null ? 0L : dealerId;
+	}
+
+
+	/**
+	 * 获取：经销商ID
+	 */
+	public Long getDealerId() {
+		return dealerId;
 	}
 
 	/**

@@ -5,8 +5,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Date;
 
+import com.cn.jhsoft.usedcar.modules.api.annotation.AuthIgnore;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,8 +46,21 @@ public class DealerController extends AbstractController {
 	 * 列表
 	 */
 	@RequestMapping("/list")
-	@RequiresPermissions(value = {"pm:dealer:list", "pm:dr:list"}, logical= Logical.OR)
+	@RequiresPermissions(value = {"pm:dealer:list", "pm:dr:list", "pm:evalstage:list", "pm:evalstage:manager"}, logical= Logical.OR)
 	public R list(@RequestParam Map<String, Object> params){
+
+		boolean isManager = false;
+
+		// 如果是有 pm:evalstage:manager 权限，则不限定经销商是谁的
+		// 权限判断
+		Subject subject = SecurityUtils.getSubject();
+		if (subject.isPermitted("pm:evalstage:manager")){
+			isManager = true;
+		}
+
+		if (!isManager){
+			params.put("createAdminid", getUserId());
+		}
 		//查询列表数据
         Query query = new Query(params);
 
@@ -61,7 +77,8 @@ public class DealerController extends AbstractController {
 	 * 信息
 	 */
 	@RequestMapping("/info/{id}")
-	@RequiresPermissions("pm:dealer:info")
+	//@RequiresPermissions("pm:dealer:info")
+	@AuthIgnore
 	public R info(@PathVariable("id") Long id){
 		DealerEntity dealer = dealerService.queryObject(id);
 		
@@ -77,6 +94,7 @@ public class DealerController extends AbstractController {
         ValidatorUtils.validateEntity(dealer, AddGroup.class);
         dealer.setCreateDate(DateUtils.getTodayDate());
         dealer.setCreateDatetime(DateUtils.getTodayDateYMDHMS());
+        dealer.setCreateAdminid(getUserId());
 		dealerService.save(dealer);
 		
 		return R.ok();

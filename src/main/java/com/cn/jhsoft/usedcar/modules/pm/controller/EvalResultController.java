@@ -80,9 +80,13 @@ public class EvalResultController extends AbstractController {
 	@RequestMapping("/save")
 	@RequiresPermissions("pm:evalstage:used")
 	public R save(Integer rn,
-				  String an){
+				  String an,
+				  Long dealerId){
 
 		if (rn == null || rn <= 0){
+			return R.error();
+		}
+		if (dealerId == null || dealerId <= 0){
 			return R.error();
 		}
 		EvalQuestionEntity evalQuestion = evalQuestionService.queryObjectByNum(rn);
@@ -95,6 +99,7 @@ public class EvalResultController extends AbstractController {
 		Map params = new HashMap<>();
 		params.put("createAdminid", getUserId());
 		params.put("questionNum", rn);
+		params.put("dealerId", dealerId);
 		EvalResultEntity evalResult = evalResultService.queryObjectByRn(params);
 		if(evalResult == null){
 			evalResult = new EvalResultEntity();
@@ -126,6 +131,7 @@ public class EvalResultController extends AbstractController {
         evalResult.setCreateDate(DateUtils.getTodayDate());
         evalResult.setCreateDatetime(DateUtils.getTodayDateYMDHMS());
         evalResult.setCreatedip(IPUtils.getIpAddr());
+        evalResult.setDealerId(dealerId);
 
         if (!isExist) {
 			evalResultService.save(evalResult);
@@ -141,7 +147,7 @@ public class EvalResultController extends AbstractController {
 	 */
 	@RequestMapping("/update")
 	@RequiresPermissions("pm:evalstage:used")
-	public R update(){
+	public R update(Long dealerId){
 
         // 是否已完成所有答题
 		Map<String, Object> evalMap = new HashMap<>();
@@ -149,6 +155,7 @@ public class EvalResultController extends AbstractController {
 		// 题目数量
 		int questionSum = evalQuestionService.queryTotal2(evalMap);
 		// 已答数量
+		evalMap.put("dealerId", dealerId);
 		int answeredSum = evalResultService.queryTotal2(evalMap);
 
 		if (questionSum > answeredSum){
@@ -158,10 +165,11 @@ public class EvalResultController extends AbstractController {
 		// 在批次中创建批次
 		EvalStageEntity evalStageEntity = new EvalStageEntity();
 		evalStageEntity.setCreateAdminid(getUserId());
-		evalStageEntity.setCreateAdmin(getUser().getCompany()+getUser().getRelname());
+		evalStageEntity.setCreateAdmin(getUser().getRelname());
 		evalStageEntity.setCreateDate(DateUtils.getTodayDate());
 		evalStageEntity.setCreateDatetime(DateUtils.getTodayDateYMDHMS());
 		evalStageEntity.setStageNum(getUserId() + DateUtils.format(new Date(), "yyyyMMddHHmmss"));
+		evalStageEntity.setDealerId(dealerId);
 		evalStageService.save(evalStageEntity);
 
 		evalMap.put("stageNull", "yes");
@@ -229,15 +237,16 @@ public class EvalResultController extends AbstractController {
 	 */
 	@RequestMapping("/auto")
 	@RequiresPermissions("pm:evalstage:evaljqr")
-	public R autoEval(){
+	public R autoEval(Long dealerId){
 
 		// 在批次中创建批次
 		EvalStageEntity evalStageEntity = new EvalStageEntity();
 		evalStageEntity.setCreateAdminid(getUserId());
-		evalStageEntity.setCreateAdmin(getUser().getCompany()+getUser().getRelname());
+		evalStageEntity.setCreateAdmin(getUser().getRelname());
 		evalStageEntity.setCreateDate(DateUtils.getTodayDate());
 		evalStageEntity.setCreateDatetime(DateUtils.getTodayDateYMDHMS());
 		evalStageEntity.setStageNum(getUserId() + DateUtils.format(new Date(), "yyyyMMddHHmmss"));
+		evalStageEntity.setDealerId(dealerId);
 		evalStageService.save(evalStageEntity);
 
 		Map<String, Object> params = new HashMap<>();
@@ -272,6 +281,7 @@ public class EvalResultController extends AbstractController {
 			evalResult.setCreatedip(IPUtils.getIpAddr());
 			evalResult.setStageId(evalStageEntity.getId());
 			evalResult.setStageNum(evalStageEntity.getStageNum());
+			evalResult.setDealerId(dealerId);
 			evalResultService.save(evalResult);
 
 			// 按类别查分

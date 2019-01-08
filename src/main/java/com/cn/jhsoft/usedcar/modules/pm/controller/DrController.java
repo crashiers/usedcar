@@ -173,6 +173,7 @@ public class DrController extends AbstractController {
 		dr.setMonth(dr.getYearMonth().split("-")[1]);
 		dr.setCreateDate(DateUtils.getTodayDate());
 		dr.setCreateDatetime(DateUtils.getTodayDateYMDHMS());
+		dr.setCreateAdminid(getUserId());
 		dr = calDr(dr);
 		drService.save(dr);
 		
@@ -250,6 +251,7 @@ public class DrController extends AbstractController {
 				if (isAdd) {
 					entity.setCreateDate(DateUtils.getTodayDate());
 					entity.setCreateDatetime(DateUtils.getTodayDateYMDHMS());
+					entity.setCreateAdminid(getUserId());
 
 					drService.save(entity);
 				}else {
@@ -454,6 +456,7 @@ public class DrController extends AbstractController {
 		dra.setMonth(dra.getYearMonth().split("-")[1]);
 		dra.setCreateDate(DateUtils.getTodayDate());
 		dra.setCreateDatetime(DateUtils.getTodayDateYMDHMS());
+		dra.setCreateAdminid(getUserId());
 
 		Map<String, Object> map = new HashMap<>();
 		map.put("dealerId", dra.getDealerId());
@@ -552,6 +555,7 @@ public class DrController extends AbstractController {
 					if (isAdd) {
 						entity.setCreateDate(DateUtils.getTodayDate());
 						entity.setCreateDatetime(DateUtils.getTodayDateYMDHMS());
+						entity.setCreateAdminid(getUserId());
 
 						draService.save(entity);
 					}else {

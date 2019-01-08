@@ -21,6 +21,16 @@ public class EvalStageEntity implements Serializable {
 	private Long id;
 
 	/**
+	 * 经销商ID
+	 */
+	private Long dealerId;
+
+	/**
+	 * 经销商名称
+	 */
+	private String dealerName;
+
+	/**
 	 * 批次编号
 	 */
 	private String stageNum;
@@ -104,6 +114,36 @@ public class EvalStageEntity implements Serializable {
 	 */
 	public Long getId() {
 		return id;
+	}
+
+	/**
+	 * 设置：经销商ID
+	 */
+	public void setDealerId(Long dealerId) {
+		this.dealerId = dealerId == null ? 0L : dealerId;
+	}
+
+
+	/**
+	 * 获取：经销商ID
+	 */
+	public Long getDealerId() {
+		return dealerId;
+	}
+
+	/**
+	 * 设置：经销商名称
+	 */
+	public void setDealerName(String dealerName) {
+		this.dealerName = dealerName;
+	}
+
+
+	/**
+	 * 获取：经销商名称
+	 */
+	public String getDealerName() {
+		return dealerName == null ? "" : dealerName;
 	}
 
 	/**

@@ -134,6 +134,7 @@ public class IndexController extends AbstractController {
 
         // 二级分类汇总
         params.put("categoryName", "category2");
+        params.put("sortWay", "asc");
         for (int i=0; i<categorys.length; i++) {
             params.put("searchStr", " where category1='"+categorys[i]+"'");
             List<EvalQuestionEntity> lists = evalQuestionService.queryScoreListGroup(params);
@@ -251,6 +252,7 @@ public class IndexController extends AbstractController {
             j++;
         }
         _params.put("categoryName", "category1");
+        _params.put("sortWay", "desc");
         String[] categorys = new String[]{"业务规划", "业务运营", "业务推广", "业务执行"};
         List<EvalQuestionEntity> category1Lists = evalQuestionService.queryScoreListGroup(_params);
 

@@ -18,6 +18,7 @@
         <result property="basementClientSum" column="basement_client_sum"/>
         <result property="createDate" column="create_date"/>
         <result property="createDatetime" column="create_datetime"/>
+		<result property="createAdminid" column="create_adminid"/>
     </resultMap>
 
 	<select id="queryObject" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.DealerEntity">
@@ -28,6 +29,9 @@
         <if test="name != null and name.trim() != ''">
             and `title` like concat('%',#{name},'%')
         </if>
+		<if test="createAdminid != null and createAdminid > 0">
+			and `create_adminid` = #{createAdminid}
+		</if>
     </sql>
 
 	<select id="queryList" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.DealerEntity">
@@ -69,7 +73,8 @@
 			`mobile`, 
 			`basement_client_sum`, 
 			`create_date`, 
-			`create_datetime`
+			`create_datetime`,
+			`create_adminid`
 		)
 		values
 		(
@@ -84,7 +89,8 @@
 			#{mobile}, 
 			#{basementClientSum}, 
 			#{createDate}, 
-			#{createDatetime}
+			#{createDatetime},
+			#{createAdminid}
 		)
 	</insert>
 	 
@@ -103,6 +109,7 @@
 			<if test="basementClientSum != null">`basement_client_sum` = #{basementClientSum}, </if>
 			<if test="createDate != null">`create_date` = #{createDate}, </if>
 			<if test="createDatetime != null">`create_datetime` = #{createDatetime}</if>
+			<if test="createAdminid != null">`create_adminid` = #{createAdminid}</if>
 		</set>
 		where id = #{id}
 	</update>

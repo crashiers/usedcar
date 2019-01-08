@@ -6,6 +6,8 @@
 	<!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="com.cn.jhsoft.usedcar.modules.pm.entity.EvalStageEntity" id="evalStageMap">
         <result property="id" column="id"/>
+		<result property="dealerId" column="dealer_id"/>
+		<result property="dealerName" column="dealer_name"/>
         <result property="stageNum" column="stage_num"/>
         <result property="score1" column="score1"/>
         <result property="score2" column="score2"/>
@@ -37,6 +39,9 @@
 		<if test="createAdminid != null and createAdminid > 0">
 			and `create_adminid` = #{createAdminid}
 		</if>
+		<if test="dealerId != null and dealerId > 0">
+			and `dealer_id` = #{dealerId}
+		</if>
     </sql>
 
 	<select id="queryList" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.EvalStageEntity">
@@ -67,7 +72,9 @@
 	<insert id="save" parameterType="com.cn.jhsoft.usedcar.modules.pm.entity.EvalStageEntity" useGeneratedKeys="true" keyProperty="id">
 		insert into tbl_eval_stage
 		(
-			`stage_num`, 
+			`dealer_id`,
+			`dealer_name`,
+			`stage_num`,
 			`score1`, 
 			`score2`, 
 			`score3`, 
@@ -84,8 +91,10 @@
 		)
 		values
 		(
-			#{stageNum}, 
-			#{score1}, 
+			#{dealerId},
+			#{dealerName},
+			#{stageNum},
+			#{score1},
 			#{score2}, 
 			#{score3}, 
 			#{score4}, 
@@ -104,6 +113,8 @@
 	<update id="update" parameterType="com.cn.jhsoft.usedcar.modules.pm.entity.EvalStageEntity">
 		update tbl_eval_stage 
 		<set>
+			<if test="dealerId != null">`dealer_id` = #{dealerId}, </if>
+			<if test="dealerName != null">`dealer_name` = #{dealerName}, </if>
 			<if test="stageNum != null">`stage_num` = #{stageNum}, </if>
 			<if test="score1 != null">`score1` = #{score1}, </if>
 			<if test="score2 != null">`score2` = #{score2}, </if>

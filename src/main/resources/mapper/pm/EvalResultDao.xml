@@ -9,6 +9,7 @@
         <result property="questionNum" column="question_num"/>
         <result property="stageId" column="stage_id"/>
         <result property="stageNum" column="stage_num"/>
+		<result property="dealerId" column="dealer_id"/>
         <result property="answer" column="answer"/>
         <result property="fullScore" column="full_score"/>
         <result property="answerScore" column="answer_score"/>
@@ -25,7 +26,7 @@
 	</select>
 
 	<select id="queryObjectByRn" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.EvalResultEntity">
-		select * from tbl_eval_result where create_adminid = #{createAdminid} and question_num = #{questionNum} and `stage_id` is null and stage_num is null
+		select * from tbl_eval_result where create_adminid = #{createAdminid} and question_num = #{questionNum} and dealer_id = #{dealerId} and `stage_id` is null and stage_num is null
 	</select>
 
     <sql id="queryList_where">
@@ -40,6 +41,9 @@
 		</if>
 		<if test="stageNull != null and stageNull.trim() == 'yes'">
 			and `stage_id` is null and stage_num is null
+		</if>
+		<if test="dealerId != null and dealerId > 0">
+			and `dealer_id` = #{dealerId}
 		</if>
     </sql>
 
@@ -81,7 +85,7 @@
 		<if test="type3name != null and type3name.trim() != ''">
 			and question_num in (select num from tbl_eval_question where category3=#{type3name})
 		</if>
-		and `stage_id` is null and stage_num is null
+		and `stage_id` is null and stage_num is null and dealer_id = #{dealerId}
 	</sql>
 
 	<select id="queryTotal2" resultType="int">
@@ -97,7 +101,8 @@
 			`question_num`,
 			`stage_id`, 
 			`stage_num`, 
-			`answer`, 
+			`dealer_id`,
+			`answer`,
 			`full_score`, 
 			`answer_score`,
 			`score`,
@@ -112,7 +117,8 @@
 			#{questionNum},
 			#{stageId}, 
 			#{stageNum}, 
-			#{answer}, 
+			#{dealerId},
+			#{answer},
 			#{fullScore}, 
 			#{answerScore},
 			#{score},
@@ -130,6 +136,7 @@
 			<if test="questionNum != null">`question_num` = #{questionNum}, </if>
 			<if test="stageId != null">`stage_id` = #{stageId}, </if>
 			<if test="stageNum != null">`stage_num` = #{stageNum}, </if>
+			<if test="dealerId != null">`dealer_id` = #{dealerId}, </if>
 			<if test="answer != null">`answer` = #{answer}, </if>
 			<if test="fullScore != null">`full_score` = #{fullScore}, </if>
 			<if test="answerScore != null">`answer_score` = #{answerScore}, </if>

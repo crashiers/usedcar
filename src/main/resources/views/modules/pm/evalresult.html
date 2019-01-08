@@ -31,6 +31,7 @@
 				<a class="picture" v-bind:class="{'btn':true, 'btn-primary': data.id == q.type1, 'btn-default': data.id != q.type1 }" style="border-radius:1px;" @click="getChildMenuData(data.id, 2)">{{data.name}}</a>
 				<span class="badge" v-if="data.allUnAnswerSum>0">{{data.allUnAnswerSum}}</span>
 			</span>
+			经销商：<b>{{dealerInfo.title}}</b>
 		</div>
 		<div class="grid-btn" v-if="menu.twoDatas != null" style="margin-top: 22px;">
 			<!--<a v-bind:class="{'btn':true, 'btn-primary': null == q.type2, 'btn-default': null != q.type2 }" style="border-radius:0px;" @click="clearTwoType()">全部二级栏目</a>-->

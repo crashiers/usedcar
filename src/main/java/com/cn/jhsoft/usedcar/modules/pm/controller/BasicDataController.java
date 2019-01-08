@@ -90,9 +90,9 @@ public class BasicDataController extends AbstractController {
 	/**
 	 * 根据标识得到儿子
 	 */
-	@RequestMapping("/list2/{ename}")
+	@RequestMapping("/list2/{ename}/{dealerId}")
 	@AuthIgnore
-	public List<BasicDataEntityCus> list2(@PathVariable("ename") String ename){
+	public List<BasicDataEntityCus> list2(@PathVariable("ename") String ename, @PathVariable("dealerId") Long dealerId){
 		List<Long> ids = basicDataService.queryBasicDataIdListByEname(ename);
 		Map<String, Object> evalMap = new HashMap<>();
 
@@ -112,6 +112,7 @@ public class BasicDataController extends AbstractController {
 				bdCus.setAllQuestionSum(evalQuestionService.queryTotal2(evalMap));
 				// 已答数量
 				evalMap.put("type1name", entity.getName());
+				evalMap.put("dealerId", dealerId);
 				bdCus.setAllUnAnswerSum(bdCus.getAllQuestionSum() - evalResultService.queryTotal2(evalMap));
 
 
@@ -127,9 +128,10 @@ public class BasicDataController extends AbstractController {
 	/**
 	 * 根据父id得到儿子
 	 */
-	@RequestMapping("/list2/getchild/{parentId}/leavel/{leavel}")
+	@RequestMapping("/list2/getchild/{parentId}/leavel/{leavel}/{dealerId}")
 	@AuthIgnore
-	public List<BasicDataEntityCus> list2(@PathVariable("parentId") int parentId, @PathVariable("leavel") int leavel){
+	public List<BasicDataEntityCus> list2(@PathVariable("parentId") int parentId, @PathVariable("leavel") int leavel,
+											@PathVariable("dealerId") Long dealerId){
 		Map<String, Object> map = new HashMap<>();
 		map.put("parentId", parentId);
 		Map<String, Object> evalMap = new HashMap<>();
@@ -146,6 +148,7 @@ public class BasicDataController extends AbstractController {
 			bdCus.setAllQuestionSum(evalQuestionService.queryTotal2(evalMap));
 			// 已答数量
 			evalMap.put("type"+leavel+"name", entity.getName());
+			evalMap.put("dealerId", dealerId);
 			bdCus.setAllUnAnswerSum(bdCus.getAllQuestionSum() - evalResultService.queryTotal2(evalMap));
 
 

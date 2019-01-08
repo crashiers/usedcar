@@ -82,6 +82,8 @@ public class DrpController extends AbstractController {
         ValidatorUtils.validateEntity(drp, AddGroup.class);
 		drp.setCreateDate(DateUtils.getTodayDate());
 		drp.setCreateDatetime(DateUtils.getTodayDateYMDHMS());
+
+		drp.setCreateAdminid(getUserId());
 		drpService.save(drp);
 		
 		return R.ok();
@@ -204,6 +206,7 @@ public class DrpController extends AbstractController {
 
 				entity.setCreateDate(DateUtils.getTodayDate());
 				entity.setCreateDatetime(DateUtils.getTodayDateYMDHMS());
+				entity.setCreateAdminid(getUserId());
 
 				drpService.save(entity);
 

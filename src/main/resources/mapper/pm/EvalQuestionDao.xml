@@ -92,7 +92,7 @@
 	</sql>
 
 	<select id="queryList2" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.EvalQuestionEntity">
-		select a.*,b.answer from tbl_eval_question a left join tbl_eval_result b on a.num=b.question_num and b.stage_id is null and b.stage_num is null and b.create_adminid = #{createAdminid}
+		select a.*,b.answer from tbl_eval_question a left join tbl_eval_result b on a.num=b.question_num and b.stage_id is null and b.stage_num is null and b.create_adminid = #{createAdminid} and b.dealer_id = #{dealerId}
 		<where>
 			<include refid="queryList2_where"></include>
 		</where>
@@ -118,9 +118,33 @@
 
 	<!--categoryName 传过来如 category1还是category2，汇总的是哪一级-->
 	<!--searchStr 用来处理二级分类的group，如传过来   where category1='业务规划'-->
+	<!-- max(num) as num 是用来排序的-->
 	<select id="queryScoreListGroup" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.EvalQuestionEntity">
 		select sum(full_score) as full_score,
 		${categoryName},
+		<if test="sortWay != null and sortWay.trim() == 'desc'">
+			(@i:=@i+1) as i,
+			(case @i
+			when 0 then max(num)+8000
+			when 1 then max(num)+500
+			when 2 then max(num)+1000
+			when 3 then max(num)+1500
+			when 4 then max(num)+2000
+			when 5 then max(num)+2500
+			when 6 then max(num)+3000
+			when 7 then max(num)+3500
+			when 8 then max(num)+4000
+			when 9 then max(num)+4500
+			when 10 then max(num)+5000
+			when 11 then max(num)+5500
+			when 12 then max(num)+6000
+			when 13 then max(num)+6500
+			when 14 then max(num)+7000
+			else max(num)+7500 end) as num,
+		</if>
+		<if test="sortWay != null and sortWay.trim() == 'asc'">
+			max(num) as num,
+		</if>
 
 		(select ROUND(sum(score)) from tbl_eval_result where
 		question_num in (select num from tbl_eval_question where ${categoryName} = a.${categoryName} ${stageAndtierWhere})
@@ -138,13 +162,44 @@
 		</if>
 
 		from tbl_eval_question a
+		<if test="sortWay != null and sortWay.trim() != ''">
+			,(select @i:=0) as it
+		</if>
+
 		${searchStr}
 		group by ${categoryName}
+		<if test="sortWay != null and sortWay.trim() != ''">
+			order by num ${sortWay}
+		</if>
 	</select>
 
 
+	<!-- max(num) as num 是用来排序的-->
 	<select id="queryScoreList2Group" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.EvalQuestionEntity">
 		select category1,category2,sum(full_score) as full_score,
+		<if test="sortWay != null and sortWay.trim() == 'desc'">
+			(@i:=@i+1) as i,
+			(case @i
+			when 0 then max(num)+8000
+			when 1 then max(num)+500
+			when 2 then max(num)+1000
+			when 3 then max(num)+1500
+			when 4 then max(num)+2000
+			when 5 then max(num)+2500
+			when 6 then max(num)+3000
+			when 7 then max(num)+3500
+			when 8 then max(num)+4000
+			when 9 then max(num)+4500
+			when 10 then max(num)+5000
+			when 11 then max(num)+5500
+			when 12 then max(num)+6000
+			when 13 then max(num)+6500
+			when 14 then max(num)+7000
+			else max(num)+7500 end) as num,
+		</if>
+		<if test="sortWay != null and sortWay.trim() == 'asc'">
+			max(num) as num,
+		</if>
 
 		(select ROUND(sum(score)) from tbl_eval_result where
 			question_num in (select num from tbl_eval_question where category2 = a.category2 and tier=#{tier}) and stage_num=#{stageNum}) as evaluate_way_score
@@ -158,8 +213,15 @@
 			question_num in (select num from tbl_eval_question where category2 = a.category2 and tier=#{tier}) and stage_num=#{stageNum3}) as remark
 		</if>
 
-		from tbl_eval_question a where tier=#{tier}
+		from tbl_eval_question a
+		<if test="sortWay != null and sortWay.trim() != ''">
+			,(select @i:=0) as it
+		</if>
+		where tier=#{tier}
 		group by category1,category2
+		<if test="sortWay != null and sortWay.trim() != ''">
+			order by num ${sortWay}
+		</if>
 	</select>
 
 	 

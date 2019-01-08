@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Date;
 
+import com.cn.jhsoft.usedcar.modules.pm.entity.DealerEntity;
+import com.cn.jhsoft.usedcar.modules.pm.service.DealerService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,6 +40,8 @@ import com.cn.jhsoft.usedcar.common.utils.IPUtils;
 public class EvalStageController extends AbstractController {
 	@Autowired
 	private EvalStageService evalStageService;
+	@Autowired
+	private DealerService dealerService;
 	
 	/**
 	 * 列表
@@ -50,6 +54,12 @@ public class EvalStageController extends AbstractController {
         Query query = new Query(params);
 
 		List<EvalStageEntity> evalStageList = evalStageService.queryList(query);
+		for (EvalStageEntity entity : evalStageList){
+			DealerEntity _entity = dealerService.queryObject(entity.getDealerId());
+			if (_entity != null){
+				entity.setDealerName(_entity.getTitle());
+			}
+		}
 		int total = evalStageService.queryTotal(query);
 		
 		PageUtils pageUtil = new PageUtils(evalStageList, total, query.getLimit(), query.getPage());
@@ -67,6 +77,12 @@ public class EvalStageController extends AbstractController {
 		Query query = new Query(params);
 
 		List<EvalStageEntity> evalStageList = evalStageService.queryList(query);
+		for (EvalStageEntity entity : evalStageList){
+			DealerEntity _entity = dealerService.queryObject(entity.getDealerId());
+			if (_entity != null){
+				entity.setDealerName(_entity.getTitle());
+			}
+		}
 		int total = evalStageService.queryTotal(query);
 
 		PageUtils pageUtil = new PageUtils(evalStageList, total, query.getLimit(), query.getPage());
