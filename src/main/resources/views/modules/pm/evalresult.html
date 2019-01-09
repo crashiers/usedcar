@@ -64,6 +64,7 @@
 			<a v-if="hasPermission('pm:evalresult:save')" class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
 			<a v-if="hasPermission('pm:evalresult:update')" class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
 			<a v-if="hasPermission('pm:evalresult:delete')" class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			<a class="btn btn-danger" @click="importLastEval" v-if="lastEvalStage != null"><i class="fa fa-arrow-circle-right"></i>&nbsp;导入最近一次评测结果（{{lastEvalStage.createDatetime}}）</a>
 		</div>
 	    <table id="jqGrid"></table>
 	    <div id="jqGridPager" style="display:none;"></div>

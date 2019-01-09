@@ -112,7 +112,7 @@
 			<if test="atype != null">`atype` = #{atype}, </if>
 			<if test="amount != null">`amount` = #{amount}, </if>
 			<if test="createDate != null">`create_date` = #{createDate}, </if>
-			<if test="createDatetime != null">`create_datetime` = #{createDatetime}</if>
+			<if test="createDatetime != null">`create_datetime` = #{createDatetime}, </if>
 			<if test="createAdminid != null">`create_adminid` = #{createAdminid}</if>
 		</set>
 		where id = #{id}

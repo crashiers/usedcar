@@ -16,8 +16,14 @@
     <tr th:each="data : ${category2Lists}">
         <td th:text="${data.category2}"></td>
         <td th:text="${data.fullScore}"></td>
-        <td th:if="${numbersSize == 1}" th:text="${data.evaluateWayScore}"></td>
-        <td th:if="${numbersSize > 1}" th:each="i:${#numbers.sequence(1,numbersSize)}" th:text="${i == 1 ? data.evaluateWayScore : (i == 2 ? data.evaluateWay : data.remark)}"></td>
+        <td th:if="${numbersSize == 1}">
+            <a class="met-job-cvbtn" href="javascript:void(0)" th:onclick="|showListLayer(${params.n}, '${data.category2}', '${tier}', 'category2', '${category1}')|" th:text="${data.evaluateWayScore}" th:if="${data.category2 != '总分'}"></a>
+            <span th:if="${data.category2 == '总分'}" th:text="${data.evaluateWayScore}"></span>
+        </td>
+        <td th:if="${numbersSize > 1}" th:each="i:${#numbers.sequence(1,numbersSize)}">
+            <a class="met-job-cvbtn" href="javascript:void(0)" th:onclick="|showListLayer(${ i==1 ? numbersSets[0] : (i == 2 ? numbersSets[1] : numbersSets[2])}, '${data.category2}', '${tier}', 'category2', '${category1}')|" th:text="${i == 1 ? data.evaluateWayScore : (i == 2 ? data.evaluateWay : data.remark)}" th:if="${data.category2 != '总分'}"></a>
+            <span th:if="${data.category2 == '总分'}" th:text="${i == 1 ? data.evaluateWayScore : (i == 2 ? data.evaluateWay : data.remark)}"></span>
+        </td>
     </tr>
 </table>
 
@@ -32,7 +38,13 @@
     <tr th:each="data : ${category3Lists}">
         <td th:text="${data.category3}"></td>
         <td th:text="${data.fullScore}"></td>
-        <td th:if="${numbersSize == 1}" th:text="${data.evaluateWayScore}"></td>
-        <td th:if="${numbersSize > 1}" th:each="i:${#numbers.sequence(1,numbersSize)}" th:text="${i == 1 ? data.evaluateWayScore : (i == 2 ? data.evaluateWay : data.remark)}"></td>
+        <td th:if="${numbersSize == 1}">
+            <a class="met-job-cvbtn" href="javascript:void(0)" th:onclick="|showListLayer(${params.n}, '${data.category3}')|" th:text="${data.evaluateWayScore}" th:if="${data.category3 != '总分'}"></a>
+            <span th:if="${data.category3 == '总分'}" th:text="${data.evaluateWayScore}"></span>
+        </td>
+        <td th:if="${numbersSize > 1}" th:each="i:${#numbers.sequence(1,numbersSize)}">
+            <a class="met-job-cvbtn" href="javascript:void(0)" th:onclick="|showListLayer(${ i==1 ? numbersSets[0] : (i == 2 ? numbersSets[1] : numbersSets[2])}, '${data.category3}')|" th:text="${i == 1 ? data.evaluateWayScore : (i == 2 ? data.evaluateWay : data.remark)}" th:if="${data.category3 != '总分'}"></a>
+            <span th:if="${data.category3 == '总分'}" th:text="${i == 1 ? data.evaluateWayScore : (i == 2 ? data.evaluateWay : data.remark)}"></span>
+        </td>
     </tr>
 </table>

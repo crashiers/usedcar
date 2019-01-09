@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Date;
 
 import com.cn.jhsoft.usedcar.modules.api.annotation.AuthIgnore;
+import com.cn.jhsoft.usedcar.modules.pm.entity.BasicDataEntity;
+import com.cn.jhsoft.usedcar.modules.pm.service.BasicDataService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -41,12 +43,14 @@ import com.cn.jhsoft.usedcar.common.utils.DateUtils;
 public class DealerController extends AbstractController {
 	@Autowired
 	private DealerService dealerService;
+	@Autowired
+	private BasicDataService basicDataService;
 	
 	/**
 	 * 列表
 	 */
 	@RequestMapping("/list")
-	@RequiresPermissions(value = {"pm:dealer:list", "pm:dr:list", "pm:evalstage:list", "pm:evalstage:manager"}, logical= Logical.OR)
+	@RequiresPermissions(value = {"pm:dealer:list", "pm:dealer:manager", "pm:dr:list", "pm:dr:manager", "pm:evalstage:list", "pm:evalstage:manager", "pm:drp:list", "pm:drp:manager"}, logical= Logical.OR)
 	public R list(@RequestParam Map<String, Object> params){
 
 		boolean isManager = false;
@@ -54,7 +58,7 @@ public class DealerController extends AbstractController {
 		// 如果是有 pm:evalstage:manager 权限，则不限定经销商是谁的
 		// 权限判断
 		Subject subject = SecurityUtils.getSubject();
-		if (subject.isPermitted("pm:evalstage:manager")){
+		if (subject.isPermitted("pm:evalstage:manager") || subject.isPermitted("pm:dealer:manager") || subject.isPermitted("pm:drp:manager") || subject.isPermitted("pm:dr:manager")){
 			isManager = true;
 		}
 
@@ -65,6 +69,7 @@ public class DealerController extends AbstractController {
         Query query = new Query(params);
 
 		List<DealerEntity> dealerList = dealerService.queryList(query);
+
 		int total = dealerService.queryTotal(query);
 		
 		PageUtils pageUtil = new PageUtils(dealerList, total, query.getLimit(), query.getPage());
@@ -81,7 +86,6 @@ public class DealerController extends AbstractController {
 	@AuthIgnore
 	public R info(@PathVariable("id") Long id){
 		DealerEntity dealer = dealerService.queryObject(id);
-		
 		return R.ok().put("dealer", dealer);
 	}
 	
@@ -95,6 +99,12 @@ public class DealerController extends AbstractController {
         dealer.setCreateDate(DateUtils.getTodayDate());
         dealer.setCreateDatetime(DateUtils.getTodayDateYMDHMS());
         dealer.setCreateAdminid(getUserId());
+
+		BasicDataEntity _entity = basicDataService.queryObject(Long.parseLong(dealer.getBrand()));
+		if (_entity != null){
+			dealer.setBrandname(_entity.getName());
+		}
+
 		dealerService.save(dealer);
 		
 		return R.ok();
@@ -107,6 +117,12 @@ public class DealerController extends AbstractController {
 	@RequiresPermissions("pm:dealer:update")
 	public R update(@RequestBody DealerEntity dealer){
         ValidatorUtils.validateEntity(dealer, UpdateGroup.class);
+
+		BasicDataEntity _entity = basicDataService.queryObject(Long.parseLong(dealer.getBrand()));
+		if (_entity != null){
+			dealer.setBrandname(_entity.getName());
+		}
+
 		dealerService.update(dealer);
 		
 		return R.ok();

@@ -35,3 +35,4 @@ alter table tbl_drp add `create_adminid` bigint DEFAULT 0 COMMENT '添加人ID';
 INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT (select menu_id from sys_menu where `name`='经销商'), '管理', null, 'pm:dealer:manager', '2', null, '6';
 INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT (select menu_id from sys_menu where `name`='置换零售业务'), '管理', null, 'pm:dr:manager', '2', null, '6';
 INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT (select menu_id from sys_menu where `name`='进销存'), '管理', null, 'pm:drp:manager', '2', null, '6';
+

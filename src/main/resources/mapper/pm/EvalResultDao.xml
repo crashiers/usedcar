@@ -94,6 +94,42 @@
 			<include refid="queryList2_where"></include>
 		</where>
 	</select>
+
+	<sql id="queryList3_where">
+		<if test="category1 != null and category1.trim() != ''">
+			and `category1` = #{category1}
+		</if>
+		<if test="category2 != null and category2.trim() != ''">
+			and `category2` = #{category2}
+		</if>
+		<if test="category3 != null and category3.trim() != ''">
+			and `category3` = #{category3}
+		</if>
+		<if test="Category1Id != null and Category1Id.trim() != '' and Category2Id.trim() != 'null'">
+			and `category1` in (select `name` from tbl_basic_data where id=#{Category1Id})
+		</if>
+		<if test="Category2Id != null and Category2Id.trim() != '' and Category2Id.trim() != 'null'">
+			and `category2` in (select `name` from tbl_basic_data where id=#{Category2Id})
+		</if>
+		<if test="Category3Id != null and Category3Id.trim() != '' and Category3Id.trim() != 'null'">
+			and `category3` in (select `name` from tbl_basic_data where id=#{Category3Id})
+		</if>
+		<if test="tier != null and tier.trim() != ''">
+			and `tier` = #{tier}
+		</if>
+	</sql>
+
+	<select id="queryList3" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.EvalResultEntity">
+		select * from tbl_eval_result where `stage_num` = #{stageNum} and question_num in (
+			select num from tbl_eval_question
+			<where>
+				<include refid="queryList3_where"></include>
+			</where>
+		)
+		order by question_num asc
+	</select>
+
+
 	 
 	<insert id="save" parameterType="com.cn.jhsoft.usedcar.modules.pm.entity.EvalResultEntity" useGeneratedKeys="true" keyProperty="id">
 		insert into tbl_eval_result

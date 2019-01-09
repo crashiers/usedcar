@@ -358,11 +358,13 @@ public class DrController extends AbstractController {
 	/**
 	 * 每月各款新车的零售量
 	 */
-	@RequestMapping("/getsmallcate/{id}/{atype}/{dealerId}")
+	@RequestMapping("/getsmallcate/{id}/{atype}/{dealerId}/{startMonth}/{endMonth}")
 	@AuthIgnore
 	public R getSmallCate(@PathVariable("id") String id,
 						  @PathVariable("atype") String atype,
-						  @PathVariable("dealerId") String dealerId){
+						  @PathVariable("dealerId") String dealerId,
+						  @PathVariable("startMonth") String startMonth,
+						  @PathVariable("endMonth") String endMonth){
 
 		// 左侧子品牌/车型
 		Map<String, Object> map = new HashMap<>();
@@ -377,6 +379,8 @@ public class DrController extends AbstractController {
 		map.put("dealerId", dealerId);
 		map.put("sidx", "year_month");
 		map.put("order", "asc");
+		map.put("startMonth", startMonth);
+		map.put("endMonth", endMonth);
 		List<DrEntity> drDataList = drService.queryList(map);
 
 		List<List<DraEntity>> _lists = new LinkedList<>();
@@ -411,11 +415,13 @@ public class DrController extends AbstractController {
 	/**
 	 * 每月各款新车的零售量 合计
 	 */
-	@RequestMapping("/getsmallcateall/{id}/{atype}/{dealerId}")
+	@RequestMapping("/getsmallcateall/{id}/{atype}/{dealerId}/{startMonth}/{endMonth}")
 	@AuthIgnore
 	public R getSmallCateAll(@PathVariable("id") String id,
 						  @PathVariable("atype") String atype,
-						  @PathVariable("dealerId") String dealerId){
+						  @PathVariable("dealerId") String dealerId,
+						 @PathVariable("startMonth") String startMonth,
+						 @PathVariable("endMonth") String endMonth){
 
 		// 左侧子品牌/车型
 		Map<String, Object> map = new HashMap<>();
@@ -424,6 +430,8 @@ public class DrController extends AbstractController {
 		map.put("dealerId", dealerId);
 		map.put("sidx", "year_month");
 		map.put("order", "asc");
+		map.put("startMonth", startMonth);
+		map.put("endMonth", endMonth);
 		List<DrEntity> drDataList = drService.queryList(map);
 
 		// 总数
@@ -482,6 +490,7 @@ public class DrController extends AbstractController {
 	public R uploadAmount(@RequestParam("file") MultipartFile file, HttpServletRequest request){
 		String dealerId = request.getParameter("dealerId").toString();
 		String atype = request.getParameter("atype").toString();
+		String brand = request.getParameter("brand").toString();
 		Map<String, BasicDataEntity> bigCateMap = new HashMap<>();
 		List<String> headers = new LinkedList<>();
 		try {

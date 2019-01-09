@@ -23,37 +23,37 @@
                     </div>
                     <div class="met-editor lazyload clearfix" style="font-size:12px;">
 
-                            <div class="col-md-4 oneTable" style="padding-left: 0px;">
-                                <table>
-                                    <tr class="oneTableHeader">
-                                        <td><b>项目</b></td>
-                                        <td><b>满分</b></td>
-                                        <td th:if="${numbersSize == 1}"><b>得分</b></td>
-                                        <td th:if="${numbersSize > 1}" th:each="i:${#numbers.sequence(1,numbersSize)}"><b th:text="'评测'+${i}"></b></td>
-                                    </tr>
-                                    <tr th:replace="modules/front/plug::thend(thisObj=${category1_1})">
-                                    </tr>
-                                    <tr th:replace="modules/front/plug::thend(thisObj=${category1_2})">
-                                    </tr>
-                                </table>
-                            </div>
-                            <div class="col-md-4 oneTable">
-                                <table>
-                                    <tr class="oneTableHeader">
-                                        <td><b>项目</b></td>
-                                        <td><b>满分</b></td>
-                                        <td th:if="${numbersSize == 1}"><b>得分</b></td>
-                                        <td th:if="${numbersSize > 1}" th:each="i:${#numbers.sequence(1,numbersSize)}"><b th:text="'评测'+${i}"></b></td>
-                                    </tr>
-                                    <tr th:replace="modules/front/plug::thend(thisObj=${category1_3})">
-                                    </tr>
-                                    <tr th:replace="modules/front/plug::thend(thisObj=${category1_4})">
-                                    </tr>
-                                </table>
-                            </div>
-                            <div class="col-md-4" id="div_radar1" style="height:220px;">
+                        <div class="col-md-4 oneTable" style="padding-left: 0px;">
+                            <table>
+                                <tr class="oneTableHeader">
+                                    <td><b>项目</b></td>
+                                    <td><b>满分</b></td>
+                                    <td th:if="${numbersSize == 1}"><b>得分</b></td>
+                                    <td th:if="${numbersSize > 1}" th:each="i:${#numbers.sequence(1,numbersSize)}"><b th:text="'评测'+${i}"></b></td>
+                                </tr>
+                                <tr th:replace="modules/front/plug::thend(thisObj=${category1_1})">
+                                </tr>
+                                <tr th:replace="modules/front/plug::thend(thisObj=${category1_2})">
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-4 oneTable">
+                            <table>
+                                <tr class="oneTableHeader">
+                                    <td><b>项目</b></td>
+                                    <td><b>满分</b></td>
+                                    <td th:if="${numbersSize == 1}"><b>得分</b></td>
+                                    <td th:if="${numbersSize > 1}" th:each="i:${#numbers.sequence(1,numbersSize)}"><b th:text="'评测'+${i}"></b></td>
+                                </tr>
+                                <tr th:replace="modules/front/plug::thend(thisObj=${category1_3})">
+                                </tr>
+                                <tr th:replace="modules/front/plug::thend(thisObj=${category1_4})">
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-4" id="div_radar1" style="height:220px;">
 
-                            </div>
+                        </div>
 
                     </div>
 
@@ -63,12 +63,12 @@
 
                         <!-- #d9534f,  #337ab7,  #5cb85c-->
                         <div class="col-md-3" style="background-color: #f0ad4e; height:600px;">
-                            <div class="tit"><a class="met-job-cvbtn" href="javascript:void(0)">业务规划</a></div>
+                            <div class="tit">业务规划</div>
 
                             <div id="div_radar2" class="div_chars">
                             </div>
 
-                            <table th:replace="modules/front/plug::category2table(category2Lists=${category20Lists})">
+                            <table th:replace="modules/front/plug::category2table(category2Lists=${category20Lists}, tier='', category1='')">
                             </table>
                         </div>
 
@@ -78,7 +78,7 @@
                             <div id="div_radar3" class="div_chars">
                             </div>
 
-                            <table th:replace="modules/front/plug::category2table(category2Lists=${category21Lists})">
+                            <table th:replace="modules/front/plug::category2table(category2Lists=${category21Lists}, tier='', category1='')">
                             </table>
                         </div>
 
@@ -88,7 +88,7 @@
                             <div id="div_radar4" class="div_chars">
                             </div>
 
-                            <table th:replace="modules/front/plug::category2table(category2Lists=${category22Lists})">
+                            <table th:replace="modules/front/plug::category2table(category2Lists=${category22Lists}, tier='', category1='')">
                             </table>
                         </div>
 
@@ -98,7 +98,7 @@
                             <div id="div_radar5" class="div_chars">
                             </div>
 
-                            <table th:replace="modules/front/plug::category2table(category2Lists=${category23Lists})">
+                            <table th:replace="modules/front/plug::category2table(category2Lists=${category23Lists}, tier='', category1='')">
                             </table>
                         </div>
 
@@ -151,7 +151,7 @@
                             <div th:each="listMapData : ${category30Sets}">
                                 <div class="col-md-3" style="padding-left: 0px;" th:each="entry : ${listMapData}">
                                     <div class="tit" style="padding: 0px;background: #5cb85c;font-size:14px;" th:text="${entry.key}"></div>
-                                    <table th:replace="modules/front/plug::category2table(category2Lists=${entry.value})">
+                                    <table th:replace="modules/front/plug::category2table(category2Lists=${entry.value}, tier='管理层', category1=${entry.key})">
                                     </table>
                                 </div>
                             </div>
@@ -162,7 +162,7 @@
                             <div th:each="listMapData : ${category31Sets}">
                                 <div class="col-md-3" style="padding-left: 0px;" th:each="entry : ${listMapData}">
                                     <div class="tit" style="padding: 0px;background: #5cb85c;font-size:14px;" th:text="${entry.key}"></div>
-                                    <table th:replace="modules/front/plug::category2table(category2Lists=${entry.value})">
+                                    <table th:replace="modules/front/plug::category2table(category2Lists=${entry.value}, tier='运营层', category1=${entry.key})">
                                     </table>
                                 </div>
                             </div>
@@ -173,7 +173,7 @@
                             <div th:each="listMapData : ${category32Sets}">
                                 <div class="col-md-3" style="padding-left: 0px;" th:each="entry : ${listMapData}">
                                     <div class="tit" style="padding: 0px;background: #5cb85c;font-size:14px;" th:text="${entry.key}"></div>
-                                    <table th:replace="modules/front/plug::category2table(category2Lists=${entry.value})">
+                                    <table th:replace="modules/front/plug::category2table(category2Lists=${entry.value}, tier='执行层', category1=${entry.key})">
                                     </table>
                                 </div>
                             </div>
@@ -193,46 +193,20 @@
 
 <!--报名信息弹出框-->
 <div class="modal fade modal-primary" id="met-job-cv" aria-hidden="true" role="dialog" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog" style="width:800px;">
         <div class="modal-content">
-            <form method='POST' id="defaultForm" class="met-form form-horizontal" action="/api/apply">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                    <h4 class="modal-title">在线报名</h4>
-                </div>
-                <div id="form-apply" class="modal-body padding-bottom-0">
-                    <table style="height: 10000">
-                        <tr>
-                            <td>1</td>
-                            <td>2</td>
-                            <td>3</td>
-                            <td>4</td>
-                            <td>5</td>
-                        </tr><tr>
-                        <td>1</td>
-                        <td>2</td>
-                        <td>3</td>
-                        <td>4</td>
-                        <td>5</td>
-                    </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>2</td>
-                            <td>3</td>
-                            <td>4</td>
-                            <td>5</td>
-                        </tr>
-                    </table>
-                </div>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title">得分明细</h4>
+            </div>
+            <div id="form-apply" class="modal-body padding-bottom-0">
 
-
-                <div class="modal-footer text-left col-sm-offset-1 ">
-                    <button type="button" class="btn btn-default btn-squared" data-dismiss="modal">关闭</button>
-
-                </div>
-            </form>
+            </div>
+            <div class="modal-footer text-left">
+                <button type="button" class="btn btn-default btn-squared" data-dismiss="modal">关闭</button>
+            </div>
         </div>
     </div>
 </div>
@@ -268,7 +242,24 @@
                     getRadar('div_radar6', r.thisData.resultIndicator30List, r.thisData.resultData30List);
                     getRadar('div_radar7', r.thisData.resultIndicator31List, r.thisData.resultData31List);
                 }
+            }
+        });
+    }
 
+    function showListLayer(no, cate, tier, level, category1){
+        if (no == "")    return;
+        tier = tier || "";
+        level = level || "category3";
+        category1 = category1 || "";
+
+        var url = "/evalList?n="+no+"&token="+token+"&cate="+cate+"&tier="+tier+"&level="+level+"&category1="+category1;
+        $.ajax({
+            type: 'GET',
+            url: url,
+            contentType: "text/html; charset=utf-8",
+            success: function(res){
+                $("#form-apply").html(res);
+                $("#met-job-cv").modal('show');
             }
         });
     }
@@ -282,14 +273,6 @@
     getEcharts();
 </script>
 
-<script>
-    if ($("#met-job-cv").length) {
-        $(document).on('click', ".met-job-cvbtn",
-            function() {
-                $("#met-job-cv").modal('show');
-            });
-    }
-</script>
 
 <style>
     .tit {

@@ -92,6 +92,7 @@ var vm = new Vue({
 		evalResult: {},
         dealerId: thisDealerId,
         dealerInfo: {},
+        lastEvalStage: {},
         menu:{
             oneDatas: null,
             twoDatas: null,
@@ -194,7 +195,8 @@ var vm = new Vue({
             }).trigger("reloadGrid");
 		},
         back: function () {
-            history.go(-1);
+            //history.go(-1);
+            self.location = "evalstage.html";
         },
 
         // 下面的所有方法 是用来实现菜单栏目的
@@ -305,6 +307,47 @@ var vm = new Vue({
             $.get(baseURL + "pm/dealer/info/"+thisDealerId, function(r){
                 vm.dealerInfo = r.dealer;
             });
+        },
+
+        // 刷新页面数据
+        reLoadPage: function () {
+            vm.getMenuData2();
+            if (vm.q.type1 != null) {
+                vm.getChildMenuData2(vm.q.type1, 2);
+            }
+            if (vm.q.type2 != null) {
+                vm.getChildMenuData2(vm.q.type2, 3);
+            }
+        },
+
+        // 最近一次评测信息
+        getLastEval: function () {
+            $.get(baseURL + "pm/evalstage/lastinfo/"+thisDealerId, function(r){
+                vm.lastEvalStage = r.evalStage;
+            });
+        },
+
+        // 导入最近一次评测结果
+        importLastEval: function () {
+            var data = "dealerId="+thisDealerId+"&category1="+vm.q.type1+"&category2="+vm.q.type2+"&category3="+vm.q.type3;
+            confirm('确定要导入吗？如果您已经答过题并且未提交评测，则您答过的题将会被覆盖。请您谨慎操作！若您选择了一级二级三级分类，则只会导入此分类下的评测。点击确定后，请您等候，导入完成了，系统会提示您！', function(){
+                $.ajax({
+                    type: "POST",
+                    url: baseURL + "pm/evalresult/importlasteval",
+                    data: data,
+                    dataType: "json",
+                    success: function(r){
+                        if(r.code == 0){
+                            alert('导入成功', function(index){
+                                vm.reload();
+                                vm.reLoadPage();
+                            });
+                        }else{
+                            alert(r.msg);
+                        }
+                    }
+                });
+            });
         }
 	}
 });
@@ -314,6 +357,8 @@ var vm = new Vue({
 vm.getMenuData();
 // 获取经销商数据
 vm.getDealerInfo();
+// 最近一次评测信息
+vm.getLastEval();
 
 
 // 单选框点击事件
@@ -330,13 +375,7 @@ function clickRadio(obj) {
         data: data,
         dataType: "json",
         success: function(r){
-            vm.getMenuData2();
-            if (vm.q.type1 != null) {
-                vm.getChildMenuData2(vm.q.type1, 2);
-            }
-            if (vm.q.type2 != null) {
-                vm.getChildMenuData2(vm.q.type2, 3);
-            }
+            vm.reLoadPage();
         }
     });
 }

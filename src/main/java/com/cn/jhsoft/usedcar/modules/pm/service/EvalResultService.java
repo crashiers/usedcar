@@ -31,4 +31,6 @@ public interface EvalResultService {
 	EvalResultEntity queryObjectByRn(Map<String, Object> map);
 
 	int queryTotal2(Map<String, Object> map);
+
+	List<EvalResultEntity> queryList3(Map<String, Object> map);
 }

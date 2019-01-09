@@ -35,64 +35,537 @@
 	    <div id="jqGridPager"></div>
     </div>
 
-    <div v-show="!showList" class="panel panel-default">
-		<div class="panel-heading">{{title}}</div>
-		<form class="form-horizontal">
-			<div class="form-group">
-			   	<div class="col-sm-2 control-label">经销商名称</div>
-			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="dealer.title" placeholder="经销商名称"/>
-			    </div>
-			</div>
 
-
-			<div class="form-group">
-				<div class="col-sm-2 control-label">地区</div>
-				<div class="col-sm-10" id="distpicker2" data-toggle="distpicker" style="padding-top: 7px;">
-					<select id="province1"></select>
-					<select id="city1"></select>
-					<select id="district1"></select>
+	<form class="form-horizontal" style="width: 100%;">
+		<div v-show="!showList" class="panel panel-default">
+			<div class="panel-heading">{{title}}基本信息</div>
+				<div class="form-group" style="margin-top: 20px;">
+					<div class="col-sm-2 control-label">经销商名称</div>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" v-model="dealer.title" placeholder="经销商名称"/>
+					</div>
 				</div>
-			</div>
+
+				<div class="form-group">
+					<div class="col-sm-2 control-label">品牌</div>
+					<div class="col-sm-10">
+						<select class="form-control" id="selectBrand">
+							<option v-for="data in brandLists" v-bind:value="data.id">{{data.name}}</option>
+						</select>
+					</div>
+				</div>
+
+
+				<div class="form-group">
+					<div class="col-sm-2 control-label">地区</div>
+					<div class="col-sm-10" id="distpicker2" data-toggle="distpicker" style="padding-top: 7px;">
+						<select id="province1"></select>
+						<select id="city1"></select>
+						<select id="district1"></select>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-2 control-label">详细地址</div>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" v-model="dealer.address" placeholder="详细地址"/>
+					</div>
+				</div>
+
+
+				<div class="form-group">
+					<div class="col-sm-2 control-label">联系人</div>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" v-model="dealer.relname" placeholder="联系人"/>
+					</div>
+				</div>
+
+
+				<div class="form-group">
+					<div class="col-sm-2 control-label">联系电话</div>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" v-model="dealer.tel" placeholder="联系电话"/>
+					</div>
+				</div>
+
+
+				<div class="form-group">
+					<div class="col-sm-2 control-label">基盘客户量</div>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" v-model="dealer.basementClientSum" placeholder="基盘客户量"/>
+					</div>
+				</div>
+
+
 			<div class="form-group">
-				<div class="col-sm-2 control-label">详细地址</div>
+				<div class="col-sm-2 control-label">二手车业务模式</div>
 				<div class="col-sm-10">
-					<input type="text" class="form-control" v-model="dealer.address" placeholder="详细地址"/>
+					<select class="form-control" v-model="dealer.businessMode">
+						<option value="单店运营">单店运营</option>
+						<option value="集团运营">集团运营</option>
+						<option value="单店+集团">单店+集团</option>
+						<option value="集团+单店">集团+单店</option>
+						<option value="第三方运营">第三方运营</option>
+						<option value="无人运营">无人运营</option>
+						<option value="内部承包">内部承包</option>
+					</select>
 				</div>
 			</div>
 
 
 			<div class="form-group">
-			   	<div class="col-sm-2 control-label">联系人</div>
-			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="dealer.relname" placeholder="联系人"/>
-			    </div>
+				<div class="col-sm-2 control-label">二手车部门主管上级</div>
+				<div class="col-sm-10">
+					<select class="form-control" v-model="dealer.superior">
+						<option value="集团二手车部">集团二手车部</option>
+						<option value="公司总经理">公司总经理</option>
+						<option value="销售总监">销售总监</option>
+						<option value="增值总监">增值总监</option>
+						<option value="售后总监">售后总监</option>
+						<option value="第三方或无部门">第三方或无部门</option>
+					</select>
+				</div>
+			</div>
+		</div>
+
+
+		<div v-show="!showList" class="panel panel-default">
+			<div class="panel-heading">二手车部门组织情况</div>
+
+			<div class="form-group" style="margin-top: 20px;">
+				<div class="col-sm-2 control-label">部门人数</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="dealer.depPersons" placeholder="部门人数（人）"/>
+				</div>
 			</div>
 
 
 			<div class="form-group">
-			   	<div class="col-sm-2 control-label">联系电话</div>
-			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="dealer.tel" placeholder="联系电话"/>
-			    </div>
+				<div class="col-sm-2 control-label">二手车经理</div>
+				<label class="radio-inline">
+					<input type="radio" name="managerWorkway" value="专职" v-model="dealer.managerWorkway"/> 专职
+				</label>
+				<label class="radio-inline">
+					<input type="radio" name="managerWorkway" value="兼职" v-model="dealer.managerWorkway"/> 兼职
+				</label>
 			</div>
 
 
 			<div class="form-group">
-			   	<div class="col-sm-2 control-label">基盘客户量</div>
-			   	<div class="col-sm-10">
-			        <input type="text" class="form-control" v-model="dealer.basementClientSum" placeholder="基盘客户量"/>
-			    </div>
+				<div class="col-sm-2 control-label">专职评估师人数</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="dealer.appraiserz" placeholder="专职评估师人数（人）"/>
+				</div>
 			</div>
 
 
 			<div class="form-group">
-				<div class="col-sm-2 control-label"></div> 
+				<div class="col-sm-2 control-label">兼职评估师人数</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="dealer.appraiserj" placeholder="兼职评估师人数（人）"/>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">专职二手车销售顾问人数</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="dealer.sellerz" placeholder="专职二手车销售顾问人数（人）"/>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">兼职二手车销售顾问人数</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="dealer.sellerj" placeholder="兼职二手车销售顾问人数（人）"/>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">专职信息员人数</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="dealer.messengerz" placeholder="专职信息员人数（人）"/>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">兼职信息员人数</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="dealer.messengerj" placeholder="兼职信息员人数（人）"/>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">专职整备技师人数</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="dealer.preparingz" placeholder="专职整备技师人数（人）"/>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">兼职整备技师人数</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="dealer.preparingj" placeholder="兼职整备技师人数（人）"/>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">专职翻新技师人数</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="dealer.newz" placeholder="专职翻新技师人数（人）"/>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">兼职翻新技师人数</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="dealer.newj" placeholder="兼职翻新技师人数（人）"/>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">专职过户专员人数</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="dealer.assignedz" placeholder="专职过户专员人数（人）"/>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">兼职过户专员人数</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="dealer.assignedj" placeholder="兼职过户专员人数（人）"/>
+				</div>
+			</div>
+		</div>
+
+
+		<div v-show="!showList" class="panel panel-default">
+			<div class="panel-heading">新车销售顾问人数</div>
+
+			<div class="form-group" style="margin-top: 20px;">
+				<div class="col-sm-2 control-label">展厅销售顾问人数</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="dealer.exhibition" placeholder="展厅销售顾问人数（人）"/>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">IDCC专员人数</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="dealer.idcc" placeholder="IDCC专员人数（人）"/>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">实习销售顾问人数</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="dealer.internship" placeholder="实习销售顾问人数（人）"/>
+				</div>
+			</div>
+		</div>
+
+
+		<div v-show="!showList" class="panel panel-default">
+			<div class="panel-heading">二手车业务考核政策（考核指标、标准）</div>
+
+
+			<div class="form-group" style="margin-top: 20px;">
+				<div class="col-sm-2 control-label">新车销售顾问</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="dealer.newcarSeller" placeholder="新车销售顾问"/>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">销售总监</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="dealer.salesDirector" placeholder="销售总监"/>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">评估师</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="dealer.appraiser" placeholder="评估师"/>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">信息员</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="dealer.messengerPerson" placeholder="信息员"/>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">过户专员</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="dealer.transferPerson" placeholder="过户专员"/>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">翻新技师</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="dealer.renovatePerson" placeholder="翻新技师"/>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">整备技师</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="dealer.hostlingPerson" placeholder="整备技师"/>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">二手车销售顾问</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="dealer.usedcarSeller" placeholder="二手车销售顾问"/>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">二手车经理</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="dealer.usedcarManager" placeholder="二手车经理"/>
+				</div>
+			</div>
+		</div>
+
+
+		<div v-show="!showList" class="panel panel-default">
+			<div class="panel-heading">激励政策(奖励发放）</div>
+
+
+			<div class="form-group" style="margin-top: 20px;">
+				<div class="col-sm-2 control-label">新车销售顾问</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="dealer.newcarSeller2" placeholder="新车销售顾问"/>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">评估师</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="dealer.appraiser2" placeholder="评估师"/>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">二手车销售顾问</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="dealer.usedcarSeller2" placeholder="二手车销售顾问"/>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">信息员</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="dealer.messengerPerson2" placeholder="信息员"/>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">翻新技师</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="dealer.renovatePerson2" placeholder="翻新技师"/>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">整备技师</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="dealer.hostlingPerson2" placeholder="整备技师"/>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">过户专员</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="dealer.transferPerson2" placeholder="过户专员"/>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">二手车经理</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="dealer.usedcarManager2" placeholder="二手车经理"/>
+				</div>
+			</div>
+		</div>
+
+
+
+
+		<div v-show="!showList" class="panel panel-default">
+			<div class="panel-heading">其他信息</div>
+
+			<div class="form-group" style="margin-top: 20px;">
+				<div class="col-sm-2 control-label">运营资金来源</div>
+				<div class="col-sm-10">
+					<select class="form-control" v-model="dealer.fundSource">
+						<option value="专项">专项</option>
+						<option value="新车款">新车款</option>
+						<option value="无资金">无资金</option>
+					</select>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">运营资金额度(万)</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="dealer.fundAmount" placeholder="运营资金额度(万)"/>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">销售模式售</div>
+				<div class="col-sm-10">
+					<select class="form-control" v-model="dealer.saleMode">
+						<option value="转售">转售</option>
+						<option value="批售">批售</option>
+						<option value="零售">零售</option>
+						<option value="批售+零售">批售+零售</option>
+						<option value="零售+批售">零售+批售</option>
+						<option value="寄售">寄售</option>
+					</select>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">营销情况简述</div>
+				<div class="col-sm-10">
+					<textarea v-model="dealer.marketingRemark" class="form-control" placeholder="营销情况简述" style="height:100px;"></textarea>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">经销商特征描述</div>
+				<div class="col-sm-10">
+					<textarea v-model="dealer.dealerFeature" class="form-control" placeholder="经销商特征描述（店址分析、销售和售后经营状况、二手车基础情况等）" style="height:100px;"></textarea>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">管理层意识与能力</div>
+				<div class="col-sm-10">
+					<textarea v-model="dealer.managerLayer" class="form-control" placeholder="管理层意识与能力" style="height:100px;"></textarea>
+
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">运营层意识与能力</div>
+				<div class="col-sm-10">
+					<textarea v-model="dealer.operationLayer" class="form-control" placeholder="运营层意识与能力（二手车总监和二手车总监）" style="height:100px;"></textarea>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">二手车人员意识与能力</div>
+				<div class="col-sm-10">
+					<textarea v-model="dealer.executiveLayer" class="form-control" placeholder="二手车人员意识与能力（执行层人员）" style="height:100px;"></textarea>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">置换业务所处阶段</div>
+				<div class="col-sm-10">
+					<select class="form-control" v-model="dealer.permuteStage">
+						<option value="筹备阶段">筹备阶段</option>
+						<option value="起步阶段">起步阶段</option>
+						<option value="提升阶段">提升阶段</option>
+						<option value="增量阶段">增量阶段</option>
+					</select>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">零售业务所处阶段</div>
+				<div class="col-sm-10">
+					<select class="form-control" v-model="dealer.sellStage">
+						<option value="零售未开展">零售未开展</option>
+						<option value="起步阶段">起步阶段</option>
+						<option value="提升阶段">提升阶段</option>
+						<option value="专业阶段">专业阶段</option>
+					</select>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">经销商核心问题</div>
+				<div class="col-sm-10">
+					<textarea v-model="dealer.question" class="form-control" placeholder="经销商核心问题" style="height:100px;"></textarea>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">提升预测</div>
+				<div class="col-sm-10">
+					<select class="form-control" v-model="dealer.forecast">
+						<option value="可改善">可改善</option>
+						<option value="难以改善">难以改善</option>
+					</select>
+				</div>
+			</div>
+
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label">备注</div>
+				<div class="col-sm-10">
+					<textarea v-model="dealer.remark" class="form-control" placeholder="备注" style="height:100px;"></textarea>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-sm-2 control-label"></div>
 				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
 				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
 			</div>
-		</form>
-	</div>
+		</div>
+
+
+	</form>
+
+
+
 </div>
 
 

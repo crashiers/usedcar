@@ -4,6 +4,8 @@ import com.cn.jhsoft.usedcar.modules.pm.entity.DrpEntity;
 import com.cn.jhsoft.usedcar.modules.sys.dao.BaseDao;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.Map;
+
 /**
  * 进销存
  * 
@@ -14,4 +16,6 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface DrpDao extends BaseDao<DrpEntity> {
     void deleteAll();
+
+    DrpEntity queryObjectByrkdhAndDealerId(Map<String, Object> map);
 }

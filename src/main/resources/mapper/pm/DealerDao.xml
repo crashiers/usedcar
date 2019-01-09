@@ -16,6 +16,57 @@
         <result property="email" column="email"/>
         <result property="mobile" column="mobile"/>
         <result property="basementClientSum" column="basement_client_sum"/>
+		<result property="businessMode" column="business_mode"/>
+		<result property="superior" column="superior"/>
+		<result property="depPersons" column="dep_persons"/>
+		<result property="managerWorkway" column="manager_workway"/>
+		<result property="appraiserz" column="appraiserz"/>
+		<result property="appraiserj" column="appraiserj"/>
+		<result property="sellerz" column="sellerz"/>
+		<result property="sellerj" column="sellerj"/>
+		<result property="messengerz" column="messengerz"/>
+		<result property="messengerj" column="messengerj"/>
+		<result property="preparingz" column="preparingz"/>
+		<result property="preparingj" column="preparingj"/>
+		<result property="newz" column="newz"/>
+		<result property="newj" column="newj"/>
+		<result property="assignedz" column="assignedz"/>
+		<result property="assignedj" column="assignedj"/>
+		<result property="exhibition" column="exhibition"/>
+		<result property="idcc" column="idcc"/>
+		<result property="internship" column="internship"/>
+		<result property="newcarSeller" column="newcar_seller"/>
+		<result property="salesDirector" column="sales_director"/>
+		<result property="appraiser" column="appraiser"/>
+		<result property="messengerPerson" column="messenger_person"/>
+		<result property="transferPerson" column="transfer_person"/>
+		<result property="renovatePerson" column="renovate_person"/>
+		<result property="hostlingPerson" column="hostling_person"/>
+		<result property="usedcarSeller" column="usedcar_seller"/>
+		<result property="usedcarManager" column="usedcar_manager"/>
+		<result property="newcarSeller2" column="newcar_seller2"/>
+		<result property="appraiser2" column="appraiser2"/>
+		<result property="usedcarSeller2" column="usedcar_seller2"/>
+		<result property="messengerPerson2" column="messenger_person2"/>
+		<result property="renovatePerson2" column="renovate_person2"/>
+		<result property="hostlingPerson2" column="hostling_person2"/>
+		<result property="transferPerson2" column="transfer_person2"/>
+		<result property="usedcarManager2" column="usedcar_manager2"/>
+		<result property="fundSource" column="fund_source"/>
+		<result property="fundAmount" column="fund_amount"/>
+		<result property="saleMode" column="sale_mode"/>
+		<result property="marketingRemark" column="marketing_remark"/>
+		<result property="dealerFeature" column="dealer_feature"/>
+		<result property="managerLayer" column="manager_layer"/>
+		<result property="operationLayer" column="operation_layer"/>
+		<result property="executiveLayer" column="executive_layer"/>
+		<result property="permuteStage" column="permute_stage"/>
+		<result property="sellStage" column="sell_stage"/>
+		<result property="question" column="question"/>
+		<result property="forecast" column="forecast"/>
+		<result property="remark" column="remark"/>
+		<result property="brand" column="brand"/>
+		<result property="brandname" column="brandname"/>
         <result property="createDate" column="create_date"/>
         <result property="createDatetime" column="create_datetime"/>
 		<result property="createAdminid" column="create_adminid"/>
@@ -71,8 +122,59 @@
 			`tel`, 
 			`email`, 
 			`mobile`, 
-			`basement_client_sum`, 
-			`create_date`, 
+			`basement_client_sum`,
+			`business_mode`,
+			`superior`,
+			`dep_persons`,
+			`manager_workway`,
+			`appraiserz`,
+			`appraiserj`,
+			`sellerz`,
+			`sellerj`,
+			`messengerz`,
+			`messengerj`,
+			`preparingz`,
+			`preparingj`,
+			`newz`,
+			`newj`,
+			`assignedz`,
+			`assignedj`,
+			`exhibition`,
+			`idcc`,
+			`internship`,
+			`newcar_seller`,
+			`sales_director`,
+			`appraiser`,
+			`messenger_person`,
+			`transfer_person`,
+			`renovate_person`,
+			`hostling_person`,
+			`usedcar_seller`,
+			`usedcar_manager`,
+			`newcar_seller2`,
+			`appraiser2`,
+			`usedcar_seller2`,
+			`messenger_person2`,
+			`renovate_person2`,
+			`hostling_person2`,
+			`transfer_person2`,
+			`usedcar_manager2`,
+			`fund_source`,
+			`fund_amount`,
+			`sale_mode`,
+			`marketing_remark`,
+			`dealer_feature`,
+			`manager_layer`,
+			`operation_layer`,
+			`executive_layer`,
+			`permute_stage`,
+			`sell_stage`,
+			`question`,
+			`forecast`,
+			`remark`,
+			`brand`,
+			`brandname`,
+			`create_date`,
 			`create_datetime`,
 			`create_adminid`
 		)
@@ -87,8 +189,59 @@
 			#{tel}, 
 			#{email}, 
 			#{mobile}, 
-			#{basementClientSum}, 
-			#{createDate}, 
+			#{basementClientSum},
+			#{businessMode},
+			#{superior},
+			#{depPersons},
+			#{managerWorkway},
+			#{appraiserz},
+			#{appraiserj},
+			#{sellerz},
+			#{sellerj},
+			#{messengerz},
+			#{messengerj},
+			#{preparingz},
+			#{preparingj},
+			#{newz},
+			#{newj},
+			#{assignedz},
+			#{assignedj},
+			#{exhibition},
+			#{idcc},
+			#{internship},
+			#{newcarSeller},
+			#{salesDirector},
+			#{appraiser},
+			#{messengerPerson},
+			#{transferPerson},
+			#{renovatePerson},
+			#{hostlingPerson},
+			#{usedcarSeller},
+			#{usedcarManager},
+			#{newcarSeller2},
+			#{appraiser2},
+			#{usedcarSeller2},
+			#{messengerPerson2},
+			#{renovatePerson2},
+			#{hostlingPerson2},
+			#{transferPerson2},
+			#{usedcarManager2},
+			#{fundSource},
+			#{fundAmount},
+			#{saleMode},
+			#{marketingRemark},
+			#{dealerFeature},
+			#{managerLayer},
+			#{operationLayer},
+			#{executiveLayer},
+			#{permuteStage},
+			#{sellStage},
+			#{question},
+			#{forecast},
+			#{remark},
+			#{brand},
+			#{brandname},
+			#{createDate},
 			#{createDatetime},
 			#{createAdminid}
 		)
@@ -107,8 +260,59 @@
 			<if test="email != null">`email` = #{email}, </if>
 			<if test="mobile != null">`mobile` = #{mobile}, </if>
 			<if test="basementClientSum != null">`basement_client_sum` = #{basementClientSum}, </if>
+			<if test="businessMode != null">`business_mode` = #{businessMode}, </if>
+			<if test="superior != null">`superior` = #{superior}, </if>
+			<if test="depPersons != null">`dep_persons` = #{depPersons}, </if>
+			<if test="managerWorkway != null">`manager_workway` = #{managerWorkway}, </if>
+			<if test="appraiserz != null">`appraiserz` = #{appraiserz}, </if>
+			<if test="appraiserj != null">`appraiserj` = #{appraiserj}, </if>
+			<if test="sellerz != null">`sellerz` = #{sellerz}, </if>
+			<if test="sellerj != null">`sellerj` = #{sellerj}, </if>
+			<if test="messengerz != null">`messengerz` = #{messengerz}, </if>
+			<if test="messengerj != null">`messengerj` = #{messengerj}, </if>
+			<if test="preparingz != null">`preparingz` = #{preparingz}, </if>
+			<if test="preparingj != null">`preparingj` = #{preparingj}, </if>
+			<if test="newz != null">`newz` = #{newz}, </if>
+			<if test="newj != null">`newj` = #{newj}, </if>
+			<if test="assignedz != null">`assignedz` = #{assignedz}, </if>
+			<if test="assignedj != null">`assignedj` = #{assignedj}, </if>
+			<if test="exhibition != null">`exhibition` = #{exhibition}, </if>
+			<if test="idcc != null">`idcc` = #{idcc}, </if>
+			<if test="internship != null">`internship` = #{internship}, </if>
+			<if test="newcarSeller != null">`newcar_seller` = #{newcarSeller}, </if>
+			<if test="salesDirector != null">`sales_director` = #{salesDirector}, </if>
+			<if test="appraiser != null">`appraiser` = #{appraiser}, </if>
+			<if test="messengerPerson != null">`messenger_person` = #{messengerPerson}, </if>
+			<if test="transferPerson != null">`transfer_person` = #{transferPerson}, </if>
+			<if test="renovatePerson != null">`renovate_person` = #{renovatePerson}, </if>
+			<if test="hostlingPerson != null">`hostling_person` = #{hostlingPerson}, </if>
+			<if test="usedcarSeller != null">`usedcar_seller` = #{usedcarSeller}, </if>
+			<if test="usedcarManager != null">`usedcar_manager` = #{usedcarManager}, </if>
+			<if test="newcarSeller2 != null">`newcar_seller2` = #{newcarSeller2}, </if>
+			<if test="appraiser2 != null">`appraiser2` = #{appraiser2}, </if>
+			<if test="usedcarSeller2 != null">`usedcar_seller2` = #{usedcarSeller2}, </if>
+			<if test="messengerPerson2 != null">`messenger_person2` = #{messengerPerson2}, </if>
+			<if test="renovatePerson2 != null">`renovate_person2` = #{renovatePerson2}, </if>
+			<if test="hostlingPerson2 != null">`hostling_person2` = #{hostlingPerson2}, </if>
+			<if test="transferPerson2 != null">`transfer_person2` = #{transferPerson2}, </if>
+			<if test="usedcarManager2 != null">`usedcar_manager2` = #{usedcarManager2}, </if>
+			<if test="fundSource != null">`fund_source` = #{fundSource}, </if>
+			<if test="fundAmount != null">`fund_amount` = #{fundAmount}, </if>
+			<if test="saleMode != null">`sale_mode` = #{saleMode}, </if>
+			<if test="marketingRemark != null">`marketing_remark` = #{marketingRemark}, </if>
+			<if test="dealerFeature != null">`dealer_feature` = #{dealerFeature}, </if>
+			<if test="managerLayer != null">`manager_layer` = #{managerLayer}, </if>
+			<if test="operationLayer != null">`operation_layer` = #{operationLayer}, </if>
+			<if test="executiveLayer != null">`executive_layer` = #{executiveLayer}, </if>
+			<if test="permuteStage != null">`permute_stage` = #{permuteStage}, </if>
+			<if test="sellStage != null">`sell_stage` = #{sellStage}, </if>
+			<if test="question != null">`question` = #{question}, </if>
+			<if test="forecast != null">`forecast` = #{forecast}, </if>
+			<if test="remark != null">`remark` = #{remark}, </if>
+			<if test="brand != null">`brand` = #{brand}, </if>
+			<if test="brandname != null">`brandname` = #{brandname}, </if>
 			<if test="createDate != null">`create_date` = #{createDate}, </if>
-			<if test="createDatetime != null">`create_datetime` = #{createDatetime}</if>
+			<if test="createDatetime != null">`create_datetime` = #{createDatetime},</if>
 			<if test="createAdminid != null">`create_adminid` = #{createAdminid}</if>
 		</set>
 		where id = #{id}

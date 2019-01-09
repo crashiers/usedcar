@@ -57,4 +57,9 @@ public class DrpServiceImpl implements DrpService {
 		drpDao.deleteAll();
 	}
 
+	@Override
+	public DrpEntity queryObjectByrkdhAndDealerId(Map<String, Object> map) {
+		return drpDao.queryObjectByrkdhAndDealerId(map);
+	}
+
 }

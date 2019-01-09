@@ -329,6 +329,84 @@ public class EvalResultController extends AbstractController {
 
 		return R.ok();
 	}
+
+
+
+
+	/**
+	 * 导入上次所答的所有题
+	 */
+	@RequestMapping("/importlasteval")
+	@RequiresPermissions("pm:evalstage:used")
+	public R importLastEval(Long dealerId,
+				  String category1,
+				  String category2,
+				  String category3){
+
+		if (dealerId == null || dealerId <= 0){
+			return R.error("参数不正确");
+		}
+
+		Map<String, Object> _params = new HashMap<>();
+		_params.put("dealerId", dealerId);
+		_params.put("createAdminid", getUserId());
+		Query query = new Query(_params);
+		query.setLimit(1);
+		List<EvalStageEntity> evalStageList = evalStageService.queryList(query);
+		EvalStageEntity evalStage = evalStageList.size() > 0 ? evalStageList.get(0) : null;
+
+		if (evalStage == null){
+			return R.error("不存在上次的评测记录");
+		}
+
+		// 遍历上次的评测记录
+		_params.clear();
+		_params.put("stageNum", evalStage.getStageNum());
+		_params.put("Category1Id", category1);
+		_params.put("Category2Id", category2);
+		_params.put("Category3Id", category3);
+		List<EvalResultEntity> resultLists = evalResultService.queryList3(_params);
+		for (EvalResultEntity resultEntity : resultLists){
+			Integer rn = resultEntity.getQuestionNum();
+			String an = resultEntity.getAnswer();
+			EvalQuestionEntity evalQuestion = evalQuestionService.queryObjectByNum(rn);
+
+			// 查询是否存在
+			boolean isExist = true;
+			Map params = new HashMap<>();
+			params.put("createAdminid", getUserId());
+			params.put("questionNum", rn);
+			params.put("dealerId", dealerId);
+			EvalResultEntity evalResult = evalResultService.queryObjectByRn(params);
+			if(evalResult == null){
+				evalResult = new EvalResultEntity();
+				isExist = false;
+			}
+
+			evalResult.setQuestionNum(resultEntity.getQuestionNum());
+			evalResult.setAnswer(resultEntity.getAnswer());
+			evalResult.setFullScore(resultEntity.getFullScore());
+			evalResult.setAnswerScore(resultEntity.getAnswerScore());
+			// 根据满分和答案分比例计算最后得分
+			evalResult.setScore(resultEntity.getScore());
+
+			evalResult.setCreateTime(DateUtils.getTimeStamp());
+			evalResult.setCreateAdminid(getUserId());
+			evalResult.setCreateDate(DateUtils.getTodayDate());
+			evalResult.setCreateDatetime(DateUtils.getTodayDateYMDHMS());
+			evalResult.setCreatedip(IPUtils.getIpAddr());
+			evalResult.setDealerId(dealerId);
+
+			if (!isExist) {
+				evalResultService.save(evalResult);
+			}else{
+				evalResultService.update(evalResult);
+			}
+
+		}
+
+		return R.ok();
+	}
 	
 	/**
 	 * 删除

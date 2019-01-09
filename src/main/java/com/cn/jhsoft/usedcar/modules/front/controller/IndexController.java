@@ -1,16 +1,20 @@
 package com.cn.jhsoft.usedcar.modules.front.controller;
 
 import com.cn.jhsoft.usedcar.common.utils.DateUtils;
+import com.cn.jhsoft.usedcar.common.utils.Query;
 import com.cn.jhsoft.usedcar.common.utils.R;
 import com.cn.jhsoft.usedcar.modules.api.annotation.AuthIgnore;
 import com.cn.jhsoft.usedcar.modules.pm.entity.BasicDataEntity;
+import com.cn.jhsoft.usedcar.modules.pm.entity.DrEntity;
 import com.cn.jhsoft.usedcar.modules.pm.entity.DraEntity;
 import com.cn.jhsoft.usedcar.modules.pm.entity.EvalQuestionEntity;
+import com.cn.jhsoft.usedcar.modules.pm.entity.EvalResultEntity;
 import com.cn.jhsoft.usedcar.modules.pm.entity.EvalStageEntity;
 import com.cn.jhsoft.usedcar.modules.pm.service.BasicDataService;
 import com.cn.jhsoft.usedcar.modules.pm.service.DrService;
 import com.cn.jhsoft.usedcar.modules.pm.service.DraService;
 import com.cn.jhsoft.usedcar.modules.pm.service.EvalQuestionService;
+import com.cn.jhsoft.usedcar.modules.pm.service.EvalResultService;
 import com.cn.jhsoft.usedcar.modules.pm.service.EvalStageService;
 import com.cn.jhsoft.usedcar.modules.sys.controller.AbstractController;
 import org.apache.shiro.SecurityUtils;
@@ -19,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -38,6 +43,8 @@ public class IndexController extends AbstractController {
     private EvalStageService evalStageService;
     @Autowired
     private EvalQuestionService evalQuestionService;
+    @Autowired
+    private EvalResultService evalResultService;
     @Autowired
     private DrService drService;
     @Autowired
@@ -96,6 +103,7 @@ public class IndexController extends AbstractController {
         params.put("n", request.getParameter("n"));
         params.put("token", request.getParameter("token"));
         model.addAttribute("params", params);
+        model.addAttribute("numbersSets", numbers);
         model.addAttribute("numbersSize", numbers.size());
 
         return "modules/front/index/report";
@@ -365,6 +373,51 @@ public class IndexController extends AbstractController {
         return R.ok().put("thisData", dataMap);
     }
 
+
+    /**
+     * 评测数据-列表
+     */
+    @GetMapping("/evalList")
+    public String evalList(HttpServletRequest request, Model model) throws IOException {
+        String tier = request.getParameter("tier").toString();
+        String cate = request.getParameter("cate").toString();
+        String stageNum = request.getParameter("n").toString();
+        String level = request.getParameter("level").toString();
+        String category1 = request.getParameter("category1").toString();
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("tier", tier);
+        params.put("stageNum", stageNum);
+        params.put("category1", category1);
+        if (!"".equals(level)) {
+            params.put(level, cate);
+        }
+
+        // 根据编号找出这套题的答案
+        List<EvalResultEntity> lists = evalResultService.queryList3(params);
+        float allScore = 0;
+        DecimalFormat df = new DecimalFormat("#");//格式化小数
+        for (EvalResultEntity entity:lists){
+            EvalQuestionEntity _entity = evalQuestionService.queryObjectByNum(entity.getQuestionNum());
+            if (_entity != null) {
+                entity.setCreatedip(_entity.getTitle());
+            }
+            allScore += entity.getScore();
+            entity.setCreateDate(df.format(entity.getScore()));
+        }
+        // 合计
+        EvalResultEntity allEntity = new EvalResultEntity();
+        allEntity.setCreatedip("合计");
+        allEntity.setAnswer("");
+        allEntity.setCreateDate(df.format(allScore));
+        lists.add(allEntity);
+
+        model.addAttribute("lists", lists);
+        return "modules/front/index/evallist";
+    }
+
+
+
     /**
      * 置换业务看板
      */
@@ -553,6 +606,102 @@ public class IndexController extends AbstractController {
         }
 
         return R.ok().put("thisData", resultMaps);
+    }
+
+    // 曲线
+    @RequestMapping("/echars_data")
+    @ResponseBody
+    public R echarsData(@RequestParam Map<String, Object> params) throws Exception {
+        Map dataMap = new HashMap();
+
+        // 取10条数据
+        params.put("sidx", "year_month");
+        params.put("order", "asc");
+        params.put("limit", 10);
+        params.put("dealerId", params.get("dealerId"));
+        Query query = new Query(params);
+        List<DrEntity> lists = drService.queryList(query);
+        Collections.sort(lists);
+
+        List<String> titles = new LinkedList<>();
+        List<String> cates = new LinkedList<>();
+        List<Map<String, String>> yDatas = new LinkedList<>();
+        List<List<Map<String, Object>>> datas = new LinkedList<>();
+
+        // 多Y 轴
+        Map yDataMap = new HashMap();
+        yDataMap.put("name", "比率");
+        yDataMap.put("formatter", "{value}%");
+        yDataMap.put("min", 0);
+        yDataMap.put("max", 100);
+        yDatas.add(yDataMap);
+
+        //yDataMap = new HashMap();
+        //yDataMap.put("name", "资源消耗");
+        //yDataMap.put("formatter", "{value}万元");
+        //yDatas.add(yDataMap);
+
+        // 分类对应的y轴，0表示第一个y轴，1表示第二个y轴
+        List<Integer> catesYs = new LinkedList<>();
+        // 每个分类的颜色
+        List<String> catesColors = new LinkedList<>();
+        Collections.addAll(catesColors, "#72b201", "#08a9f2", "#ab78ba");
+
+        for (DrEntity entity : lists){
+            titles.add(entity.getYearMonth());
+        }
+        params.put("type", params.get("type") == null ? "one" : params.get("type").toString());
+        switch (params.get("type").toString()){
+            case "one":
+                Collections.addAll(cates, "广义置换率", "狭义置换率");
+                //Collections.addAll(catesYs, 0, 0, 1);
+                break;
+            case "two":
+                Collections.addAll(cates, "大客户消耗", "企业用户消耗", "占比(企业)");
+                //Collections.addAll(catesYs, 0, 0, 1);
+                break;
+            case "three":
+                Collections.addAll(cates, "大客户资源数");
+                break;
+        }
+
+
+        // 按分类来
+        for (String cate : cates){
+            List<Map<String, Object>> datasData = new LinkedList<>();
+            // 遍历x坐标map...
+            for (String k : titles){
+                Map<String, Object> thismap = new HashMap<>();
+
+                thismap.put("name", k);
+                switch (params.get("type").toString()){
+                    case "one":
+                    case "two":
+                        thismap.put("value", 100);
+                        break;
+                    case "three":
+                        thismap.put("value", 100);
+                        break;
+                }
+                datasData.add(thismap);
+            }
+
+            datas.add(datasData);
+        }
+
+        Map map = new HashMap();
+        map.put("titles", titles);
+        map.put("datas", datas);
+        map.put("cates", cates);
+
+        // 每个分类的颜色
+        map.put("catesColors", catesColors);
+
+        // 这是针对多y轴的情况
+        map.put("yDatas", yDatas);
+        map.put("catesYs", catesYs);
+
+        return R.ok().put("thisData", map);
     }
 
 

@@ -62,4 +62,9 @@ public class EvalResultServiceImpl implements EvalResultService {
 		return evalResultDao.queryTotal2(map);
 	}
 
+	@Override
+	public List<EvalResultEntity> queryList3(Map<String, Object> map) {
+		return evalResultDao.queryList3(map);
+	}
+
 }

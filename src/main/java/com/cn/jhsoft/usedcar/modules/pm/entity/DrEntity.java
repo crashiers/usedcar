@@ -16,7 +16,7 @@ import java.util.Date;
  * @email hn1987@126.com
  * @date 2018-12-26 19:28:56
  */
-public class DrEntity implements Serializable {
+public class DrEntity implements Serializable,Comparable<DrEntity> {
 	private static final long serialVersionUID = 1L;
 	
     /**
@@ -519,6 +519,15 @@ public class DrEntity implements Serializable {
 	 */
 	public Long getCreateAdminid() {
 		return createAdminid;
+	}
+
+	@Override
+	public int compareTo(DrEntity o) {
+		//自定义比较方法，如果认为此实体本身大则返回1，否则返回-1
+		if(this.getYearMonth().compareTo(o.getYearMonth()) > 0){
+			return 1;
+		}
+		return -1;
 	}
 
 }

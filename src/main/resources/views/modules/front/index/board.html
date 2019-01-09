@@ -54,6 +54,21 @@
                     </div>
 
 
+
+                    <!--广义狭义置换率-->
+                    <div class="met-editor lazyload clearfix info" style="font-size:12px;padding-top:40px;padding-left:0px;padding-right:0px;">
+
+                        <!--折线图-->
+                        <div class="col-md-12" id="divLine1" style="height:450px;">
+                        </div>
+
+                    </div>
+
+                    <!--置换潜客率-->
+                    <!--潜客评估率-->
+                    <!--评估成交率-->
+
+
                 </div>
             </div>
 
@@ -96,6 +111,52 @@
             }
         });
     }
+
+    function getLineEcharts(type) {
+        if (d == "")    return;
+        var url = "/echars_data?type="+type+"&token="+token+"&dealerId="+d;
+
+        $.ajax({
+            type: 'GET',
+            url: url,
+            contentType: "application/json",
+            success: function(res){
+
+                switch (type){
+                    case "one":
+                        moreLineMoreY("divLine1", '广义置换率/狭义置换率', res.thisData.titles, res.thisData.datas, res.thisData.cates, 2, '', 2, 2);
+                        break;
+                    case "two":
+                        //moreLineMoreY("echars_div_two", "大客户消耗额及占比（企业）曲线", res.thisData.titles, res.thisData.datas, res.thisData.cates, 11, '', 2, 2, res.thisData.catesColors, res.thisData.yDatas, res.thisData.catesYs);
+                        break;
+                    case "three":
+                        //moreLineMoreY("echars_div_three", "大客户资源数", res.thisData.titles, res.thisData.datas, res.thisData.cates, 2, '', 2, 2);
+                        break;
+
+                }
+
+            }
+        });
+//        // 去请求数据以生成报表
+//        var url = "/boardecharts?b="+b+"&d="+d+"&token="+token;
+//        $.ajax({
+//            type: 'GET',
+//            url: url,
+//            contentType: "application/json",
+//            success: function(r){
+//                if (r.code === 0){
+//                    //bing('div_bing1', '', r.thisData.titles, r.thisData.datas, 1, 2);
+//
+//                    $(".divBing").each(function(index,element){
+//                        var brandName = $(this).attr("brand-name");
+//
+//                        bing($(this).attr("id"), '', r.thisData[brandName].titles, r.thisData[brandName].datas, 1, 2);
+//                    });
+//                }
+//
+//            }
+//        });
+    }
     /*]]>*/
 
 </script>
@@ -104,6 +165,7 @@
         //getEcharts();
     });
     getEcharts();
+    getLineEcharts('one');
 </script>
 
 <style>

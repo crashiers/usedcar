@@ -4,6 +4,7 @@ import com.cn.jhsoft.usedcar.modules.pm.entity.EvalResultEntity;
 import com.cn.jhsoft.usedcar.modules.sys.dao.BaseDao;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,5 +20,7 @@ public interface EvalResultDao extends BaseDao<EvalResultEntity> {
     EvalResultEntity queryObjectByRn(Map<String, Object> map);
 
     int queryTotal2(Map<String, Object> map);
+
+    List<EvalResultEntity> queryList3(Map<String, Object> map);
 	
 }

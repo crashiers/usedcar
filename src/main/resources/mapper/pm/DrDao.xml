@@ -44,6 +44,12 @@
         <if test="name != null and name.trim() != ''">
             and `title` like concat('%',#{name},'%')
         </if>
+		<if test="startMonth != null and startMonth.trim() != ''">
+			<![CDATA[ and `year_month` >= #{startMonth} ]]>
+		</if>
+		<if test="endMonth != null and endMonth.trim() != ''">
+			<![CDATA[ and `year_month` <= #{endMonth} ]]>
+		</if>
 		and `dealer_id` = #{dealerId}
     </sql>
 
@@ -154,7 +160,7 @@
 			<if test="sellDealAmount != null">`sell_deal_amount` = #{sellDealAmount}, </if>
 			<if test="sellDealRate != null">`sell_deal_rate` = #{sellDealRate}, </if>
 			<if test="createDate != null">`create_date` = #{createDate}, </if>
-			<if test="createDatetime != null">`create_datetime` = #{createDatetime}</if>
+			<if test="createDatetime != null">`create_datetime` = #{createDatetime}, </if>
 			<if test="createAdminid != null">`create_adminid` = #{createAdminid}</if>
 		</set>
 		where id = #{id}

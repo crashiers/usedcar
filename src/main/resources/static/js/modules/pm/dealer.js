@@ -15,7 +15,7 @@ $(function () {
 			{ label: '联系电话', name: 'tel', index: 'tel', width: 4*10+20 }, 			
 			{ label: '邮箱', name: 'email', index: 'email', width: 2*10+20 , hidden: true},
 			{ label: '手机号', name: 'mobile', index: 'mobile', width: 3*10+20 , hidden: true},
-			{ label: '基盘客户量', name: 'basementClientSum', index: 'basement_client_sum', width: 5*10+20 }, 			
+			{ label: '品牌', name: 'brandname', index: 'brandname', width: 40 },
 			{ label: '添加日期', name: 'createDate', index: 'create_date', width: 4*10+20 }, 			
 			{ label: '添加时间', name: 'createDatetime', index: 'create_datetime', width: 4*10+20, hidden: true }
         ],
@@ -55,6 +55,8 @@ var vm = new Vue({
 		},
 		showList: true,
 		title: null,
+        brandId: 0,
+        brandLists: null,
 		dealer: {}
 	},
 	methods: {
@@ -65,6 +67,9 @@ var vm = new Vue({
 			vm.showList = false;
 			vm.title = "新增";
 			vm.dealer = {};
+
+            // 获取品牌数据
+            vm.getBrandListData();
 		},
 		update: function (event) {
 			var id = getSelectedRow();
@@ -81,6 +86,7 @@ var vm = new Vue({
             vm.dealer.province = $("#province1").val();
             vm.dealer.city = $("#city1").val();
             vm.dealer.district = $("#district1").val();
+            vm.dealer.brand = $("#selectBrand").val();
 			$.ajax({
 				type: "POST",
 			    url: baseURL + url,
@@ -132,6 +138,10 @@ var vm = new Vue({
                     city: vm.dealer.city,
                     district: vm.dealer.district
                 });
+
+                // 获取品牌数据
+                vm.getBrandListData();
+
             });
 		},
 		reload: function (event) {
@@ -141,6 +151,19 @@ var vm = new Vue({
                 postData:{'name': vm.q.name},
                 page:page
             }).trigger("reloadGrid");
-		}
+		},
+
+		// 品牌下拉列表
+        getBrandListData: function () {
+            $.get(baseURL + "pm/basicdata/list3/brand", function(lists){
+                vm.brandLists = lists.length == 0 ? null : lists;
+                console.log(vm.dealer.brand);
+                $("#selectBrand").val(vm.brandLists[0].id);
+                if (vm.dealer.brand != null){
+                    $("#selectBrand").val(vm.dealer.brand);
+				}
+            });
+        }
 	}
 });
+

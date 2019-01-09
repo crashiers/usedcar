@@ -34,19 +34,20 @@
 					<option v-for="data in dealerLists" v-bind:value="data.id">{{data.title}}</option>
 				</select>
             </div>
-			<div class="form-group col-sm-4" style="padding:5px 0px 0px 0px; text-align:left;">
-				品牌：<b style="margin-right:10px;">{{dealer.brandname}}</b>
-				年月：
-				<input type="text" class="inputMode dateInput" style="width:90px;" v-bind:value="q.startMonthVal" id="startMonth" onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM',maxDate:'#F{$dp.$D(\'endMonth\')||\'%y-%M\'}'  })"/>
-				 至
-				<input type="text" class="inputMode dateInput" style="width:90px;" v-bind:value="q.endMonthVal" id="endMonth" onClick="WdatePicker({skin:'twoer',dateFmt:'yyyy-MM',minDate:'#F{$dp.$D(\'startMonth\')||\'%y-%M\'}'  })"/>
+			<div class="form-group col-sm-1" style="padding:5px 0px 0px 0px; text-align:right;">
+				选择品牌：
 			</div>
-            <a class="btn btn-default" @click="query" style="margin-right: 0px;padding: 6px 5px;">查询</a>
-			<a v-if="hasPermission('pm:dr:save')" class="btn btn-primary" @click="add" style="margin-right: 0px;padding: 6px 5px;"><i class="fa fa-plus"></i>&nbsp;新增</a>
-			<a v-if="hasPermission('pm:dr:save')" class="btn btn-primary" @click="upload" style="margin-right: 0px;padding: 6px 5px;"><i class="fa fa-arrow-circle-right"></i>&nbsp;导入</a>
-			<a v-if="hasPermission('pm:dr:update')" class="btn btn-primary" @click="update" style="margin-right: 0px;padding: 6px 5px;"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
-			<a v-if="hasPermission('pm:dr:delete')" class="btn btn-primary" @click="del" style="margin-right: 0px;padding: 6px 5px;"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
-			<a class="btn btn-danger" onclick="return gotoBoard(this)" target="_blank" href="/" style="margin-right: 0px;padding: 6px 5px;">置换业务看板</a>
+			<div class="form-group col-sm-2" style="padding-left: 0px;width: 15%;">
+				<select class="form-control" id="selectBrandId" @change="getAmountAllLists">
+					<option v-for="data in brandLists" v-bind:value="data.id">{{data.name}}</option>
+				</select>
+			</div>
+            <a class="btn btn-default" @click="query" style="display: none;">查询</a>
+			<a v-if="hasPermission('pm:dr:save')" class="btn btn-primary" @click="add" style="margin-right: 0px;padding: 6px 10px;"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			<a v-if="hasPermission('pm:dr:save')" class="btn btn-primary" @click="upload" style="margin-right: 0px;padding: 6px 10px;"><i class="fa fa-arrow-circle-right"></i>&nbsp;导入</a>
+			<a v-if="hasPermission('pm:dr:update')" class="btn btn-primary" @click="update" style="margin-right: 0px;padding: 6px 10px;"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+			<a v-if="hasPermission('pm:dr:delete')" class="btn btn-primary" @click="del" style="margin-right: 0px;padding: 6px 10px;"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			<a class="btn btn-danger" onclick="return gotoBoard(this)" target="_blank" href="/" style="margin-right: 0px;padding: 6px 10px;">置换业务看板</a>
 		</div>
 	    <table id="jqGrid"></table>
 	    <div id="jqGridPager"></div>
@@ -159,8 +160,6 @@
 		</form>
 	</div>
 
-
-
 	<div v-show="showUpload || showUploadAmount1 || showUploadAmount2" class="panel panel-default">
 		<div class="panel-heading" v-if="showUpload">导入</div>
 		<div class="panel-heading" v-if="showUploadAmount1">每月各款新车的零售量导入</div>
@@ -193,37 +192,9 @@
 		</form>
 	</div>
 
-	<div v-show="showUpdateAmount" class="panel panel-default">
-		<div class="panel-heading">{{title}}</div>
-		<form class="form-horizontal">
-
-			<div class="form-group">
-				<div class="col-sm-2 control-label">车型</div>
-				<div class="col-sm-10" style="padding-top: 7px;">
-					{{updateAmountData.arcticName}}
-					<input type="hidden" id="updateAmountArcticId" v-bind:value="updateAmountData.arcticId"/>
-					<input type="hidden" id="updateAmountAtype" v-bind:value="updateAmountData.atype"/>
-				</div>
-			</div>
-
-			<div class="form-group" v-for="(data, indexRow) in updateAmountData.dataArr">
-				<div class="col-sm-2 control-label">{{data.yearMonth}}</div>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" name="updateAmountAmount" v-bind:value="data.amount" v-bind="{'yearMonth': data.yearMonth }"/>
-				</div>
-			</div>
-
-			<div class="form-group">
-				<div class="col-sm-2 control-label"></div>
-				<input type="button" class="btn btn-primary" @click="saveAmount" value="确定"/>
-				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
-			</div>
-		</form>
-	</div>
-
 	<!--每月各款新车的零售量-->
 	<div v-show="showList" class="panel panel-default rrappApprove" style="margin-top:20px;">
-		<div class="panel-heading">每月各款新车的零售量</div>
+		<div class="panel-heading">每月各款新车的零售量 【1、点击表格里的单元格，会出现编辑框，输入数量后会自动保存】【2、按键盘上的Tab键，会结束本输入框输入，进入下一个输入框输入】</div>
 		<div class="row" style="padding-top: 0px;">
 			<div class="col-sm-12" style="padding-top: 8px;">
 				<a v-if="hasPermission('pm:dr:save')" class="btn btn-primary" @click="uploadAmount(1)"><i class="fa fa-arrow-circle-right"></i>&nbsp;导入</a>
@@ -237,15 +208,11 @@
 								<tr class="he">
 									<td>月份</td>
 									<td v-for="data in yearMonthLists">{{data.yearMonth}}</td>
-									<td></td>
 								</tr>
 								<tr v-for="(val, indexRow) in smallBrandLists">
 									<td>{{val.name}}</td>
 									<td v-for="(data, key, indexCol) in amountDataLists1[indexRow]" v-bind:class="data.yearMonth + '_' + data.arctic + '_' + data.atype" @click="flag && updateAmount(data)" v-bind:yearMonth="data.yearMonth" v-bind:arctic="data.arctic" v-bind:amount="data.amount" v-bind:atype="data.atype" v-bind:dealerId="data.dealerId">
 									{{data.amount}}
-									</td>
-									<td>
-										<a class="btn btn-danger" @click="updateRowAmount(val.id, val.name, 1, amountDataLists1[indexRow])" style="padding:0px 5px;">修改</a>
 									</td>
 								</tr>
 								<tr>
@@ -253,7 +220,6 @@
 									<td v-for="(val, colIndex) in allAmountDataLists1">
 										{{val.allAmount}}
 									</td>
-									<td></td>
 								</tr>
 							</table>
 						</div>
@@ -269,7 +235,7 @@
 
 	<!--每月各款新车的置换数量-->
 	<div v-show="showList" class="panel panel-default rrappApprove" style="margin-top:20px;">
-		<div class="panel-heading">每月各款新车的置换数量</div>
+		<div class="panel-heading">每月各款新车的置换数量 【1、点击表格里的单元格，会出现编辑框，输入数量后会自动保存】【2、按键盘上的Tab键，会结束本输入框输入，进入下一个输入框输入】</div>
 
 		<div class="row" style="padding-top: 0px;">
 			<div class="col-sm-12" style="padding-top: 8px;">
@@ -285,15 +251,11 @@
 								<tr class="he">
 									<td>月份</td>
 									<td v-for="data in yearMonthLists">{{data.yearMonth}}</td>
-									<td></td>
 								</tr>
 								<tr v-for="(val, indexRow) in smallBrandLists">
 									<td>{{val.name}}</td>
 									<td v-for="(data, key, indexCol) in amountDataLists2[indexRow]" v-bind:class="data.yearMonth + '_' + data.arctic + '_' + data.atype" @click="flag && updateAmount(data)" v-bind:yearMonth="data.yearMonth" v-bind:arctic="data.arctic" v-bind:amount="data.amount" v-bind:atype="data.atype" v-bind:dealerId="data.dealerId">
 										{{data.amount}}
-									</td>
-									<td>
-										<a class="btn btn-danger" @click="updateRowAmount(val.id, val.name, 2, amountDataLists2[indexRow])" style="padding:0px 5px;">修改</a>
 									</td>
 								</tr>
 								<tr>
@@ -301,7 +263,6 @@
 									<td v-for="(val, colIndex) in allAmountDataLists2">
 										{{val.allAmount}}
 									</td>
-									<td></td>
 								</tr>
 							</table>
 						</div>
@@ -325,13 +286,6 @@
 	}
 </style>
 
-<script src="../../js/date_fun.js"></script>
-<script src="../../js/modules/pm/dr.js"></script>
-<script>
-
-$(function(){
-
-});
-</script>
+<script src="../../js/modules/pm/dr_bak.js"></script>
 </body>
 </html>

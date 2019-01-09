@@ -7,7 +7,9 @@ import java.util.Map;
 import java.util.Date;
 
 import com.cn.jhsoft.usedcar.common.utils.ExcelPOIUtils;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -50,6 +52,19 @@ public class DrpController extends AbstractController {
 	@RequestMapping("/list")
 	@RequiresPermissions("pm:drp:list")
 	public R list(@RequestParam Map<String, Object> params){
+		boolean isManager = false;
+
+		// 如果是有 pm:evalstage:manager 权限，则不限定经销商是谁的
+		// 权限判断
+		Subject subject = SecurityUtils.getSubject();
+		if (subject.isPermitted("pm:drp:manager")){
+			isManager = true;
+		}
+
+		if (!isManager){
+			params.put("createAdminid", getUserId());
+		}
+
 		//查询列表数据
         Query query = new Query(params);
 
@@ -95,13 +110,13 @@ public class DrpController extends AbstractController {
 	@RequestMapping("/upload")
 	@RequiresPermissions("pm:drp:save")
 	public R save(@RequestParam("file") MultipartFile file, HttpServletRequest request){
-		//String dealerId = request.getParameter("dealerId").toString();
+		String dealerId = request.getParameter("dealerId").toString();
 		try {
 			// startRowNum是从0开始，1代表忽略第0行。
 			List<String[]> lists = ExcelPOIUtils.readExcel(file, 1);
 
 			// 先删除所有数据
-			drpService.deleteAll();
+			// drpService.deleteAll();
 
 			// 忽略第一行 头，i从1开始
 			for(int i = 1;i<lists.size();i++){
@@ -115,16 +130,30 @@ public class DrpController extends AbstractController {
 				}
 
 				int num = 0;
-				DrpEntity entity = new DrpEntity();
 
-				entity.setNum(Long.valueOf(datas[num++]));
-				entity.setRkdh(datas[num++]);
+				Long _num = Long.valueOf(datas[num++]);
+				String rkdh = datas[num++];
+				boolean isNew = false;
+
+				// 是否存在
+				Map _params = new HashMap();
+				_params.put("dealerId", dealerId);
+				_params.put("rkdh", rkdh);
+				DrpEntity entity = drpService.queryObjectByrkdhAndDealerId(_params);
+				if (entity == null){
+					entity = new DrpEntity();
+					isNew = true;
+				}
+
+				entity.setDealerId(Long.valueOf(dealerId));
+				entity.setNum(_num);
+				entity.setRkdh(rkdh);
 				entity.setBrand(datas[num++]);
 				entity.setArctic(datas[num++]);
 				entity.setCarModel(datas[num++]);
 				entity.setColor(datas[num++]);
 				entity.setMileage(datas[num++]);
-				entity.setFirstDate(datas[num++]);
+				entity.setFirstDate(DateUtils.format(DateUtils.getDateFrom1900(Integer.valueOf(datas[num++])), "yyyy-MM-dd"));
 
 				entity.setDisplacement(datas[num++]);
 				entity.setGearbox(datas[num++]);
@@ -140,13 +169,13 @@ public class DrpController extends AbstractController {
 				entity.setRawCarOwner(datas[num++]);
 				entity.setRawPhone(datas[num++]);
 				entity.setPermuteArctic(datas[num++]);
-				entity.setBuyDate(datas[num++]);
+				entity.setBuyDate(DateUtils.format(DateUtils.getDateFrom1900(Integer.valueOf(datas[num++])), "yyyy-MM-dd"));
 				entity.setBuyPrice(datas[num++]);
 				entity.setBuyTransferFee(datas[num++]);
 				entity.setBuyOtherFee(datas[num++]);
 				entity.setBep(datas[num++]);
 				entity.setSlNum(datas[num++]);
-				entity.setSellDate(datas[num++]);
+				entity.setSellDate(DateUtils.format(DateUtils.getDateFrom1900(Integer.valueOf(datas[num++])), "yyyy-MM-dd"));
 
 				entity.setIsAuth(datas[num++]);
 				entity.setServicingCosts(datas[num++]);
@@ -166,7 +195,7 @@ public class DrpController extends AbstractController {
 				entity.setNewCarOwner(datas[num++]);
 				entity.setNewPhone(datas[num++]);
 				entity.setChannel(datas[num++]);
-				entity.setSellDateFinal(datas[num++]);
+				entity.setSellDateFinal(DateUtils.format(DateUtils.getDateFrom1900(Integer.valueOf(datas[num++])), "yyyy-MM-dd"));
 				entity.setSellPriceFinal(datas[num++]);
 				entity.setPaymentType(datas[num++]);
 
@@ -208,7 +237,11 @@ public class DrpController extends AbstractController {
 				entity.setCreateDatetime(DateUtils.getTodayDateYMDHMS());
 				entity.setCreateAdminid(getUserId());
 
-				drpService.save(entity);
+				if (isNew) {
+					drpService.save(entity);
+				}else{
+					drpService.update(entity);
+				}
 
 			}
 		} catch (IOException e) {

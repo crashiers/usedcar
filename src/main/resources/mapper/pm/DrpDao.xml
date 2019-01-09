@@ -94,10 +94,15 @@
 		select * from tbl_drp where id = #{value}
 	</select>
 
+	<select id="queryObjectByrkdhAndDealerId" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.DrpEntity">
+		select * from tbl_drp where rkdh = #{rkdh} and dealer_id=#{dealerId}
+	</select>
+
     <sql id="queryList_where">
         <if test="name != null and name.trim() != ''">
             and `rkdh` like concat('%',#{name},'%')
         </if>
+		and `dealer_id` = #{dealerId}
     </sql>
 
 	<select id="queryList" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.DrpEntity">
@@ -381,7 +386,7 @@
 			<if test="buyPriceLeavel != null">`buy_price_leavel` = #{buyPriceLeavel}, </if>
 			<if test="isStore != null">`is_store` = #{isStore}, </if>
 			<if test="createDate != null">`create_date` = #{createDate}, </if>
-			<if test="createDatetime != null">`create_datetime` = #{createDatetime}</if>
+			<if test="createDatetime != null">`create_datetime` = #{createDatetime}, </if>
 			<if test="createAdminid != null">`create_adminid` = #{createAdminid}</if>
 		</set>
 		where id = #{id}

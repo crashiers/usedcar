@@ -1,0 +1,14 @@
+<table class="table table-bordered table-hover table-striped table-responsive">
+    <tr>
+        <td>序号</td>
+        <td>题目</td>
+        <td>您的答案</td>
+        <td>得分</td>
+    </tr>
+    <tr th:each="data,dataStat : ${lists}">
+        <td th:text="${dataStat.index+1}"></td>
+        <td th:text="${data.createdip}" style="text-align: left; padding-left: 10px;"></td>
+        <td th:text="${data.answer}"></td>
+        <td th:text="${data.createDate}"></td>
+    </tr>
+</table>

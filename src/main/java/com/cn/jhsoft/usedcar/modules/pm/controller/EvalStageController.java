@@ -1,9 +1,11 @@
 package com.cn.jhsoft.usedcar.modules.pm.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Date;
 
+import com.cn.jhsoft.usedcar.modules.api.annotation.AuthIgnore;
 import com.cn.jhsoft.usedcar.modules.pm.entity.DealerEntity;
 import com.cn.jhsoft.usedcar.modules.pm.service.DealerService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -99,6 +101,24 @@ public class EvalStageController extends AbstractController {
 	public R info(@PathVariable("id") Long id){
 		EvalStageEntity evalStage = evalStageService.queryObject(id);
 		
+		return R.ok().put("evalStage", evalStage);
+	}
+
+
+	/**
+	 * 最近一次评测信息
+	 */
+	@RequestMapping("/lastinfo/{dealerId}")
+	@AuthIgnore
+	public R lastInfo(@PathVariable("dealerId") Long dealerId){
+		Map<String, Object> params = new HashMap<>();
+		params.put("dealerId", dealerId);
+		params.put("createAdminid", getUserId());
+		Query query = new Query(params);
+		query.setLimit(1);
+		List<EvalStageEntity> evalStageList = evalStageService.queryList(query);
+		EvalStageEntity evalStage = evalStageList.size() > 0 ? evalStageList.get(0) : null;
+
 		return R.ok().put("evalStage", evalStage);
 	}
 	

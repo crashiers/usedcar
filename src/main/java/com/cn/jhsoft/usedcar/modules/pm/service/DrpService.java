@@ -29,4 +29,6 @@ public interface DrpService {
 	void deleteBatch(Long[] ids);
 
 	void deleteAll();
+
+	DrpEntity queryObjectByrkdhAndDealerId(Map<String, Object> map);
 }

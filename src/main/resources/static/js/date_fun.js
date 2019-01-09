@@ -25,6 +25,17 @@ function formatDate(date) {
     }
     return (myyear + "-" + mymonth + "-" + myweekday);
 }
+
+//格式化日期：yyyy-MM
+function formatDateYM(date) {
+    var myyear = date.getFullYear();
+    var mymonth = date.getMonth() + 1;
+    if (mymonth < 10) {
+        mymonth = "0" + mymonth;
+    }
+    return (myyear + "-" + mymonth);
+}
+
 //获得某月的天数
 function getMonthDays(myMonth) {
     var monthStartDate = new Date(nowYear, myMonth, 1);
@@ -94,10 +105,46 @@ function getQuarterStartDate() {
     var quarterStartDate = new Date(nowYear, getQuarterStartMonth(), 1);
     return formatDate(quarterStartDate);
 }
-//或的本季度的结束日期
+//获得本季度的结束日期
 function getQuarterEndDate() {
     var quarterEndMonth = getQuarterStartMonth() + 2;
     var quarterStartDate = new Date(nowYear, quarterEndMonth,
         getMonthDays(quarterEndMonth));
     return formatDate(quarterStartDate);
+}
+
+function getDate(strDate){
+    if(strDate==null||strDate===undefined) return null;
+    var date = new Date();
+    try{
+        if(strDate == undefined){
+            date= null;
+        }else if(typeof strDate == 'string'){
+            strDate = strDate.replace(/:/g,'-');
+            strDate = strDate.replace(/ /g,'-');
+            var dtArr = strDate.split("-");
+            if(dtArr.length>=2&&dtArr.length<6){
+                date=new Date(dtArr[0], dtArr[1], "01");
+            }else if(date.length>8){
+                date=new Date(Date.UTC(dtArr[0],dtArr[1]-1,dtArr[2],dtArr[3]-8,dtArr[4],dtArr[5]));
+            }
+        }else{
+            date = null;
+        }
+        return date;
+    }catch(e){
+        alert('格式化日期出现异常：' + e.message);
+    }
+}
+
+// 当前年月
+function getThisMonth(){
+    var pre = new Date();
+    return formatDateYM(pre);
+}
+// 一年前的年月
+function getPreYearMonth(){
+    var pre = new Date();
+    pre.setFullYear(pre.getFullYear()-1);
+    return formatDateYM(pre);
 }

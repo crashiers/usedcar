@@ -1,7 +1,8 @@
 $(function () {
     $("#jqGrid").jqGrid({
         url: baseURL + 'pm/drp/list',
-        datatype: "json",
+        // 只加载本地数据，也就是不向服务器发送请求
+        datatype: "local",
         colModel: [			
 			{ label: 'id', name: 'id', index: 'id', width: 35, key: true, hidden: true },
 			{ label: '经销商ID', name: 'dealerId', index: 'dealer_id', width: 5*10+20, hidden: true },
@@ -9,7 +10,7 @@ $(function () {
 			{ label: '入库号', name: 'rkdh', index: 'rkdh', width: 3*10+20 }, 			
 			{ label: '品牌', name: 'brand', index: 'brand', width: 2*10+20 }, 			
 			{ label: '车型', name: 'arctic', index: 'arctic', width: 2*10+20 }, 			
-			{ label: '车款', name: 'carModel', index: 'car_model', width: 2*10+20 }, 			
+			{ label: '款式', name: 'carModel', index: 'car_model', width: 2*10+20 },
 			{ label: '颜色', name: 'color', index: 'color', width: 2*10+20 }, 			
 			{ label: '表征里程', name: 'mileage', index: 'mileage', width: 4*10+20 }, 			
 			{ label: '初登日期', name: 'firstDate', index: 'first_date', width: 4*10+20 }, 			
@@ -129,6 +130,8 @@ var vm = new Vue({
         showAdd: false,
         showUpload: false,
 		title: null,
+        dealerId: 0,
+        dealerLists: null,
 		drp: {}
 	},
 	methods: {
@@ -182,7 +185,8 @@ var vm = new Vue({
         upLoadFile: function (event) {
             var buttonObj = event.currentTarget;
             buttonObj.disabled = true;
-            var url = "pm/drp/upload";
+            vm.dealerId = $("#selectDealerId").val() == null ? vm.dealerId : $("#selectDealerId").val();
+            var url = "pm/drp/upload?dealerId="+vm.dealerId;
             $.ajaxFileUpload({
                 type: "POST",
                 url: baseURL + url,
@@ -246,11 +250,34 @@ var vm = new Vue({
 			vm.showList = true;
             vm.showAdd = false;
             vm.showUpload = false;
+            vm.dealerId = $("#selectDealerId").val() == null ? vm.dealerId : $("#selectDealerId").val();
 			var page = $("#jqGrid").jqGrid('getGridParam','page');
 			$("#jqGrid").jqGrid('setGridParam',{
-                postData:{'name': vm.q.name},
-                page:page
+                postData:{'name': vm.q.name, 'dealerId':vm.dealerId},
+                page:page,
+                datatype: "json"
             }).trigger("reloadGrid");
-		}
+		},
+
+        // 经销商下拉列表
+        getDealerListData: function () {
+            $.get(baseURL + "pm/dealer/list?sidx=id&order=asc", function(r){
+                var lists = r.page.list;
+                vm.dealerLists = lists.length == 0 ? null : lists;
+                if (lists.length > 0){
+                    vm.dealerId = vm.dealerLists[0].id;
+                    vm.reload();
+                }else{
+                    layer.alert('请先添加经销商，再操作进销存！', function(){
+                        parent.location = "/default.html#modules/pm/dealer.html";
+                    });
+                }
+
+            });
+        }
 	}
 });
+
+
+// 获取经销商数据
+vm.getDealerListData();

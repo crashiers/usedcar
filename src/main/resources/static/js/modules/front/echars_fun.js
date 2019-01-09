@@ -331,6 +331,278 @@ function getPointHour(divId, chartsTitle, thisTitles, thisDatas, thisColor) {
 
 
 
+// 兼容多y 轴 和 单 y轴的情况
+function moreLineMoreY(divId, chartsTitle, thisTitles, thisDatas, thisCates, isShowCates, formatter, isStack, isArea, thisCatesColors, yDatas, thisCatesYs) {
+
+    isShowCates = isShowCates || 1;
+    formatter = formatter || '';
+    // 是否叠加
+    isStack = isStack || '';
+    // 是一条线，还是一个面
+    isArea = isArea || '';
+    // 每个分类用哪种颜色
+    thisCatesColors = thisCatesColors || '';
+    // 多y 轴，这是每个轴的数据
+    yDatas = yDatas || '';
+    // 这是每个分类对应在哪条 y 轴上
+    thisCatesYs = thisCatesYs || '';
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById(divId));
+
+    option = {
+        tooltip: {
+            trigger: 'axis'
+        },
+        grid: {
+            left: '1%',
+            right: '1%',
+            bottom: '10%',
+            top:'3%',
+            containLabel: true
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: thisTitles,
+            //设置轴线的属性
+            axisLine:{
+                lineStyle:{
+                    //color:'#ccc',
+                    width:0,//轴线的粗细
+                }
+            }
+        },
+        yAxis: {
+            type: 'value',
+            // 不显示一条一条的横线
+            splitLine:{show:false},
+            // 显示整数
+            minInterval: 1,
+            //设置轴线的属性
+            axisLine:{
+                lineStyle:{
+                    //color:'#ccc',
+                    width:0,//轴线的粗细
+                }
+            }
+        },
+        series: []
+    };
+
+    if (yDatas != ''){
+        option.yAxis = [];
+        for (var k = 0, length = yDatas.length; k < length; k++) {
+            var item = {
+                type: 'value',
+                name: yDatas[k].name,
+                min: yDatas[k].min,
+                max: yDatas[k].max,
+                splitLine:{show:false},
+                axisLabel: {
+                    formatter: yDatas[k].formatter
+                }
+            };
+            option.yAxis.push(item);
+        }
+        // 把x 轴显示出来
+        option.xAxis.axisLine = {};
+    }else{
+        // 把x,y 轴显示出来
+        option.xAxis.axisLine = {};
+        option.yAxis.axisLine = {};
+        // 把 背景中横线(参考线) 隐藏掉
+        option.yAxis.splitLine = {show:false};
+    }
+
+    if (isShowCates == 1 || isShowCates == 11){
+        option.legend = {
+            data:thisCates
+        };
+        option.grid.top = '12%';
+        if (isShowCates == 11){
+            option.grid.top = '3%';
+            option.legend.bottom = 'bottom';
+            option.legend.y = 'bottom';
+            option.grid.bottom = '13%';
+        }
+    }
+
+    if (chartsTitle != ""){
+        option.title = {
+            text: chartsTitle,
+            x:'center'
+        };
+        option.grid.top = '20%';
+    }
+
+    for (var k = 0, length = thisCates.length; k < length; k++) {
+        var item = {
+            name:thisCates[k],
+            type:'line',
+            data:thisDatas[k],
+            //设置颜色
+            itemStyle:{
+                normal:{color:colors[k]}
+            }
+        };
+        if (yDatas != ''){
+            item.yAxisIndex = thisCatesYs[k];
+        }
+        if (thisCatesColors != ''){
+            item.itemStyle = {
+                normal:{color:thisCatesColors[k]}
+            };
+        }
+        if (isStack == ''){
+            item.stack = "总量";
+        }
+        if (isArea == ''){
+            item.areaStyle = {normal: {}};
+        }else{
+            option.grid.right = '3%';
+        }
+        option.series.push(item);
+    }
+
+
+    if (formatter != ''){
+        // 这个要求，option.series.data 为这种形式的如：  [{name:"周一",value:120}, {name:"周二",value:132}]
+        // 原来是 [120, 132]
+        option.tooltip.formatter = function (params, ticket, callback) {
+            var res = params[0].name+'<br/>';
+            var myseries = option.series;
+            for (var i = 0; i < myseries.length; i++) {
+                for(var j = 0; j<myseries[i].data.length; j++){
+                    if(myseries[i].data[j].name == params[0].name){
+                        var valueFliter = formatter(myseries[i].data[j].value);
+                        res += myseries[i].name +' : '+valueFliter+'</br>';
+                    }
+                }
+            }
+            return res;
+        };
+    }
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.clear();
+    myChart.setOption(option);
+
+}
+
+function moreLine(divId, chartsTitle, thisTitles, thisDatas, thisCates, isShowCates, formatter, isStack, isArea) {
+
+    isShowCates = isShowCates || 1;
+    formatter = formatter || '';
+    // 是否叠加
+    isStack = isStack || '';
+    // 是一条线，还是一个面
+    isArea = isArea || '';
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById(divId));
+
+    option = {
+        tooltip: {
+            trigger: 'axis'
+        },
+        grid: {
+            left: '1%',
+            right: '10%',
+            bottom: '10%',
+            top:'3%',
+            containLabel: true
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: thisTitles,
+            //设置轴线的属性
+            axisLine:{
+                lineStyle:{
+                    //color:'#ccc',
+                    width:0,//轴线的粗细
+                }
+            }
+        },
+        yAxis: {
+            type: 'value',
+            //设置轴线的属性
+            axisLine:{
+                lineStyle:{
+                    //color:'#ccc',
+                    width:0,//轴线的粗细
+                }
+            }
+        },
+        series: []
+    };
+
+    if (isShowCates == 1 || isShowCates == 11){
+        option.legend = {
+            data:thisCates
+        };
+        option.grid.top = '12%';
+        if (isShowCates == 11){
+            option.grid.top = '3%';
+            option.legend.bottom = 'bottom';
+            option.grid.bottom = '13%';
+        }
+    }
+
+    if (chartsTitle != ""){
+        option.title = {
+            text: chartsTitle,
+            x:'center'
+        };
+        option.grid.top = '20%';
+    }
+
+    for (var k = 0, length = thisCates.length; k < length; k++) {
+        var item = {
+            name:thisCates[k],
+            type:'line',
+            data:thisDatas[k],
+            //设置颜色
+            itemStyle:{
+                normal:{color:colors[k]}
+            }
+        };
+        if (isStack == ''){
+            item.stack = "总量";
+        }
+        if (isArea == ''){
+            item.areaStyle = {normal: {}};
+        }else{
+            option.grid.right = '1%';
+        }
+        option.series.push(item);
+    }
+
+
+
+    if (formatter != ''){
+        // 这个要求，option.series.data 为这种形式的如：  [{name:"周一",value:120}, {name:"周二",value:132}]
+        // 原来是 [120, 132]
+        option.tooltip.formatter = function (params, ticket, callback) {
+            var res = params[0].name+'<br/>';
+            var myseries = option.series;
+            for (var i = 0; i < myseries.length; i++) {
+                for(var j = 0; j<myseries[i].data.length; j++){
+                    if(myseries[i].data[j].name == params[0].name){
+                        var valueFliter = formatter(myseries[i].data[j].value);
+                        res += myseries[i].name +' : '+valueFliter+'</br>';
+                    }
+                }
+            }
+            return res;
+        };
+    }
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.clear();
+    myChart.setOption(option);
+
+}
+
 // 饼状图
 function bing(divId, chartsTitle, thisTitles, thisDatas, isAllBing, isShowLabelLine) {
 
@@ -352,9 +624,9 @@ function bing(divId, chartsTitle, thisTitles, thisDatas, isAllBing, isShowLabelL
             orient: 'vertical',
             x: 'right',
             type: 'scroll',
-            right: 10,
-            top: 50,
-            bottom: 30,
+            right: 0,
+            top: 0,
+            bottom: 0,
             data: thisTitles
         },
         color: colors,
@@ -362,9 +634,9 @@ function bing(divId, chartsTitle, thisTitles, thisDatas, isAllBing, isShowLabelL
             {
                 name:chartsTitle,
                 type:'pie',
-                radius: ['50%', '80%'],
-                center: ['43%', '53%'],
-                avoidLabelOverlap: true,   //是否启用防止标签重叠策略
+                radius: ['50%', '90%'],
+                center: ['40%', '50%'],
+                avoidLabelOverlap: false,
                 data:thisDatas
             }
         ]
@@ -399,6 +671,359 @@ function bing(divId, chartsTitle, thisTitles, thisDatas, isAllBing, isShowLabelL
 
     // 使用刚指定的配置项和数据显示图表。
     myChart.clear();
+    myChart.setOption(option);
+
+}
+
+// 仪表盘
+function dash_board(divId, chartsTitle, dataValue, dataUnit, dataTitle) {
+
+    // dataUnit 值的单位，如 完成率，利率等
+    dataUnit = dataUnit || '';
+    // dataValue 单个值，如50
+    dataValue = dataValue || 0;
+    // dataTitle 指这是个什么东西 如 业务指标，如 天气情况
+    dataTitle = dataTitle || chartsTitle;
+
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById(divId));
+
+    option = {
+        tooltip : {
+            formatter: "{a} {b} : {c}"
+        },
+        series: [
+            {
+                name: dataTitle,
+                type: 'gauge',
+                radius: '100%',
+
+                axisLine: {            // 坐标轴线
+                    lineStyle: {       // 属性lineStyle控制线条样式
+                        width: 10,
+                        color: [[0.5, '#c23531'], [0.6, '#e98f6f'], [0.7, '#63869e'], [0.8, '#91c7ae'], [1, '#749f83']]
+                    }
+                },
+                splitLine: {           // 分隔线
+                    length: 10,         // 属性length控制线长
+                    lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+                        color: 'auto'
+                    }
+                },
+
+                detail: {formatter:dataTitle, fontSize:18},
+                data: [{value: dataValue, name: dataUnit}]
+            }
+        ]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+}
+
+// 堆叠柱状图
+function moreColumnar(divId, chartsTitle, thisTitles, thisDatas, thisCates, isShowCates, thisStacks, formatter, isXYexchange) {
+
+    isShowCates = isShowCates || 1;
+    formatter = formatter || '';
+    thisStacks = thisStacks || '';
+    // 是否调换xy轴显示
+    isXYexchange = isXYexchange || '';
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById(divId));
+
+    option = {
+        tooltip: {
+            trigger: 'axis',
+            axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            }
+        },
+        grid: {
+            left: '1%',
+            right: '2%',
+            bottom: '2%',
+            top:'5%',
+            containLabel: true
+        },
+        xAxis: {
+            type: 'category',
+            data: thisTitles,
+            //设置轴线的属性
+            axisLine:{
+                lineStyle:{
+                    //color:'#ccc',
+                    width:0,//轴线的粗细
+                }
+            }
+        },
+        yAxis: {
+            type: 'value',
+            //设置轴线的属性
+            axisLine:{
+                lineStyle:{
+                    //color:'#ccc',
+                    width:0,//轴线的粗细
+                }
+            }
+        },
+        series: []
+    };
+
+    if (isShowCates == 1){
+        option.legend = {
+            data:thisCates
+        };
+        option.grid.top = '10%';
+    }
+    for (var k = 0, length = thisCates.length; k < length; k++) {
+
+        // 这个变量是用于控制 是在一要柱子上叠加显示，还是一组柱子平行显示
+        var stack = "总量";
+        if (thisStacks != ''){
+            stack = thisStacks[k];
+        }
+
+        option.series.push(
+            {
+                name:thisCates[k],
+                type:'bar',
+                stack: stack,
+                barWidth:30,
+                //设置柱体颜色
+                itemStyle:{
+                    normal:{color:colors[k]}
+                },
+                data:thisDatas[k]
+            });
+    }
+
+    // 是否调换xy轴显示
+    if (isXYexchange != ''){
+        var tmp = option.xAxis;
+        option.xAxis = option.yAxis;
+        option.yAxis = tmp;
+    }
+
+
+
+    if (formatter != ''){
+        // 这个要求，option.series.data 为这种形式的如：  [{name:"周一",value:120}, {name:"周二",value:132}]
+        // 原来是 [120, 132]
+        option.tooltip.formatter = function (params, ticket, callback) {
+            var res = params[0].name+'<br/>';
+            var myseries = option.series;
+            for (var i = 0; i < myseries.length; i++) {
+                for(var j = 0; j<myseries[i].data.length; j++){
+                    if(myseries[i].data[j].name == params[0].name){
+                        var valueFliter = formatter(myseries[i].data[j].value);
+                        res += myseries[i].name +' : '+valueFliter+'</br>';
+                    }
+                }
+            }
+            return res;
+        };
+    }
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.clear();
+    myChart.setOption(option);
+
+}
+
+// 树状矩阵
+function pubMapTree(divId, thisTitles, thisDatas, thisColors) {
+    var myChart = echarts.init(document.getElementById(divId));
+
+    var option = {
+        tooltip : {
+            trigger: 'item',
+            //formatter: "{b}: {c}"
+            formatter: "{b}"
+        },
+        toolbox: {
+            show : false,
+            feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                restore : {show: true},
+                saveAsImage : {show: true}
+            }
+        },
+        calculable : false,
+        color: thisColors,
+        series : [
+            {
+                name:'',
+                type:'treemap',
+                width:'100%',// 宽度
+                height:'100%',
+                breadcrumb:false,// 不显示底下的面包屑
+                itemStyle: {
+                    normal: {
+                        label: {
+                            show: true,
+                            formatter: "{b}"
+                        },
+                        borderWidth: 1
+                    },
+                    emphasis: {
+                        label: {
+                            show: true
+                        }
+                    }
+                },
+                data:[
+                    // {
+                    //     name: '三星',
+                    //     value: 6
+                    // },
+                    // {
+                    //     name: '小米',
+                    //     value: 4
+                    // },
+                    // {
+                    //     name: '苹果',
+                    //     value: 4
+                    // },
+                    // {
+                    //     name: '华为',
+                    //     value: 2
+                    // },
+                    // {
+                    //     name: '联想',
+                    //     value: 2
+                    // },
+                    // {
+                    //     name: '魅族',
+                    //     value: 1
+                    // },
+                    // {
+                    //     name: '中兴',
+                    //     value: 1
+                    // }
+                ]
+            }
+        ]
+    };
+
+
+
+    for (var k = 0, length = thisTitles.length; k < length; k++) {
+        var item = {
+            name:thisTitles[k]+"："+thisDatas[k],
+            value:thisDatas.length > 0 ? thisDatas[k] : 0
+        };
+        option.series[0].data.push(item);
+    }
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+
+}
+
+
+// 点面图...
+function pointArea(divId, thisDatas, xName, yName){
+
+    // x 轴 上方显示的文字
+    xName = xName || '';
+    // y 轴 右方显示的文字
+    yName = yName || '';
+
+    var myChart = echarts.init(document.getElementById(divId));
+
+    var option = {
+        grid: {
+            left: '5%',
+            right: '2%',
+            bottom: '15%',
+            top: '4%'
+        },
+        tooltip : {
+            //trigger: 'axis',
+            showDelay : 0,
+            formatter : function (params) {
+                if (params.value.length > 1) {
+                    return 'x：'+params.value[0] + ' '
+                        + 'y：'+params.value[1] + ' ';
+                }
+                else {
+                    return params.seriesName + ' :<br/>'
+                        + params.name + ' : '
+                        + params.value + 'kg ';
+                }
+            },
+            // axisPointer:{
+            //     show: true,
+            //     type : 'cross',
+            //     lineStyle: {
+            //         type : 'dashed',
+            //         width : 1
+            //     }
+            // }
+        },
+        xAxis : [
+            {
+                name : xName,
+                type : 'value',
+                scale:true,
+                axisLabel : {
+                    //formatter: '{value} cm'
+                    formatter: '{value}'
+                },
+                axisLine:{
+                    onZero: false,   // 不从0点开始，也就是说如果有负数时，x轴从最下方的负数开始
+                    lineStyle:{
+                        //color:'#ccc',
+                        //width:0,//不显示线
+                    }
+                },
+                splitLine: {
+                    show: false
+                }
+            }
+        ],
+        yAxis : [
+            {
+                name : yName,
+                type : 'value',
+                scale:true,
+                min: -10,
+                max: 10,
+                axisLabel : {
+                    //formatter: '{value} kg'
+                    formatter: '{value}'
+                },
+                axisLine:{
+                    onZero: false,   // 不从0点开始，也就是说如果有负数时，y轴从最左侧的负数开始
+                    lineStyle:{
+                        //color:'#ccc',
+                        //width:0,//不显示线
+                    }
+                },
+                splitLine: {
+                    show: false
+                }
+            }
+        ],
+        series : [
+            {
+                //name:'',
+                type:'scatter',
+                // 点的大小
+                symbolSize:2,
+                color:colors[4],
+                data : thisDatas
+                // data: [[161.2, -51.6], [167.5, 59.0], [159.5, 49.2], [157.0, 63.0], [155.8, 53.6],
+                //     [170.0, 59.0], [159.1, 47.6], [166.0, 69.8], [176.2, 66.8], [160.2, 75.2],
+                //     [172.5, 55.2], [170.9, 54.2], [172.9, 62.5], [153.4, 42.0], [160.0, 50.0]
+                // ]
+            }
+        ]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
     myChart.setOption(option);
 
 }
