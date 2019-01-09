@@ -44,10 +44,10 @@
         <if test="name != null and name.trim() != ''">
             and `title` like concat('%',#{name},'%')
         </if>
-		<if test="startMonth != null and startMonth.trim() != ''">
+		<if test="startMonth != null and startMonth.trim() != '' and startMonth.trim() != 'null'">
 			<![CDATA[ and `year_month` >= #{startMonth} ]]>
 		</if>
-		<if test="endMonth != null and endMonth.trim() != ''">
+		<if test="endMonth != null and endMonth.trim() != '' and endMonth.trim() != 'null'">
 			<![CDATA[ and `year_month` <= #{endMonth} ]]>
 		</if>
 		and `dealer_id` = #{dealerId}

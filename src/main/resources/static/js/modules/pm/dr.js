@@ -93,10 +93,6 @@ var vm = new Vue({
         amountDataLists2: [],
         allAmountDataLists1: [],
         allAmountDataLists2: [],
-        amountDatas1: {},
-        amountDatas2: {},
-        amountDatas1Maps: {},
-        amountDatas2Maps: {},
         updateAmountData: {}
     },
     methods: {
@@ -298,8 +294,8 @@ var vm = new Vue({
                 datatype: "json"
             }).trigger("reloadGrid");
 
-            // 获取转换和零售数据
-            vm.getAmountAllLists();
+            // 获取经销商的品牌
+            vm.getDealerBrand();
         },
 
         // 经销商下拉列表
@@ -309,7 +305,7 @@ var vm = new Vue({
                 vm.dealerLists = lists.length == 0 ? null : lists;
                 if (lists.length > 0){
                     vm.dealerId = vm.dealerLists[0].id;
-                    vm.getDealerBrand();
+                    vm.reload();
                 }else{
                     layer.alert('请先添加经销商，再操作置换零售业务！', function(){
                         parent.location = "/default.html#modules/pm/dealer.html";
@@ -326,8 +322,8 @@ var vm = new Vue({
                 vm.dealer = r.dealer;
                 vm.brandId = vm.dealer.brand;
 
-                // 获取经销商的品牌
-                vm.reload();
+                // 获取转换和零售数据
+                vm.getAmountAllLists();
 
             });
         },
@@ -381,61 +377,6 @@ var vm = new Vue({
             });
         },
 
-        // 修改数量
-        updateAmount: function (dataObj) {
-            return;
-            var amount = '';
-            vm.flag = false;
-            var tdClass = dataObj.yearMonth+"_"+dataObj.arctic+"_"+dataObj.atype;
-            if (typeof($("."+tdClass).attr("amount")) != "undefined"){
-                amount = $.trim($("."+tdClass).attr("amount"));
-            }
-            if ($.trim($("."+tdClass).html()) != ""){
-                amount = $.trim($("."+tdClass).html());
-            }
-            if (dataObj.atype == '1'){
-                vm.amountDatas1[tdClass] = Object.assign({}, dataObj);
-            }else{
-                vm.amountDatas2[tdClass] = Object.assign({}, dataObj);
-            }
-
-            $("."+tdClass).html('<input type="text" value="'+amount+'" onkeyup="saveAmount(this)" onblur="inputToText(this)"/>');
-            //$("."+tdClass).find("input").focus();
-            var t = $("."+tdClass).find("input").val();
-            $("."+tdClass).find("input").val("").focus().val(t);
-
-            // tab键 进入下一个单元格编辑
-            $("."+tdClass).find("input").bind('keypress', function(event) {
-
-                // 是否是最后一行，或者最后一列
-                var isEndRow = $("."+tdClass).parent().index() + 2 == $("."+tdClass).parent().parent().find("tr").size();
-                var isEndCol = $("."+tdClass).index() + 1 == $("."+tdClass).parent().find("td").size();
-                var nextTd = null;
-
-                if(event.keyCode == 9) {
-                    var nextDataObj = Object.assign({}, dataObj);
-                    // 是否是最后一列
-                    if (isEndCol){
-                        // 不是最后一行
-                        if (!isEndRow){
-                            // 到下一行的第二个
-                            nextTd = $("."+tdClass).parent().next().find("td:first").next();
-                        }
-                    }else{
-                        // 到右边那个
-                        nextTd = $("."+tdClass).next();
-                    }
-
-                    if (nextTd != null){
-                        nextDataObj.yearMonth = $(nextTd).attr("yearMonth");
-                        nextDataObj.arctic = $(nextTd).attr("arctic");
-                        nextDataObj.amount = typeof($(nextTd).attr("amount")) == "undefined" ? '' : $(nextTd).attr("amount");
-                        vm.updateAmount(nextDataObj);
-                    }
-                }
-            });
-        },
-
         // 数量导入
         uploadAmount: function(atype){
             vm.showList = false;
@@ -471,7 +412,6 @@ var vm = new Vue({
             vm.updateAmountData.arcticName = arcticName;
             vm.updateAmountData.atype = atype;
             vm.updateAmountData.dataArr = dataArr;
-            console.log(vm.updateAmountData.dataArr);
 
         },
 
@@ -514,101 +454,14 @@ var vm = new Vue({
 // 获取经销商数据
 vm.getDealerListData();
 
-// 保存数量
-function saveAmount(inputObj) {
-    var oldValue = $.trim($(inputObj).val());
-    $(inputObj).val($(inputObj).val().replace(/\D/g,''));
-    var newValue = $.trim($(inputObj).val());
-    var dataObj;
-    var atype = 1;
-    var tdClass = $(inputObj).parent().attr("class");
-    if ($(inputObj).parent().attr("atype") == '1'){
-        dataObj = vm.amountDatas1[tdClass];
-    }else{
-        dataObj = vm.amountDatas2[tdClass];
-        atype = 2;
-    }
-
-    // 经过处理了...所以是不合格的数字，不需要更新库
-    if (oldValue != newValue){
-        return;
-    }
-
-    if (atype == 1) {
-        // 如果上一次输入的数，与本次输入的数一致，则返回
-        if (vm.amountDatas1Maps[tdClass] == newValue) {
-            return;
-        }
-
-        if (newValue == ""){
-            // 如果上次不为空，本次为空，则本次设为0
-            if (typeof(vm.amountDatas1Maps[tdClass]) == "undefined" ||  vm.amountDatas1Maps[tdClass] == "") {
-                newValue = 0;
-            }else if (vm.amountDatas1Maps[tdClass] != newValue){
-                newValue = 0;
-            }
-
-            // 有 amount 属性，代表是非空的状态
-            if (typeof($(inputObj).parent().attr("amount")) != "undefined"){
-                newValue = 0;
-            }
-        }
-        vm.amountDatas1Maps[tdClass] = newValue;
-
-    }else{
-        // 如果上一次输入的数，与本次输入的数一致，则返回
-        if (vm.amountDatas2Maps[tdClass] == newValue) {
-            return;
-        }
-
-        if (newValue == ""){
-            // 如果上次不为空，本次为空，则本次设为0
-            if (typeof(vm.amountDatas2Maps[tdClass]) == "undefined" ||  vm.amountDatas2Maps[tdClass] == "") {
-                newValue = 0;
-            }else if (vm.amountDatas2Maps[tdClass] != newValue){
-                newValue = 0;
-            }
-
-            // 有 amount 属性，代表是非空的状态
-            if (typeof($(inputObj).parent().attr("amount")) != "undefined"){
-                newValue = 0;
-            }
-        }
-        vm.amountDatas2Maps[tdClass] = newValue;
-    }
-
-    if (atype == 1){
-        vm.amountDatas1Maps[tdClass] = newValue;
-    }else{
-        vm.amountDatas2Maps[tdClass] = newValue;
-    }
-    $(inputObj).parent().attr("amount", newValue);
-
-    var url = "pm/dr/savedra";
-    dataObj.amount = newValue;
-    $.ajax({
-        type: "POST",
-        url: baseURL + url,
-        contentType: "application/json",
-        data: JSON.stringify(dataObj),
-        success: function(r){
-            //vm.amountDatas1[$(inputObj).parent().attr("class")].id = r.id;
-            vm.calSumAmount(atype);
-        }
-    });
-}
-
-// 文本框变为文字事件
-function inputToText(inputObj){
-    $(inputObj).parent().html($(inputObj).val());
-    vm.flag = true;
-}
 
 // 查看业务看板
 function gotoBoard(obj) {
     vm.dealerId = $("#selectDealerId").val() == null ? vm.dealerId : $("#selectDealerId").val();
+    vm.q.startMonthVal = $("#startMonth").val();
+    vm.q.endMonthVal = $("#endMonth").val();
     //vm.brandId = $("#selectBrandId").val() == null ? vm.brandId : $("#selectBrandId").val();
-    $(obj).attr("href", "/board?d="+vm.dealerId+"&b="+vm.brandId+"&token="+localStorage.getItem("token"));
+    $(obj).attr("href", "/board?d="+vm.dealerId+"&b="+vm.brandId+"&token="+localStorage.getItem("token")+"&sm="+vm.q.startMonthVal+"&em="+vm.q.endMonthVal);
     return true;
 }
 function gotoAllBoard(obj) {

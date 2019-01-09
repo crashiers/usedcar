@@ -428,6 +428,8 @@ public class IndexController extends AbstractController {
         params.put("d", request.getParameter("d"));
         params.put("b", request.getParameter("b") == null || request.getParameter("b").toString().equals("") ? "" : request.getParameter("b").toString());
         params.put("token", request.getParameter("token"));
+        params.put("sm", request.getParameter("sm"));
+        params.put("em", request.getParameter("em"));
         model.addAttribute("params", params);
 
         // 权限判断
@@ -462,6 +464,8 @@ public class IndexController extends AbstractController {
             map.put("atype", 1);
             map.put("brand", brandEntity.getId());
             map.put("dealerId", params.get("d"));
+            map.put("startMonth", params.get("sm"));
+            map.put("endMonth", params.get("em"));
             List<DraEntity> draLists1 = draService.queryListGroupArctic(map);
             Map<String, Integer> draAmounts1 = new HashMap<>();
             for (DraEntity draEntity : draLists1){
@@ -574,6 +578,8 @@ public class IndexController extends AbstractController {
             map.put("atype", 1);
             map.put("brand", brandEntity.getId());
             map.put("dealerId", params.get("d"));
+            map.put("startMonth", params.get("sm"));
+            map.put("endMonth", params.get("em"));
             List<DraEntity> draLists1 = draService.queryListGroupArctic(map);
             Map<String, Integer> draAmounts = new HashMap<>();
             int allAmount = 0;
@@ -612,16 +618,15 @@ public class IndexController extends AbstractController {
     @RequestMapping("/echars_data")
     @ResponseBody
     public R echarsData(@RequestParam Map<String, Object> params) throws Exception {
-        Map dataMap = new HashMap();
 
-        // 取10条数据
-        params.put("sidx", "year_month");
-        params.put("order", "asc");
-        params.put("limit", 10);
-        params.put("dealerId", params.get("dealerId"));
-        Query query = new Query(params);
+        Map<String, Object> _map = new HashMap<>();
+        _map.put("dealerId", params.get("dealerId"));
+        _map.put("startMonth", params.get("sm"));
+        _map.put("endMonth", params.get("em"));
+        _map.put("sidx", "year_month");
+        _map.put("order", "asc");
+        Query query = new Query(_map);
         List<DrEntity> lists = drService.queryList(query);
-        Collections.sort(lists);
 
         List<String> titles = new LinkedList<>();
         List<String> cates = new LinkedList<>();
@@ -632,8 +637,8 @@ public class IndexController extends AbstractController {
         Map yDataMap = new HashMap();
         yDataMap.put("name", "比率");
         yDataMap.put("formatter", "{value}%");
-        yDataMap.put("min", 0);
-        yDataMap.put("max", 100);
+        //yDataMap.put("min", 0);
+        //yDataMap.put("max", 100);
         yDatas.add(yDataMap);
 
         //yDataMap = new HashMap();
@@ -657,11 +662,14 @@ public class IndexController extends AbstractController {
                 //Collections.addAll(catesYs, 0, 0, 1);
                 break;
             case "two":
-                Collections.addAll(cates, "大客户消耗", "企业用户消耗", "占比(企业)");
+                Collections.addAll(cates, "置换潜客率");
                 //Collections.addAll(catesYs, 0, 0, 1);
                 break;
             case "three":
-                Collections.addAll(cates, "大客户资源数");
+                Collections.addAll(cates, "潜客评估率");
+                break;
+            case "four":
+                Collections.addAll(cates, "评估成交率");
                 break;
         }
 
@@ -674,15 +682,7 @@ public class IndexController extends AbstractController {
                 Map<String, Object> thismap = new HashMap<>();
 
                 thismap.put("name", k);
-                switch (params.get("type").toString()){
-                    case "one":
-                    case "two":
-                        thismap.put("value", 100);
-                        break;
-                    case "three":
-                        thismap.put("value", 100);
-                        break;
-                }
+                thismap.put("value", getCharsSum(lists, k, cate));
                 datasData.add(thismap);
             }
 
@@ -702,6 +702,34 @@ public class IndexController extends AbstractController {
         map.put("catesYs", catesYs);
 
         return R.ok().put("thisData", map);
+    }
+
+    /**
+     * 获取某年月 的dr比率数据
+     * @param lists
+     * @param yearMonth
+     * @param cate
+     * @return
+     */
+    private Float getCharsSum(List<DrEntity> lists, String yearMonth, String cate) {
+
+        for (DrEntity entity : lists){
+            if (entity.getYearMonth().equals(yearMonth)){
+                switch (cate){
+                    case "广义置换率":
+                        return entity.getGeneralizedRate();
+                    case "狭义置换率":
+                        return entity.getNarrowlyRate();
+                    case "置换潜客率":
+                        return entity.getLatentRate();
+                    case "潜客评估率":
+                        return entity.getLatentAssessRate();
+                    case "评估成交率":
+                        return entity.getLatentAssessDealRate();
+                }
+            }
+        }
+        return 0F;
     }
 
 

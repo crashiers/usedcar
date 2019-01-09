@@ -430,9 +430,21 @@ function moreLineMoreY(divId, chartsTitle, thisTitles, thisDatas, thisCates, isS
     if (chartsTitle != ""){
         option.title = {
             text: chartsTitle,
-            x:'center'
+            x:'center',
+            textStyle:{
+                //文字颜色
+                color:'#666',
+                //字体风格,'normal','italic','oblique'
+                fontStyle:'normal',
+                //字体粗细 'normal','bold','bolder','lighter',100 | 200 | 300 | 400...
+                fontWeight:'bold',
+                //字体系列
+                fontFamily:'sans-serif',
+                //字体大小
+                fontSize:15
+            }
         };
-        option.grid.top = '20%';
+        option.grid.top = '10%';
     }
 
     for (var k = 0, length = thisCates.length; k < length; k++) {
@@ -624,9 +636,9 @@ function bing(divId, chartsTitle, thisTitles, thisDatas, isAllBing, isShowLabelL
             orient: 'vertical',
             x: 'right',
             type: 'scroll',
-            right: 0,
-            top: 0,
-            bottom: 0,
+            right: 10,
+            top: 50,
+            bottom: 30,
             data: thisTitles
         },
         color: colors,
@@ -634,9 +646,9 @@ function bing(divId, chartsTitle, thisTitles, thisDatas, isAllBing, isShowLabelL
             {
                 name:chartsTitle,
                 type:'pie',
-                radius: ['50%', '90%'],
-                center: ['40%', '50%'],
-                avoidLabelOverlap: false,
+                radius: ['50%', '80%'],
+                center: ['43%', '53%'],
+                avoidLabelOverlap: true,   //是否启用防止标签重叠策略
                 data:thisDatas
             }
         ]

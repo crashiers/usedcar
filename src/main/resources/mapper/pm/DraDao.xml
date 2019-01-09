@@ -65,7 +65,14 @@
 
 
 	<select id="queryListGroupArctic" resultType="com.cn.jhsoft.usedcar.modules.pm.entity.DraEntity">
-		select arctic,sum(amount) as amount from tbl_dra where dealer_id=#{dealerId} and brand=#{brand} and atype=#{atype} group by arctic;
+		select arctic,sum(amount) as amount from tbl_dra where dealer_id=#{dealerId} and brand=#{brand} and atype=#{atype}
+		<if test="startMonth != null and startMonth.trim() != '' and startMonth.trim() != 'null'">
+			<![CDATA[ and `year_month` >= #{startMonth} ]]>
+		</if>
+		<if test="endMonth != null and endMonth.trim() != '' and endMonth.trim() != 'null'">
+			<![CDATA[ and `year_month` <= #{endMonth} ]]>
+		</if>
+		 group by arctic;
 	</select>
 
 	 

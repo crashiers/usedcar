@@ -75,3 +75,5 @@ tbody > tr > th {font-weight: normal; }
 .rrappApprove .table .he td {font-weight: bold;}
 .rrappApprove .table td input {width:50px; height:25px; line-height:25px;}
 .rrappApprove .table td.bg {background:#f2dcdb}
+
+.layui-layer-content {color:#000;}

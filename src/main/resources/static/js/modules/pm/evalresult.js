@@ -330,7 +330,7 @@ var vm = new Vue({
         // 导入最近一次评测结果
         importLastEval: function () {
             var data = "dealerId="+thisDealerId+"&category1="+vm.q.type1+"&category2="+vm.q.type2+"&category3="+vm.q.type3;
-            confirm('确定要导入吗？如果您已经答过题并且未提交评测，则您答过的题将会被覆盖。请您谨慎操作！若您选择了一级二级三级分类，则只会导入此分类下的评测。点击确定后，请您等候，导入完成了，系统会提示您！', function(){
+            confirm('确定要导入吗？如果您已经答过题并且未提交评测，则您答过的题将会被覆盖。请您谨慎操作！若您选择了一级二级三级分类，则只会导入此分类下的评测。', function(){
                 $.ajax({
                     type: "POST",
                     url: baseURL + "pm/evalresult/importlasteval",

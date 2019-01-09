@@ -198,7 +198,7 @@
 		<form class="form-horizontal">
 
 			<div class="form-group">
-				<div class="col-sm-2 control-label">车型</div>
+				<div class="col-sm-2 control-label">车型：</div>
 				<div class="col-sm-10" style="padding-top: 7px;">
 					{{updateAmountData.arcticName}}
 					<input type="hidden" id="updateAmountArcticId" v-bind:value="updateAmountData.arcticId"/>
@@ -207,7 +207,7 @@
 			</div>
 
 			<div class="form-group" v-for="(data, indexRow) in updateAmountData.dataArr">
-				<div class="col-sm-2 control-label">{{data.yearMonth}}</div>
+				<div class="col-sm-2 control-label">{{data.yearMonth}}：</div>
 				<div class="col-sm-10">
 					<input type="text" class="form-control" name="updateAmountAmount" v-bind:value="data.amount" v-bind="{'yearMonth': data.yearMonth }"/>
 				</div>

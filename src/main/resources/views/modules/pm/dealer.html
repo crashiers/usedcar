@@ -36,10 +36,11 @@
     </div>
 
 
-	<form class="form-horizontal" style="width: 100%;">
+
 		<div v-show="!showList" class="panel panel-default">
 			<div class="panel-heading">{{title}}基本信息</div>
-				<div class="form-group" style="margin-top: 20px;">
+			<form class="form-horizontal">
+				<div class="form-group">
 					<div class="col-sm-2 control-label">经销商名称</div>
 					<div class="col-sm-10">
 						<input type="text" class="form-control" v-model="dealer.title" placeholder="经销商名称"/>
@@ -125,13 +126,14 @@
 					</select>
 				</div>
 			</div>
+			</form>
 		</div>
 
 
 		<div v-show="!showList" class="panel panel-default">
 			<div class="panel-heading">二手车部门组织情况</div>
-
-			<div class="form-group" style="margin-top: 20px;">
+			<form class="form-horizontal">
+			<div class="form-group">
 				<div class="col-sm-2 control-label">部门人数</div>
 				<div class="col-sm-10">
 					<input type="text" class="form-control" v-model="dealer.depPersons" placeholder="部门人数（人）"/>
@@ -244,13 +246,14 @@
 					<input type="text" class="form-control" v-model="dealer.assignedj" placeholder="兼职过户专员人数（人）"/>
 				</div>
 			</div>
+			</form>
 		</div>
 
 
 		<div v-show="!showList" class="panel panel-default">
 			<div class="panel-heading">新车销售顾问人数</div>
-
-			<div class="form-group" style="margin-top: 20px;">
+			<form class="form-horizontal">
+			<div class="form-group">
 				<div class="col-sm-2 control-label">展厅销售顾问人数</div>
 				<div class="col-sm-10">
 					<input type="text" class="form-control" v-model="dealer.exhibition" placeholder="展厅销售顾问人数（人）"/>
@@ -272,14 +275,15 @@
 					<input type="text" class="form-control" v-model="dealer.internship" placeholder="实习销售顾问人数（人）"/>
 				</div>
 			</div>
+			</form>
 		</div>
 
 
 		<div v-show="!showList" class="panel panel-default">
 			<div class="panel-heading">二手车业务考核政策（考核指标、标准）</div>
+			<form class="form-horizontal">
 
-
-			<div class="form-group" style="margin-top: 20px;">
+			<div class="form-group">
 				<div class="col-sm-2 control-label">新车销售顾问</div>
 				<div class="col-sm-10">
 					<input type="text" class="form-control" v-model="dealer.newcarSeller" placeholder="新车销售顾问"/>
@@ -349,14 +353,15 @@
 					<input type="text" class="form-control" v-model="dealer.usedcarManager" placeholder="二手车经理"/>
 				</div>
 			</div>
+			</form>
 		</div>
 
 
 		<div v-show="!showList" class="panel panel-default">
 			<div class="panel-heading">激励政策(奖励发放）</div>
+			<form class="form-horizontal">
 
-
-			<div class="form-group" style="margin-top: 20px;">
+			<div class="form-group">
 				<div class="col-sm-2 control-label">新车销售顾问</div>
 				<div class="col-sm-10">
 					<input type="text" class="form-control" v-model="dealer.newcarSeller2" placeholder="新车销售顾问"/>
@@ -418,6 +423,7 @@
 					<input type="text" class="form-control" v-model="dealer.usedcarManager2" placeholder="二手车经理"/>
 				</div>
 			</div>
+			</form>
 		</div>
 
 
@@ -425,8 +431,8 @@
 
 		<div v-show="!showList" class="panel panel-default">
 			<div class="panel-heading">其他信息</div>
-
-			<div class="form-group" style="margin-top: 20px;">
+			<form class="form-horizontal">
+			<div class="form-group">
 				<div class="col-sm-2 control-label">运营资金来源</div>
 				<div class="col-sm-10">
 					<select class="form-control" v-model="dealer.fundSource">
@@ -559,10 +565,10 @@
 				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
 				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
 			</div>
+
+
+			</form>
 		</div>
-
-
-	</form>
 
 
 
