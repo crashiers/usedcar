@@ -374,6 +374,8 @@ public class DrController extends AbstractController {
 		// 左侧子品牌/车型
 		Map<String, Object> map = new HashMap<>();
 		map.put("parentId", id);
+		map.put("sidx", "id");
+		map.put("order", "asc");
 		if (id.equals("") || id.equals("0") || id == null){
 			List<BasicDataEntity> _list = basicDataService.queryChildListByEname("brand");
 			map.put("parentId", _list.get(0).getId());

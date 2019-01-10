@@ -572,6 +572,8 @@ public class IndexController extends AbstractController {
             // 取出车型
             Map<String, Object> map = new HashMap<>();
             map.put("parentId", brandEntity.getId());
+            map.put("sidx", "id");
+            map.put("order", "asc");
             List<BasicDataEntity> basicDataList = basicDataService.queryList(map);
 
             // 新车
@@ -582,10 +584,8 @@ public class IndexController extends AbstractController {
             map.put("endMonth", params.get("em"));
             List<DraEntity> draLists1 = draService.queryListGroupArctic(map);
             Map<String, Integer> draAmounts = new HashMap<>();
-            int allAmount = 0;
             for (DraEntity draEntity : draLists1) {
                 draAmounts.put(draEntity.getArctic(), draEntity.getAmount());
-                allAmount += draEntity.getAmount();
             }
 
             List<String> titles = new LinkedList<>();
@@ -595,7 +595,6 @@ public class IndexController extends AbstractController {
                 if (draAmounts.get(entity.getId() + "") == null) {
                     m.put("value", 0);
                 } else {
-                    //m.put("value", df.format(((float) draAmounts.get(entity.getId()+"") / allAmount) * 100));
                     m.put("value", draAmounts.get(entity.getId() + ""));
                 }
                 m.put("name", entity.getName());

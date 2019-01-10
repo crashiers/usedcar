@@ -141,10 +141,6 @@
         if (d == "")    return;
         var url = "/echars_data?type="+type+"&token="+token+"&dealerId="+d+"&sm="+startMonth+"&em="+endMonth;
 
-        var formatter = function (value, index) {
-            return value + '%';
-        };
-
         var divId = "divLine1";
         var title = "";
         switch (type){
@@ -167,12 +163,24 @@
 
         }
 
+        var formatter = function (value, index) {
+            return value + ' %';
+        };
+
         $.ajax({
             type: 'GET',
             url: url,
             contentType: "application/json",
             success: function(res){
                 moreLineMoreY(divId, title, res.thisData.titles, res.thisData.datas, res.thisData.cates, 11, formatter, 2, 2, res.thisData.catesColors, res.thisData.yDatas, res.thisData.catesYs);
+                if (type == "one"){
+                    getLineEcharts("two");
+                }else if (type == "two"){
+                    getLineEcharts("three");
+                }else if (type == "three"){
+                    getLineEcharts("four");
+                }
+
             }
         });
     }
@@ -185,9 +193,6 @@
     });
     getEcharts();
     getLineEcharts('one');
-    getLineEcharts('two');
-    getLineEcharts('three');
-    getLineEcharts('four');
 </script>
 
 <style>

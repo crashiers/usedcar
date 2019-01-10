@@ -348,6 +348,7 @@ function moreLineMoreY(divId, chartsTitle, thisTitles, thisDatas, thisCates, isS
     thisCatesYs = thisCatesYs || '';
     // 基于准备好的dom，初始化echarts实例
     var myChart = echarts.init(document.getElementById(divId));
+    myChart.clear();
 
     option = {
         tooltip: {
@@ -454,7 +455,9 @@ function moreLineMoreY(divId, chartsTitle, thisTitles, thisDatas, thisCates, isS
             data:thisDatas[k],
             //设置颜色
             itemStyle:{
-                normal:{color:colors[k]}
+                normal:{
+                    color:colors[k]
+                }
             }
         };
         if (yDatas != ''){
@@ -477,22 +480,19 @@ function moreLineMoreY(divId, chartsTitle, thisTitles, thisDatas, thisCates, isS
     }
 
 
+
     if (formatter != ''){
         // 这个要求，option.series.data 为这种形式的如：  [{name:"周一",value:120}, {name:"周二",value:132}]
         // 原来是 [120, 132]
-        option.tooltip.formatter = function (params, ticket, callback) {
-            var res = params[0].name+'<br/>';
-            var myseries = option.series;
-            for (var i = 0; i < myseries.length; i++) {
-                for(var j = 0; j<myseries[i].data.length; j++){
-                    if(myseries[i].data[j].name == params[0].name){
-                        var valueFliter = formatter(myseries[i].data[j].value);
-                        res += myseries[i].name +' : '+valueFliter+'</br>';
-                    }
-                }
+        option.tooltip.formatter = function(params)
+        {
+            var relVal = params[0].name;
+            for (var i = 0, l = params.length; i < l; i++) {
+                var valueFormatter = formatter(params[i].value);
+                relVal += '<br/>' + params[i].seriesName + ' : ' + valueFormatter;
             }
-            return res;
-        };
+            return relVal;
+        }
     }
 
     // 使用刚指定的配置项和数据显示图表。
