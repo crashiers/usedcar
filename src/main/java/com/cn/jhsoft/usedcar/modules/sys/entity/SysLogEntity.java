@@ -31,6 +31,11 @@ public class SysLogEntity implements Serializable {
 	private Date createDate;
 
 	/**
+	 * 添加时间
+	 */
+	private String createDatetime;
+
+	/**
 	 * 设置：
 	 */
 	public void setId(Long id) {
@@ -121,5 +126,20 @@ public class SysLogEntity implements Serializable {
 
 	public void setTime(Long time) {
 		this.time = time;
+	}
+
+	/**
+	 * 设置：添加时间
+	 */
+	public void setCreateDatetime(String createDatetime) {
+		this.createDatetime = createDatetime;
+	}
+
+
+	/**
+	 * 获取：添加时间
+	 */
+	public String getCreateDatetime() {
+		return createDatetime;
 	}
 }

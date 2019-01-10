@@ -2,6 +2,7 @@ package com.cn.jhsoft.usedcar.modules.pm.controller;
 
 import java.util.*;
 
+import com.cn.jhsoft.usedcar.common.annotation.SysLog;
 import com.cn.jhsoft.usedcar.modules.pm.entity.EvalQuestionEntity;
 import com.cn.jhsoft.usedcar.modules.pm.entity.EvalStageEntity;
 import com.cn.jhsoft.usedcar.modules.pm.service.EvalQuestionService;
@@ -145,6 +146,7 @@ public class EvalResultController extends AbstractController {
 	/**
 	 * 提交评测
 	 */
+	@SysLog("提交评测")
 	@RequestMapping("/update")
 	@RequiresPermissions("pm:evalstage:used")
 	public R update(Long dealerId){
@@ -235,6 +237,7 @@ public class EvalResultController extends AbstractController {
 	/**
 	 * 机器人自动提交评测
 	 */
+	@SysLog("机器人自动提交评测")
 	@RequestMapping("/auto")
 	@RequiresPermissions("pm:evalstage:evaljqr")
 	public R autoEval(Long dealerId){
@@ -336,6 +339,7 @@ public class EvalResultController extends AbstractController {
 	/**
 	 * 导入上次所答的所有题
 	 */
+	@SysLog("导入上次所答的所有题")
 	@RequestMapping("/importlasteval")
 	@RequiresPermissions("pm:evalstage:used")
 	public R importLastEval(Long dealerId,

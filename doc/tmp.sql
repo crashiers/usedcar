@@ -36,3 +36,17 @@ INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `or
 INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT (select menu_id from sys_menu where `name`='置换零售业务'), '管理', null, 'pm:dr:manager', '2', null, '6';
 INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT (select menu_id from sys_menu where `name`='进销存'), '管理', null, 'pm:drp:manager', '2', null, '6';
 
+drop table sys_log;
+-- 系统日志
+CREATE TABLE `sys_log` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) COMMENT '用户名',
+  `operation` varchar(50) COMMENT '用户操作',
+  `method` varchar(200) COMMENT '请求方法',
+  `params` varchar(5000) COMMENT '请求参数',
+  `time` bigint NOT NULL COMMENT '执行时长(毫秒)',
+  `ip` varchar(64) COMMENT 'IP地址',
+  `create_date` datetime COMMENT '创建时间',
+  `create_datetime` varchar(32) COMMENT '操作时间',
+  PRIMARY KEY (`id`)
+) ENGINE=`InnoDB` DEFAULT CHARACTER SET utf8 COMMENT='系统日志';

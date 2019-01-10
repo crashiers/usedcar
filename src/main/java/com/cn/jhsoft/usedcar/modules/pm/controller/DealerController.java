@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Date;
 
+import com.cn.jhsoft.usedcar.common.annotation.SysLog;
 import com.cn.jhsoft.usedcar.modules.api.annotation.AuthIgnore;
 import com.cn.jhsoft.usedcar.modules.pm.entity.BasicDataEntity;
 import com.cn.jhsoft.usedcar.modules.pm.service.BasicDataService;
@@ -92,6 +93,7 @@ public class DealerController extends AbstractController {
 	/**
 	 * 保存
 	 */
+	@SysLog("添加经销商")
 	@RequestMapping("/save")
 	@RequiresPermissions("pm:dealer:save")
 	public R save(@RequestBody DealerEntity dealer){
@@ -113,6 +115,7 @@ public class DealerController extends AbstractController {
 	/**
 	 * 修改
 	 */
+	@SysLog("修改经销商")
 	@RequestMapping("/update")
 	@RequiresPermissions("pm:dealer:update")
 	public R update(@RequestBody DealerEntity dealer){
@@ -131,6 +134,7 @@ public class DealerController extends AbstractController {
 	/**
 	 * 删除
 	 */
+	@SysLog("删除经销商")
 	@RequestMapping("/delete")
 	@RequiresPermissions("pm:dealer:delete")
 	public R delete(@RequestBody Long[] ids){

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Date;
 
+import com.cn.jhsoft.usedcar.common.annotation.SysLog;
 import com.cn.jhsoft.usedcar.common.utils.ExcelPOIUtils;
 import com.cn.jhsoft.usedcar.modules.sys.entity.SysUserEntity;
 import org.apache.shiro.authz.annotation.Logical;
@@ -103,6 +104,7 @@ public class EvalQuestionController extends AbstractController {
 	/**
 	 * 保存
 	 */
+	@SysLog("添加评测题目")
 	@RequestMapping("/save")
 	@RequiresPermissions("pm:evalquestion:save")
 	public R save(@RequestBody EvalQuestionEntity evalQuestion){
@@ -125,6 +127,7 @@ public class EvalQuestionController extends AbstractController {
 	/**
 	 * 上传
 	 */
+	@SysLog("导入评测题目")
 	@RequestMapping("/upload")
 	@RequiresPermissions("pm:evalquestion:upload")
 	public R save(@RequestParam("file") MultipartFile file){
@@ -181,6 +184,7 @@ public class EvalQuestionController extends AbstractController {
 	/**
 	 * 修改
 	 */
+	@SysLog("修改评测题目")
 	@RequestMapping("/update")
 	@RequiresPermissions("pm:evalquestion:update")
 	public R update(@RequestBody EvalQuestionEntity evalQuestion){
@@ -193,6 +197,7 @@ public class EvalQuestionController extends AbstractController {
 	/**
 	 * 删除
 	 */
+	@SysLog("删除评测题目")
 	@RequestMapping("/delete")
 	@RequiresPermissions("pm:evalquestion:delete")
 	public R delete(@RequestBody Long[] ids){

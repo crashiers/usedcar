@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Date;
 import java.util.Set;
 
+import com.cn.jhsoft.usedcar.common.annotation.SysLog;
 import com.cn.jhsoft.usedcar.common.utils.ExcelPOIUtils;
 import com.cn.jhsoft.usedcar.modules.api.annotation.AuthIgnore;
 import com.cn.jhsoft.usedcar.modules.pm.entity.ApproveWeightMatrixEntity;
@@ -158,6 +159,7 @@ public class DrController extends AbstractController {
 	/**
 	 * 保存
 	 */
+	@SysLog("添加二手车业务数据")
 	@RequestMapping("/save")
 	@RequiresPermissions("pm:dr:save")
 	public R save(@RequestBody DrEntity dr){
@@ -183,6 +185,7 @@ public class DrController extends AbstractController {
 	/**
 	 * 上传
 	 */
+	@SysLog("导入二手车业务数据")
 	@RequestMapping("/upload")
 	@RequiresPermissions("pm:dr:save")
 	public R save(@RequestParam("file") MultipartFile file, HttpServletRequest request){
@@ -318,6 +321,7 @@ public class DrController extends AbstractController {
 	/**
 	 * 修改
 	 */
+	@SysLog("修改二手车业务数据")
 	@RequestMapping("/update")
 	@RequiresPermissions("pm:dr:update")
 	public R update(@RequestBody DrEntity dr){
@@ -346,6 +350,7 @@ public class DrController extends AbstractController {
 	/**
 	 * 删除
 	 */
+	@SysLog("删除二手车业务数据")
 	@RequestMapping("/delete")
 	@RequiresPermissions("pm:dr:delete")
 	public R delete(@RequestBody Long[] ids){
@@ -457,6 +462,7 @@ public class DrController extends AbstractController {
 	/**
 	 * 保存数量
 	 */
+	@SysLog("更新每月各款新车的零售/置换量")
 	@RequestMapping("/savedra")
 	@RequiresPermissions("pm:dr:save")
 	public R saveDra(@RequestBody DraEntity dra){
@@ -485,6 +491,7 @@ public class DrController extends AbstractController {
 	/**
 	 * 上传数量
 	 */
+	@SysLog("导入每月各款新车的零售/置换量")
 	@RequestMapping("/uploadamount")
 	@RequiresPermissions("pm:dr:save")
 	public R uploadAmount(@RequestParam("file") MultipartFile file, HttpServletRequest request){

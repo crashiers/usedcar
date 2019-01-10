@@ -1,6 +1,7 @@
 package com.cn.jhsoft.usedcar.common.aspect;
 
 import com.cn.jhsoft.usedcar.common.annotation.SysLog;
+import com.cn.jhsoft.usedcar.common.utils.DateUtils;
 import com.cn.jhsoft.usedcar.common.utils.HttpContextUtils;
 import com.cn.jhsoft.usedcar.common.utils.IPUtils;
 import com.cn.jhsoft.usedcar.modules.sys.entity.SysLogEntity;
@@ -88,7 +89,8 @@ public class SysLogAspect {
 		sysLog.setUsername(username);
 
 		sysLog.setTime(time);
-		sysLog.setCreateDate(new Date());
+		//sysLog.setCreateDate(new Date());
+		sysLog.setCreateDatetime(DateUtils.getTodayDateYMDHMS());
 		//保存系统日志
 		sysLogService.save(sysLog);
 	}

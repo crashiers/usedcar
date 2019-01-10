@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Date;
 
+import com.cn.jhsoft.usedcar.common.annotation.SysLog;
 import com.cn.jhsoft.usedcar.common.utils.ExcelPOIUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -107,6 +108,7 @@ public class DrpController extends AbstractController {
 	/**
 	 * 上传
 	 */
+	@SysLog("导入进销存")
 	@RequestMapping("/upload")
 	@RequiresPermissions("pm:drp:save")
 	public R save(@RequestParam("file") MultipartFile file, HttpServletRequest request){

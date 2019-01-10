@@ -120,6 +120,7 @@ CREATE TABLE `sys_log` (
   `time` bigint NOT NULL COMMENT '执行时长(毫秒)',
   `ip` varchar(64) COMMENT 'IP地址',
   `create_date` datetime COMMENT '创建时间',
+  `create_datetime` varchar(32) COMMENT '操作时间',
   PRIMARY KEY (`id`)
 ) ENGINE=`InnoDB` DEFAULT CHARACTER SET utf8 COMMENT='系统日志';
 
@@ -176,6 +177,11 @@ INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `or
 INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @parentId, '新增', NULL, 'sys:config:save,sys:config:select', '2', NULL, '7';
 INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @parentId, '修改', NULL, 'sys:config:update,sys:config:select', '2', NULL, '7';
 INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @parentId, '删除', NULL, 'sys:config:delete', '2', NULL, '7';
+
+-- 日志管理菜单 SQL
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) VALUES ('1', '日志管理', 'modules/sys/log.html', NULL, '1', 'fa fa fa-tags', '8');
+set @parentId = @@identity;
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`) SELECT @parentId, '查看', NULL, 'sys:log:list,sys:log:info', '2', NULL, '7';
 
 
 -- 定时任务 菜单 sql Start
