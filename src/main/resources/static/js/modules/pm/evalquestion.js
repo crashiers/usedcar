@@ -20,7 +20,7 @@ $(function () {
         height: 'auto',
         //height: 385,
         rowNum: 50,
-		rowList : [10,30,50],
+		rowList : [50,100,200],
         rownumbers: false,
         rownumWidth: 25, 
         autowidth:true,

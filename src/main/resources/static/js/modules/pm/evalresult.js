@@ -40,7 +40,7 @@ $(function () {
         height: 'auto',
 		//height: $(window).height() - 100,
         rowNum: 1000,
-		rowList : [10,30,50],
+		rowList : [50,100,200],
         rownumbers: true,
         rownumWidth: 50,
         autowidth:true,
