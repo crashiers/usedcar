@@ -1153,7 +1153,11 @@ function getRadar(divId, indicatorArr, dataArr) {
     for (var k = 0; k < dataArr.length; k++) {
         var item = {
             name:dataArr[k].name,
-            value:dataArr[k].value
+            value:dataArr[k].value,
+            //设置颜色
+            itemStyle:{
+                normal:{color:colors[k]}
+            }
         };
 
         //这里的配置显示数值
