@@ -624,8 +624,7 @@ public class IndexController extends AbstractController {
         _map.put("endMonth", params.get("em"));
         _map.put("sidx", "year_month");
         _map.put("order", "asc");
-        Query query = new Query(_map);
-        List<DrEntity> lists = drService.queryList(query);
+        List<DrEntity> lists = drService.queryList(_map);
 
         List<String> titles = new LinkedList<>();
         List<String> cates = new LinkedList<>();
