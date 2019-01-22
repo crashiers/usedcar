@@ -221,18 +221,18 @@ public class DrpController extends AbstractController {
 				entity.setOtherEarnings(datas[num++]);
 				entity.setRebate2(datas[num++]);
 				entity.setSynthesisMaori(datas[num++]);
-				entity.setBuyYear(datas[num++]);
-
-				entity.setBuyMonth(datas[num++]);
-				entity.setSellYear(datas[num++]);
-				entity.setSellMonth(datas[num++]);
-				entity.setBuyWay(datas[num++]);
-				entity.setSellWay(datas[num++]);
-				entity.setSellWay2(datas[num++]);
-				entity.setCarAge(datas[num++]);
-				entity.setCarAgeLeavel(datas[num++]);
-				entity.setBuyPriceLeavel(datas[num++]);
-				entity.setIsStore(datas[num++]);
+//				entity.setBuyYear(datas[num++]);
+//
+//				entity.setBuyMonth(datas[num++]);
+//				entity.setSellYear(datas[num++]);
+//				entity.setSellMonth(datas[num++]);
+//				entity.setBuyWay(datas[num++]);
+//				entity.setSellWay(datas[num++]);
+//				entity.setSellWay2(datas[num++]);
+//				entity.setCarAge(datas[num++]);
+//				entity.setCarAgeLeavel(datas[num++]);
+//				entity.setBuyPriceLeavel(datas[num++]);
+//				entity.setIsStore(datas[num++]);
 
 
 				entity.setCreateDate(DateUtils.getTodayDate());

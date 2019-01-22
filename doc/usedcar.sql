@@ -268,7 +268,7 @@ CREATE TABLE IF NOT EXISTS `tbl_drp` (
   `maori_rate2` varchar(32) COMMENT '收购毛利率2',
   `other_earnings` varchar(32) COMMENT '衍生收益',
   `rebate2` varchar(32) COMMENT '厂家返利',
-  `synthesis_maori` varchar(32) COMMENT '综合毛利',
+  `synthesis_maori` varchar(32) COMMENT '综合毛利，这之后的列都不要了',
   `buy_year` varchar(8) COMMENT '收购年',
   `buy_month` varchar(8) COMMENT '收购月',
   `sell_year` varchar(8) COMMENT '销售年',
@@ -318,7 +318,7 @@ insert into tbl_basic_data values (41, 8, '', '车辆收购', 3, '0:4:8:', 1, '2
 insert into tbl_basic_data values (42, 8, '', '整备翻新', 3, '0:4:8:', 2, '2018-12-22 17:10:10', 1);
 insert into tbl_basic_data values (43, 8, '', '车辆展示', 3, '0:4:8:', 3, '2018-12-22 17:10:10', 1);
 insert into tbl_basic_data values (44, 8, '', '车辆销售', 3, '0:4:8:', 4, '2018-12-22 17:10:10', 1);
-insert into tbl_basic_data values (45, 8, '', '客户维系与开发', 3, '0:4:8:', 5, '2018-12-22 17:10:10', 1);
+insert into tbl_basic_data values (45, 8, '', '客户维系', 3, '0:4:8:', 5, '2018-12-22 17:10:10', 1);
 
 -- 三级 - 车辆收购
 insert into tbl_basic_data values (51, 41, 'swap', '客户接待', 4, '0:4:8:41:', 1, '2018-12-22 17:10:10', 1);

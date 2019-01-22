@@ -50,3 +50,7 @@ CREATE TABLE `sys_log` (
   `create_datetime` varchar(32) COMMENT '操作时间',
   PRIMARY KEY (`id`)
 ) ENGINE=`InnoDB` DEFAULT CHARACTER SET utf8 COMMENT='系统日志';
+
+
+update tbl_basic_data set `name`='客户维系' where id=45;
+update tbl_eval_question set `category2`='客户维系' where `category2`='客户维系与开发';
