@@ -84,7 +84,7 @@ $(function () {
         rownumbers: false,
         rownumWidth: 25, 
         //autowidth:true,
-		width:10000,
+		width:8500,
         multiselect: true,
         pager: "#jqGridPager",
         jsonReader : {
