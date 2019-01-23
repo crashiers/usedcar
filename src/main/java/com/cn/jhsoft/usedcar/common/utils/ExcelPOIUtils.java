@@ -11,6 +11,8 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellValue;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -27,6 +29,8 @@ public class ExcelPOIUtils {
     private static Logger logger  = Logger.getLogger(ExcelPOIUtils.class);
     private final static String xls = "xls";
     private final static String xlsx = "xlsx";
+    private static FormulaEvaluator evaluator;
+    private static Workbook workbook = null;
 
     /**
      * 读入excel文件，解析后返回
@@ -40,6 +44,8 @@ public class ExcelPOIUtils {
         Workbook workbook = getWorkBook(file);
         //创建返回对象，把每行中的值作为一个数组，所有行作为一个集合返回
         List<String[]> list = new ArrayList<String[]>();
+        evaluator = workbook.getCreationHelper().createFormulaEvaluator();
+
         if(workbook != null){
             for(int sheetNum = 0;sheetNum < workbook.getNumberOfSheets();sheetNum++){
                 //获得当前sheet工作表
@@ -97,7 +103,6 @@ public class ExcelPOIUtils {
         //获得文件名
         String fileName = file.getOriginalFilename();
         //创建Workbook工作薄对象，表示整个excel
-        Workbook workbook = null;
         try {
             //获取excel文件的io流
             InputStream is = file.getInputStream();
@@ -124,7 +129,7 @@ public class ExcelPOIUtils {
             cell.setCellType(Cell.CELL_TYPE_STRING);
         }
         //判断数据的类型
-        DateFormat formater;
+//        DateFormat formater;
         switch (cell.getCellType()){
             case Cell.CELL_TYPE_NUMERIC: //数字
 //                if(HSSFDateUtil.isCellDateFormatted(cell)){
@@ -144,7 +149,8 @@ public class ExcelPOIUtils {
                 cellValue = String.valueOf(cell.getBooleanCellValue());
                 break;
             case Cell.CELL_TYPE_FORMULA: //公式
-                cellValue = String.valueOf(cell.getCellFormula());
+                //cellValue = String.valueOf(cell.getCellFormula());
+                cellValue = getCellValue(evaluator.evaluate(cell));
                 break;
             case Cell.CELL_TYPE_BLANK: //空值
                 cellValue = "";
@@ -156,6 +162,27 @@ public class ExcelPOIUtils {
                 cellValue = "未知类型";
                 break;
         }
+        return cellValue;
+    }
+
+
+
+    private static String getCellValue(CellValue cell) {
+        String cellValue = null;
+        switch (cell.getCellType()) {
+            case Cell.CELL_TYPE_STRING:
+                cellValue=cell.getStringValue();
+                break;
+
+            case Cell.CELL_TYPE_NUMERIC:
+                cellValue=String.valueOf(cell.getNumberValue());
+                break;
+            case Cell.CELL_TYPE_FORMULA:
+                break;
+            default:
+                break;
+        }
+
         return cellValue;
     }
 

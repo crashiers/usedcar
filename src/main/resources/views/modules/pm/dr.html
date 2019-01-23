@@ -177,7 +177,7 @@
 				<div class="col-sm-2 control-label">格式参考</div>
 				<div class="col-sm-10 control-label" style="text-align: left;">
 					<a href="/file/dr.xls" target="_blank" v-if="showUpload">点此下载 Excel数据样本</a>
-					<a href="/file/dra.xls" target="_blank" v-if="showUploadAmount1 || showUploadAmount2">点此下载 Excel数据样本</a>
+					<a v-bind="{'href': '/file/dra_'+dealer.brandname+'.xls' }" target="_blank" v-if="showUploadAmount1 || showUploadAmount2">点此下载 Excel数据样本</a>
 				</div>
 			</div>
 
@@ -185,8 +185,8 @@
 			<div class="form-group">
 				<div class="col-sm-2 control-label"></div>
 				<input type="button" class="btn btn-primary" @click="upLoadFile" value="确定" v-if="showUpload" />
-				<input type="button" class="btn btn-primary" @click="upLoadFileAmount(1)" value="确定" v-if="showUploadAmount1" />
-				<input type="button" class="btn btn-primary" @click="upLoadFileAmount(2)" value="确定" v-if="showUploadAmount2" />
+				<input type="button" class="btn btn-primary" @click="upLoadFileAmount" value="确定" v-if="showUploadAmount1" />
+				<input type="button" class="btn btn-primary" @click="upLoadFileAmount2" value="确定" v-if="showUploadAmount2" />
 				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
 				&nbsp;&nbsp;点击上传后，请您耐心等待，上传完成后页面会提示您。
 			</div>

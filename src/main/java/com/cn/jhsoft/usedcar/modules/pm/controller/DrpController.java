@@ -155,7 +155,11 @@ public class DrpController extends AbstractController {
 				entity.setCarModel(datas[num++]);
 				entity.setColor(datas[num++]);
 				entity.setMileage(datas[num++]);
-				entity.setFirstDate(DateUtils.format(DateUtils.getDateFrom1900(Integer.valueOf(datas[num++])), "yyyy-MM-dd"));
+
+				String date1 = datas[num++];
+				if (!"".equals(date1)) {
+					entity.setFirstDate(DateUtils.format(DateUtils.getDateFrom1900(Integer.valueOf(date1)), "yyyy-MM-dd"));
+				}
 
 				entity.setDisplacement(datas[num++]);
 				entity.setGearbox(datas[num++]);
@@ -171,13 +175,22 @@ public class DrpController extends AbstractController {
 				entity.setRawCarOwner(datas[num++]);
 				entity.setRawPhone(datas[num++]);
 				entity.setPermuteArctic(datas[num++]);
-				entity.setBuyDate(DateUtils.format(DateUtils.getDateFrom1900(Integer.valueOf(datas[num++])), "yyyy-MM-dd"));
+
+				String date2 = datas[num++];
+				if (!"".equals(date2)) {
+					entity.setBuyDate(DateUtils.format(DateUtils.getDateFrom1900(Integer.valueOf(date2)), "yyyy-MM-dd"));
+				}
+
 				entity.setBuyPrice(datas[num++]);
 				entity.setBuyTransferFee(datas[num++]);
 				entity.setBuyOtherFee(datas[num++]);
 				entity.setBep(datas[num++]);
 				entity.setSlNum(datas[num++]);
-				entity.setSellDate(DateUtils.format(DateUtils.getDateFrom1900(Integer.valueOf(datas[num++])), "yyyy-MM-dd"));
+
+				String date3 = datas[num++];
+				if (!"".equals(date3)) {
+					entity.setSellDate(DateUtils.format(DateUtils.getDateFrom1900(Integer.valueOf(date3)), "yyyy-MM-dd"));
+				}
 
 				entity.setIsAuth(datas[num++]);
 				entity.setServicingCosts(datas[num++]);
@@ -197,7 +210,12 @@ public class DrpController extends AbstractController {
 				entity.setNewCarOwner(datas[num++]);
 				entity.setNewPhone(datas[num++]);
 				entity.setChannel(datas[num++]);
-				entity.setSellDateFinal(DateUtils.format(DateUtils.getDateFrom1900(Integer.valueOf(datas[num++])), "yyyy-MM-dd"));
+
+				String date4 = datas[num++];
+				if (!"".equals(date4)) {
+					entity.setSellDateFinal(DateUtils.format(DateUtils.getDateFrom1900(Integer.valueOf(date4)), "yyyy-MM-dd"));
+				}
+
 				entity.setSellPriceFinal(datas[num++]);
 				entity.setPaymentType(datas[num++]);
 

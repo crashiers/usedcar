@@ -201,7 +201,47 @@ var vm = new Vue({
                 }
             });
         },
-        upLoadFileAmount: function (atype) {
+        upLoadFileAmount: function (event) {
+            var atype = 1;
+            var buttonObj = event.currentTarget;
+            buttonObj.disabled = true;
+            vm.dealerId = $("#selectDealerId").val() == null ? vm.dealerId : $("#selectDealerId").val();
+            if (vm.brandId == null){
+                //return;
+            }
+            var url = "pm/dr/uploadamount?atype="+atype+"&dealerId="+vm.dealerId+"&brand="+vm.brandId;
+            $.ajaxFileUpload({
+                type: "POST",
+                url: baseURL + url,
+                fileElementId: 'file',
+                data: {'token':localStorage.getItem("token")},
+                success: function(r){
+                    buttonObj.disabled = false;
+                    $("#file").val("");
+                    if(r.code === 0){
+                        alert('已成功导入', function(index){
+                            vm.getAmountAllLists();
+                        });
+                    }else{
+                        alert(r.msg);
+                    }
+                },
+                complete:function(r){
+                    buttonObj.disabled = false;
+                    $("#file").val("");
+                    var _r = JSON.parse(r.responseText);
+                    if(_r.code === 0){
+                        alert('已成功导入', function(index){
+                            vm.getAmountAllLists();
+                        });
+                    }else{
+                        alert(_r.msg);
+                    }
+                }
+            });
+        },
+        upLoadFileAmount2: function (event) {
+            var atype = 2;
             var buttonObj = event.currentTarget;
             buttonObj.disabled = true;
             vm.dealerId = $("#selectDealerId").val() == null ? vm.dealerId : $("#selectDealerId").val();
