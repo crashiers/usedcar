@@ -73,7 +73,7 @@ $(function () {
 			{ label: '衍生收益', name: 'otherEarnings', index: 'other_earnings', width: 4*10+20 }, 			
 			{ label: '厂家返利', name: 'rebate2', index: 'rebate2', width: 4*10+20 }, 			
 			{ label: '综合毛利', name: 'synthesisMaori', index: 'synthesis_maori', width: 4*10+20 },
-			{ label: '添加日期', name: 'createDate', index: 'create_date', width: 8*10+20 },
+			{ label: '添加日期', name: 'createDate', index: 'create_date', width: 4*10+20 },
 			{ label: '添加时间', name: 'createDatetime', index: 'create_datetime', width: 4*10+20, hidden:true }
         ],
 		viewrecords: true,
@@ -84,7 +84,7 @@ $(function () {
         rownumbers: false,
         rownumWidth: 25, 
         //autowidth:true,
-		width:8500,
+		width:9500,
         multiselect: true,
         pager: "#jqGridPager",
         jsonReader : {
